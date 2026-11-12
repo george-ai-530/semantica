@@ -44,7 +44,7 @@ function normalizeError(failure: unknown): MarkdownEditorError {
   if (failure instanceof MarkdownClientError) return failure;
   return {
     kind: "network",
-    message: "The Markdown service could not be reached. Your draft was kept.",
+    message: "无法连接 Markdown 服务。您的草稿已保留。",
   };
 }
 

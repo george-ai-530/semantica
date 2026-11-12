@@ -237,7 +237,7 @@ function buildCommunitySummaries(
         dominantSemanticGroup,
         color: data.color,
         anchorNodeId: data.anchorNodeId,
-        anchorLabel: data.anchorNodeId ? getNodeLabel(graphRef, data.anchorNodeId) : "Community anchor",
+        anchorLabel: data.anchorNodeId ? getNodeLabel(graphRef, data.anchorNodeId) : "社区锚点",
         prominence: data.prominence,
       };
     })
@@ -439,7 +439,7 @@ function buildOverviewBackboneSnapshot(
   if (visibleNodeIds.size === 0) {
     return {
       ready: false,
-      reason: "No visible nodes are available for overview backbone selection.",
+      reason: "没有可见节点可用于概览骨干选择。",
       edgeIds: [],
     };
   }
@@ -569,8 +569,8 @@ function buildOverviewBackboneSnapshot(
   return {
     ready: edgeIds.length > 0,
     reason: edgeIds.length > 0
-      ? "Ready"
-      : "No overview backbone edges met the current visibility thresholds.",
+      ? "就绪"
+      : "没有概览骨干边满足当前可见性阈值。",
     edgeIds,
   };
 }
@@ -582,7 +582,7 @@ function buildDirectedPathSnapshot(
   if (interactionState.activePath.length < 2) {
     return {
       ready: false,
-      reason: "Trace a path to compare it against local strict directed shortest pathfinding.",
+      reason: "请追踪一条路径，以便将其与本地严格有向最短路径进行比较。",
       sourceId: interactionState.selectedNodeId || null,
       targetId: null,
       path: [],
@@ -596,7 +596,7 @@ function buildDirectedPathSnapshot(
   if (!sourceId || !targetId || !graphRef.hasNode(sourceId) || !graphRef.hasNode(targetId)) {
     return {
       ready: false,
-      reason: "Active path endpoints are not available in the current graph view.",
+      reason: "活动路径的端点在当前图谱视图中不可用。",
       sourceId,
       targetId,
       path: [],
@@ -610,8 +610,8 @@ function buildDirectedPathSnapshot(
     return {
       ready: path.length > 1,
       reason: path.length > 1
-        ? "Ready"
-        : "No strict directed shortest path found in the current graph view.",
+        ? "就绪"
+        : "在当前图谱视图中未找到严格有向最短路径。",
       sourceId,
       targetId,
       path,
@@ -622,7 +622,7 @@ function buildDirectedPathSnapshot(
     console.error("[GraphAnalytics] directed pathfinding failed", error);
     return {
       ready: false,
-      reason: "Directed pathfinding failed for the current graph snapshot.",
+      reason: "当前图谱快照的有向路径查找失败。",
       sourceId,
       targetId,
       path: [],
@@ -660,10 +660,10 @@ export function buildGraphAnalyticsSnapshot(params: {
     communities: {
       ready: communitySummaries.length > 0,
       reason: communitySummaries.length > 0
-        ? "Ready"
+        ? "就绪"
         : base.communitiesByNode.size > 0
-          ? "No visible communities in the current graph context."
-          : "Community detection has not produced summaries yet.",
+          ? "当前图谱上下文中没有可见社区。"
+          : "社区检测尚未生成摘要。",
       count: base.communityCount,
       modularity: base.modularity,
       summaries: communitySummaries,
@@ -672,16 +672,16 @@ export function buildGraphAnalyticsSnapshot(params: {
       ready: centralitySummaries.length > 0,
       reason: centralitySummaries.length > 0
         ? base.betweennessReady
-          ? "Ready"
-          : "Ready (degree-biased while betweenness is bounded for large graphs)."
-        : "Centrality ranking is waiting for graph data.",
+          ? "就绪"
+          : "就绪（大图中中介中心度受限，结果偏向度数）。"
+        : "中心度排名正在等待图谱数据。",
       topNodes: centralitySummaries,
     },
     semanticRegions: {
       ready: semanticRegionSummaries.length > 0,
       reason: semanticRegionSummaries.length > 0
-        ? "Ready"
-        : "No semantic regions are visible in the current graph context.",
+        ? "就绪"
+        : "当前图谱上下文中没有可见的语义区域。",
       summaries: semanticRegionSummaries,
     },
     overviewBackbone,

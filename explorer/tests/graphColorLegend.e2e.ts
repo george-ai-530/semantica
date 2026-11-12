@@ -79,7 +79,7 @@ test("visible legend follows loaded data, reloads, focused views, and distance m
     await route.fulfill({ json });
   });
   await page.goto(BASE_URL);
-  await page.getByRole("button", { name: "Open Semantica Explorer" }).click();
+  await page.getByRole("button", { name: "打开 COWIN 图谱" }).click();
   const legend = page.getByRole("group", { name: "Node colors" });
   await legend.waitFor();
   await page.locator("canvas").first().waitFor({ state: "visible" });

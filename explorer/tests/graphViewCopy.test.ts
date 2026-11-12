@@ -9,19 +9,19 @@ import {
 test("groupedViewReasonText owns grouped-view copy for every reason code", () => {
   assert.equal(
     groupedViewReasonText({ code: "communities-undetected" }),
-    "Grouped view is unavailable until communities can be detected.",
+    "在检测到社区之前，分组视图不可用。",
   );
   assert.equal(
     groupedViewReasonText({ code: "community-nodes-missing" }),
-    "Grouped view is unavailable because no community nodes could be created.",
+    "由于无法创建任何社区节点，分组视图不可用。",
   );
   assert.equal(
     groupedViewReasonText({ code: "invalid-community-layout", nodeId: "community-a" }),
-    "Grouped node community-a has invalid coordinates.",
+    "分组节点 community-a 的坐标无效。",
   );
   assert.equal(
     groupedViewReasonText({ code: "missing-grouped-node", edgeId: "edge-1" }),
-    "Grouped edge edge-1 references a missing grouped node.",
+    "分组边 edge-1 引用了缺失的分组节点。",
   );
   assert.equal(groupedViewReasonText(null), null);
 });
@@ -29,15 +29,15 @@ test("groupedViewReasonText owns grouped-view copy for every reason code", () =>
 test("focusedUnavailableReasonText owns focused-mode copy for every reason code", () => {
   assert.equal(
     focusedUnavailableReasonText({ code: "no-selection" }),
-    "Select a node to inspect in Focused mode.",
+    "请选择一个节点以在聚焦模式下检查。",
   );
   assert.equal(
     focusedUnavailableReasonText({ code: "grouped-unresolvable" }),
-    "Focused mode is unavailable for this grouped selection.",
+    "聚焦模式对此分组所选项目不可用。",
   );
   assert.equal(
     focusedUnavailableReasonText({ code: "not-in-graph" }),
-    "Selected item is not available in the current graph.",
+    "所选项目在当前图谱中不可用。",
   );
   assert.equal(focusedUnavailableReasonText(null), null);
 });

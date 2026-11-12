@@ -73,9 +73,9 @@ type GraphStatsPayload = {
 type ConnectionStatus = 'checking' | 'online' | 'offline';
 
 const CONNECTION_STATUS_LABEL: Record<ConnectionStatus, string> = {
-  checking: 'Connecting…',
-  online: 'System Online',
-  offline: 'Backend Unreachable',
+  checking: '连接中…',
+  online: '系统在线',
+  offline: '后端不可达',
 };
 
 const queryClient = new QueryClient();
@@ -88,12 +88,12 @@ const PREVIEW_DOTS = Array.from({ length: 42 }, (_, i) => ({
 }));
 
 const navItems: NavItem[] = [
-  { id: 'explore', label: 'Knowledge Explorer', hint: 'Graph and vocabulary browsing', icon: Database },
-  { id: 'analyze', label: 'Analyze', hint: 'Query and inspect the dataset', icon: FileSearch },
-  { id: 'decisions', label: 'Decisions', hint: 'Decision chains and precedent review', icon: Scale },
-  { id: 'enrich', label: 'Enrich', hint: 'Import, export, and merge workflows', icon: GitBranchPlus },
-  { id: 'manage', label: 'Manage', hint: 'Lineage and governance tooling', icon: Settings2 },
-  { id: 'ontology-hub', label: 'Ontology Hub', hint: 'Schema governance, registry, and vocabulary management', icon: GitMerge },
+  { id: 'explore', label: '知识探索', hint: '图谱与词汇浏览', icon: Database },
+  { id: 'analyze', label: '分析', hint: '查询与检查数据集', icon: FileSearch },
+  { id: 'decisions', label: '决策', hint: '决策链与先例审查', icon: Scale },
+  { id: 'enrich', label: '数据增强', hint: '导入、导出与合并流程', icon: GitBranchPlus },
+  { id: 'manage', label: '管理', hint: '溯源与治理工具', icon: Settings2 },
+  { id: 'ontology-hub', label: '本体中心', hint: '模式治理、注册表与词汇管理', icon: GitMerge },
 ];
 
 function readInitialWorkspace(): WorkspaceId {
@@ -1559,40 +1559,40 @@ function WelcomeScreen({
 
   const isOnline = stats.status === 'online';
   const metrics: LandingMetric[] = [
-    { label: 'Knowledge nodes', value: formatMetric(stats.nodes, 'Live'), tone: 'cyan' },
-    { label: 'Relationships mapped', value: formatMetric(stats.edges, 'Ready'), tone: 'mint' },
-    { label: 'Graph modes', value: '3', tone: 'amber' },
-    { label: isOnline ? 'Dataset online' : 'Ready to explore', value: isOnline ? 'Active' : 'Standby', tone: 'rose' },
+    { label: '知识节点', value: formatMetric(stats.nodes, '在线'), tone: 'cyan' },
+    { label: '已映射关系', value: formatMetric(stats.edges, '就绪'), tone: 'mint' },
+    { label: '图谱模式', value: '3', tone: 'amber' },
+    { label: isOnline ? '数据集在线' : '随时可探索', value: isOnline ? '活跃' : '待命', tone: 'rose' },
   ];
 
   const secondaryLaunchers: LandingAction[] = [
     {
-      label: 'Vocabulary',
-      description: 'Schemes and terms',
+      label: '词汇表',
+      description: '模式与术语',
       icon: Database,
       onClick: onOpenVocabulary,
     },
     {
-      label: 'Analyze',
-      description: 'Inference and queries',
+      label: '分析',
+      description: '推理与查询',
       icon: BrainCircuit,
       onClick: onOpenReasoning,
     },
     {
-      label: 'Decisions',
-      description: 'Chains and precedents',
+      label: '决策',
+      description: '决策链与先例',
       icon: Scale,
       onClick: onOpenDecisions,
     },
     {
-      label: 'Enrich',
-      description: 'Import and resolve',
+      label: '数据增强',
+      description: '导入与消解',
       icon: GitBranchPlus,
       onClick: onOpenImport,
     },
     {
-      label: 'Manage',
-      description: 'Lineage and ontology',
+      label: '管理',
+      description: '溯源与本体',
       icon: ShieldCheck,
       onClick: onOpenManage,
     },
@@ -1609,33 +1609,33 @@ function WelcomeScreen({
               <div className="landing-status-dot" />
               <span className="landing-status-text">{CONNECTION_STATUS_LABEL[stats.status]}</span>
               <div className="landing-status-divider" />
-              <span className="landing-status-version">Semantica v2 · Semantic Intelligence</span>
+              <span className="landing-status-version">COWIN · 语义智能平台</span>
             </div>
 
-            <div className="landing-kicker" aria-label="Product category">
+            <div className="landing-kicker" aria-label="产品类别">
               <span className="landing-kicker-mark" aria-hidden="true" />
-              Knowledge Explorer
+              知识图谱工作台
             </div>
 
             <h1 className="landing-title">
-              Navigate knowledge<br />
-              like a <span>living system.</span>
+              像生命系统一样<br />
+              驾驭<span>知识网络。</span>
             </h1>
             <p className="landing-subtitle">
-              Semantica turns dense knowledge graphs into a navigable command center —
-              discovery, reasoning, provenance, distance intelligence, and decision context,
-              all in one interface.
+              COWIN 将高密度知识图谱转化为可导航的指挥中心 ——
+              发现、推理、溯源、距离智能与决策上下文，
+              尽在一个界面。
             </p>
 
             <div className="landing-cta-row">
               <button className="landing-cta-primary" type="button" onClick={onOpenNetwork}>
                 <Network size={16} />
-                Open Semantica Explorer
+                打开 COWIN 图谱
                 <ArrowRight size={15} />
               </button>
               <button className="landing-cta-secondary" type="button" onClick={onOpenReasoning}>
                 <BrainCircuit size={15} />
-                Run Reasoning
+                运行推理
               </button>
             </div>
           </div>
@@ -1646,15 +1646,15 @@ function WelcomeScreen({
               <div className="landing-preview-dot" />
               <div className="landing-preview-dot" />
               <div className="landing-preview-dot" />
-              <div className="landing-preview-tab">Semantica Explorer</div>
+              <div className="landing-preview-tab">COWIN 图谱</div>
             </div>
             <div className="landing-command-card">
               <div className="landing-command-icon">
                 <Search size={15} />
               </div>
               <div>
-                <div className="landing-command-label">Search command, node, or concept</div>
-                <div className="landing-command-meta">distance heatmap · focused view · causal path</div>
+                <div className="landing-command-label">搜索命令、节点或概念</div>
+                <div className="landing-command-meta">距离热力图 · 聚焦视图 · 因果路径</div>
               </div>
             </div>
             <div className="landing-preview-orbit">
@@ -1694,16 +1694,16 @@ function WelcomeScreen({
               </svg>
             </div>
             <div className="landing-dossier-card">
-              <div className="landing-dossier-kicker">Entity Dossier</div>
+              <div className="landing-dossier-kicker">实体档案</div>
               <div className="landing-dossier-title">NSRP1</div>
-              <div className="landing-dossier-row"><span>Distance band</span><strong>Near</strong></div>
-              <div className="landing-dossier-row"><span>Path coherence</span><strong>0.84</strong></div>
-              <div className="landing-dossier-row"><span>Provenance</span><strong>Audited</strong></div>
+              <div className="landing-dossier-row"><span>距离区间</span><strong>近</strong></div>
+              <div className="landing-dossier-row"><span>路径一致性</span><strong>0.84</strong></div>
+              <div className="landing-dossier-row"><span>溯源</span><strong>已审计</strong></div>
             </div>
             <div className="landing-timeline-card">
               <div className="landing-timeline-header">
-                <span className="landing-timeline-title">Temporal Evidence</span>
-                <span className="landing-timeline-badge">66% coverage</span>
+                <span className="landing-timeline-title">时序证据</span>
+                <span className="landing-timeline-badge">66% 覆盖率</span>
               </div>
               <div className="landing-timeline-track" />
               <div className="landing-timeline-labels">
@@ -1715,7 +1715,7 @@ function WelcomeScreen({
         </section>
 
         {/* ── Live metrics ── */}
-        <div className="landing-metrics" aria-label="System status">
+        <div className="landing-metrics" aria-label="系统状态">
           {metrics.map((metric) => (
             <div key={metric.label} className="landing-metric" data-tone={metric.tone}>
               <div className="landing-metric-value">{metric.value}</div>
@@ -1725,18 +1725,18 @@ function WelcomeScreen({
         </div>
 
         {/* ── Workspace grid ── */}
-        <section aria-label="Workspaces">
+        <section aria-label="工作区">
           <div className="landing-section-header">
-            <h2 className="landing-section-title">Workspaces</h2>
+            <h2 className="landing-section-title">工作区</h2>
             <div className="landing-section-line" />
           </div>
           <div className="landing-workspace-grid">
             <button className="landing-workspace-card landing-workspace-card--primary" type="button" onClick={onOpenNetwork}>
               <div>
-                <div className="landing-workspace-card-eyebrow">Primary Workspace</div>
-                <div className="landing-workspace-card-title">Semantica Explorer</div>
+                <div className="landing-workspace-card-eyebrow">主工作区</div>
+                <div className="landing-workspace-card-title">COWIN 图谱</div>
                 <div className="landing-workspace-card-desc">
-                  Full graph, grouped communities, focused neighborhoods, and distance intelligence — all in one canvas.
+                  完整图谱、社区分组、聚焦邻域与距离智能 —— 尽在一块画布。
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -1765,13 +1765,13 @@ function WelcomeScreen({
         </section>
 
         {/* ── Capability band ── */}
-        <section className="landing-capability-band" aria-label="Intelligence capabilities">
-          <div className="landing-capability-label">Intelligence Layer</div>
-          <div className="landing-capability"><Radar size={12} />Distance Heatmap</div>
-          <div className="landing-capability"><Network size={12} />Focused Neighborhood</div>
-          <div className="landing-capability"><GitMerge size={12} />Grouped Communities</div>
-          <div className="landing-capability"><Route size={12} />Trace Causal Path</div>
-          <div className="landing-capability"><ShieldCheck size={12} />Provenance Dossier</div>
+        <section className="landing-capability-band" aria-label="智能能力">
+          <div className="landing-capability-label">智能层</div>
+          <div className="landing-capability"><Radar size={12} />距离热力图</div>
+          <div className="landing-capability"><Network size={12} />聚焦邻域</div>
+          <div className="landing-capability"><GitMerge size={12} />社区分组</div>
+          <div className="landing-capability"><Route size={12} />因果路径追踪</div>
+          <div className="landing-capability"><ShieldCheck size={12} />溯源档案</div>
         </section>
 
       </div>
@@ -1801,7 +1801,7 @@ export default function App() {
 
   const confirmDiscardExploreDraft = () => (
     !exploreDraftDirty
-    || window.confirm("Discard the unapplied Markdown draft and leave this resource?")
+    || window.confirm("放弃未应用的 Markdown 草稿并离开该资源？")
   );
 
   const switchExploreView = (nextView: ExploreView) => {
@@ -1848,9 +1848,9 @@ export default function App() {
     if (activeWorkspace === 'explore') {
       return (
         <WorkspaceShell
-          title="Explore"
-          subtitle={exploreView === 'graph' ? undefined : exploreView === 'memories' ? "Browse and edit canonical AgentMemory documents." : "Browse the graph and switch views without leaving the workspace."}
-          kicker={exploreView === 'graph' ? 'Graph Studio' : exploreView === 'memories' ? 'Memory Browser' : 'Vocabulary Browser'}
+          title="探索"
+          subtitle={exploreView === 'graph' ? undefined : exploreView === 'memories' ? "浏览并编辑规范的 AgentMemory 文档。" : "浏览图谱并在视图间切换，无需离开工作区。"}
+          kicker={exploreView === 'graph' ? '图谱工作室' : exploreView === 'memories' ? '记忆浏览' : '词汇浏览'}
           compact
           tabs={
             <ExploreWorkspaceTabs
@@ -1878,16 +1878,16 @@ export default function App() {
     if (activeWorkspace === 'analyze') {
       return (
         <WorkspaceShell
-          title="Analyze"
-          subtitle="Query the active graph and test inference rules."
-          kicker={analyzeView === 'reasoning' ? 'Reasoning Engine' : 'SPARQL Query'}
+          title="分析"
+          subtitle="查询当前图谱并测试推理规则。"
+          kicker={analyzeView === 'reasoning' ? '推理引擎' : 'SPARQL 查询'}
           tabs={
             <>
               <button className="workspace-tab" data-active={analyzeView === 'reasoning'} onClick={() => setAnalyzeView('reasoning')}>
-                Reasoning Playground
+                推理演练场
               </button>
               <button className="workspace-tab" data-active={analyzeView === 'sparql'} onClick={() => setAnalyzeView('sparql')}>
-                SPARQL Querying
+                SPARQL 查询
               </button>
             </>
           }
@@ -1904,9 +1904,9 @@ export default function App() {
     if (activeWorkspace === 'decisions') {
       return (
         <WorkspaceShell
-          title="Decisions"
-          subtitle="Inspect decision chains, causal context, and precedent matches."
-          kicker="Decision Intelligence"
+          title="决策"
+          subtitle="检查决策链、因果上下文与先例匹配。"
+          kicker="决策智能"
         >
           <ErrorBoundary key="decisions">
             <Suspense fallback={<WorkspaceFallback />}>
@@ -1920,22 +1920,22 @@ export default function App() {
     if (activeWorkspace === 'enrich') {
       return (
         <WorkspaceShell
-          title="Enrich"
-          subtitle="Import, export, reconcile, and audit graph entities."
-          kicker="Knowledge Audit"
+          title="数据增强"
+          subtitle="导入、导出、对账与审计图谱实体。"
+          kicker="知识审计"
           tabs={
             <>
               <button className="workspace-tab" data-active={enrichView === 'import'} onClick={() => setEnrichView('import')}>
-                Import and Export
+                导入与导出
               </button>
               <button className="workspace-tab" data-active={enrichView === 'merge'} onClick={() => setEnrichView('merge')}>
-                Diff and Merge
+                差异与合并
               </button>
               <button className="workspace-tab" data-active={enrichView === 'resolve'} onClick={() => setEnrichView('resolve')}>
-                Entity Resolution
+                实体消解
               </button>
               <button className="workspace-tab" data-active={enrichView === 'registry'} onClick={() => setEnrichView('registry')}>
-                Registry
+                注册表
               </button>
             </>
           }
@@ -1955,9 +1955,9 @@ export default function App() {
     if (activeWorkspace === 'ontology-hub') {
       return (
         <WorkspaceShell
-          title="Ontology Hub"
-          subtitle="Load, browse, edit, and govern ontologies and vocabularies."
-          kicker="Schema Governance"
+          title="本体中心"
+          subtitle="加载、浏览、编辑并治理本体与词汇表。"
+          kicker="模式治理"
           compact
         >
           <ErrorBoundary key="ontology-hub">
@@ -1977,19 +1977,19 @@ export default function App() {
 
     return (
       <WorkspaceShell
-        title="Manage"
-        subtitle="Review provenance, lineage, ontology, and governance context."
-        kicker="Graph Governance"
+        title="管理"
+        subtitle="审查溯源、谱系、本体与治理上下文。"
+        kicker="图谱治理"
         tabs={
           <>
             <button className="workspace-tab" data-active={manageView === 'lineage'} onClick={() => setManageView('lineage')}>
-              PROV-O Lineage
+              PROV-O 谱系
             </button>
             <button className="workspace-tab" data-active={manageView === 'kg-overview'} onClick={() => setManageView('kg-overview')}>
-              KG Overview
+              知识图谱总览
             </button>
             <button className="workspace-tab" data-active={manageView === 'ontology'} onClick={() => setManageView('ontology')}>
-              Ontology Summary
+              本体摘要
             </button>
           </>
         }
@@ -2013,7 +2013,9 @@ export default function App() {
       <style>{shellStyles}</style>
       <div className="app-shell">
         <aside className="app-rail">
-          <button className="brand-pill" title="Semantica Knowledge Explorer" onClick={() => switchWorkspace('welcome')} style={{ cursor: 'pointer', border: '1px solid rgba(127,208,255,0.18)' }}>SKE</button>
+          <button className="brand-pill" title="COWIN 知识图谱" onClick={() => switchWorkspace('welcome')} style={{ cursor: 'pointer', border: '1px solid rgba(127,208,255,0.18)', padding: 0, background: 'transparent', overflow: 'hidden' }}>
+            <img src="/favicon.png" alt="COWIN" width={34} height={34} style={{ display: 'block', borderRadius: 'inherit' }} />
+          </button>
           {navItems.map(({ id, label, hint, icon: Icon }) => (
             <button
               key={id}

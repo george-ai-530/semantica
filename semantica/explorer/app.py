@@ -230,7 +230,7 @@ def create_app(
     @app.get("/api/info")
     async def info():
         return {
-            "name": "Semantica Knowledge Explorer",
+            "name": "COWIN 知识图谱",
             "version": __version__,
             "status": "active",
             "capabilities": explorer_capabilities(agent_memory),
@@ -246,6 +246,12 @@ def create_app(
         async def serve_spa(full_path: str):
             if full_path.startswith("api/"):
                 raise HTTPException(status_code=404, detail="API route not found")
+            # Serve real static files (favicon, manifest, etc.) before falling
+            # back to the SPA index; the resolved-path guard blocks traversal
+            # outside the static directory.
+            candidate = (static_dir / full_path).resolve()
+            if candidate.is_file() and static_dir.resolve() in candidate.parents:
+                return FileResponse(candidate)
             index_path = static_dir / "index.html"
             if index_path.is_file():
                 return FileResponse(index_path)
