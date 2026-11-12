@@ -6,17 +6,17 @@ export type RegistryEntry = {
 };
 
 export const ONTOLOGY_MINIMAP_THEME = {
-  bgColor: "#0b1625",
-  maskColor: "rgba(7, 17, 31, 0.72)",
-  maskStrokeColor: "#5faeff",
+  bgColor: "#ffffff",
+  maskColor: "rgba(255, 255, 255, 0.72)",
+  maskStrokeColor: "#0052d9",
   maskStrokeWidth: 2,
-  nodeColor: "#2d7fd3",
-  nodeStrokeColor: "#9acbff",
+  nodeColor: "#366ef4",
+  nodeStrokeColor: "#0052d9",
   nodeStrokeWidth: 1,
   style: {
-    border: "1px solid #29435c",
+    border: "1px solid #ddd",
     borderRadius: 6,
-    boxShadow: "0 4px 16px rgba(0, 0, 0, 0.32)",
+    boxShadow: "0 4px 16px rgba(0, 0, 0, 0.1)",
   },
 } as const;
 

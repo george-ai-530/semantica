@@ -113,16 +113,16 @@ function PreviewCard({ preview }: { preview: OntologyPreview }) {
   return (
     <div style={previewCardStyle}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-        <CheckCircle2 size={16} color="#4cc38a" />
-        <span style={{ color: "#4cc38a", fontSize: 12, fontWeight: 700 }}>
+        <CheckCircle2 size={16} color="#2ba471" />
+        <span style={{ color: "#2ba471", fontSize: 12, fontWeight: 700 }}>
           预览就绪
         </span>
-        <Badge label={preview.format} color="#58a6ff" />
+        <Badge label={preview.format} color="#0052d9" />
       </div>
 
       <div style={previewTitleStyle}>{preview.name}</div>
       {preview.description && (
-        <div style={{ color: "#8fa8c6", fontSize: 12, marginTop: 6, lineHeight: 1.5 }}>
+        <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 12, marginTop: 6, lineHeight: 1.5 }}>
           {preview.description}
         </div>
       )}
@@ -151,12 +151,12 @@ function PreviewRow({
 }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-      <span style={{ color: "#6a7f97", fontSize: 10, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: "0.07em" }}>
+      <span style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 10, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: "0.07em" }}>
         {label}
       </span>
       <span
         style={{
-          color: "#c6d4e3",
+          color: "rgba(0, 0, 0, 0.7)",
           fontSize: 11,
           fontFamily: mono ? "monospace" : undefined,
           wordBreak: "break-all",
@@ -415,24 +415,24 @@ function FileUploadPanel({ onLoaded }: { onLoaded: () => void }) {
         style={{
           ...dropzoneStyle,
           borderColor: dragging
-            ? "rgba(74,163,255,0.5)"
-            : "rgba(127,208,255,0.18)",
-          background: dragging ? "rgba(74,163,255,0.06)" : undefined,
+            ? "rgba(0, 82, 217,0.5)"
+            : "rgba(54, 110, 244,0.18)",
+          background: dragging ? "rgba(0, 82, 217,0.06)" : undefined,
         }}
         onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
         onDragLeave={() => setDragging(false)}
         onDrop={handleDrop}
         onClick={() => fileRef.current?.click()}
       >
-        <FileUp size={24} color="#4aa3ff" />
+        <FileUp size={24} color="#0052d9" />
         {fileName ? (
-          <div style={{ color: "#ebf3ff", fontSize: 13, fontWeight: 600 }}>{fileName}</div>
+          <div style={{ color: "rgba(0, 0, 0, 0.9)", fontSize: 13, fontWeight: 600 }}>{fileName}</div>
         ) : (
           <>
-            <div style={{ color: "#8fa8c6", fontSize: 13 }}>
-              拖放文件到此处，或 <span style={{ color: "#4aa3ff" }}>浏览</span>
+            <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 13 }}>
+              拖放文件到此处，或 <span style={{ color: "#0052d9" }}>浏览</span>
             </div>
-            <div style={{ color: "#5a7a9a", fontSize: 11 }}>
+            <div style={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 11 }}>
               .ttl · .rdf · .owl · .xml · .nt · .jsonld · .json · .n3
             </div>
           </>
@@ -649,8 +649,8 @@ export function OntologyLoader({ onLoaded, onClose }: LoaderProps) {
       <div style={modalStyle}>
         <div style={modalHeaderStyle}>
           <div>
-            <div style={{ color: "#ebf3ff", fontSize: 16, fontWeight: 800 }}>加载本体</div>
-            <div style={{ color: "#8fa8c6", fontSize: 12, marginTop: 2 }}>
+            <div style={{ color: "rgba(0, 0, 0, 0.9)", fontSize: 16, fontWeight: 800 }}>加载本体</div>
+            <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 12, marginTop: 2 }}>
               从 URL 导入、上传文件，或创建新本体
             </div>
           </div>
@@ -659,7 +659,7 @@ export function OntologyLoader({ onLoaded, onClose }: LoaderProps) {
           </button>
         </div>
 
-        <div style={{ display: "flex", gap: 2, padding: "0 20px", borderBottom: "1px solid rgba(127,208,255,0.1)" }}>
+        <div style={{ display: "flex", gap: 2, padding: "0 20px", borderBottom: "1px solid rgba(54, 110, 244,0.1)" }}>
           {(["url", "file", "create"] as LoaderMode[]).map((m) => (
             <button
               key={m}
@@ -695,7 +695,7 @@ export function OntologyLoader({ onLoaded, onClose }: LoaderProps) {
 const overlayStyle: React.CSSProperties = {
   position: "fixed",
   inset: 0,
-  background: "rgba(3,9,18,0.78)",
+  background: "rgba(255, 255, 255,0.78)",
   backdropFilter: "blur(6px)",
   display: "flex",
   alignItems: "center",
@@ -709,9 +709,9 @@ const modalStyle: React.CSSProperties = {
   display: "flex",
   flexDirection: "column",
   borderRadius: 20,
-  border: "1px solid rgba(127,208,255,0.16)",
-  background: "linear-gradient(180deg, rgba(11,21,34,0.98), rgba(6,13,22,0.96))",
-  boxShadow: "0 32px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
+  border: "1px solid rgba(54, 110, 244,0.16)",
+  background: "linear-gradient(180deg, rgba(255, 255, 255,0.98), rgba(255, 255, 255,0.96))",
+  boxShadow: "0 32px 80px rgba(0,0,0,0.16), inset 0 1px 0 rgba(0, 0, 0, 0.06)",
   overflow: "hidden",
 };
 
@@ -749,18 +749,18 @@ const modalTabBase: React.CSSProperties = {
 };
 
 const modalTabIdle: React.CSSProperties = {
-  color: "#8fa8c6",
+  color: "rgba(0, 0, 0, 0.6)",
 };
 
 const modalTabActive: React.CSSProperties = {
-  color: "#4aa3ff",
-  borderBottomColor: "#4aa3ff",
+  color: "#0052d9",
+  borderBottomColor: "#0052d9",
 };
 
 const closeIconBtnStyle: React.CSSProperties = {
   background: "transparent",
   border: "none",
-  color: "#8fa8c6",
+  color: "rgba(0, 0, 0, 0.6)",
   cursor: "pointer",
   padding: 4,
   borderRadius: 8,
@@ -769,7 +769,7 @@ const closeIconBtnStyle: React.CSSProperties = {
 };
 
 const fieldLabelStyle: React.CSSProperties = {
-  color: "#8fa8c6",
+  color: "rgba(0, 0, 0, 0.6)",
   fontSize: 11,
   fontWeight: 700,
   letterSpacing: "0.05em",
@@ -779,9 +779,9 @@ const inputStyle: React.CSSProperties = {
   width: "100%",
   padding: "8px 12px",
   borderRadius: 8,
-  border: "1px solid rgba(127,208,255,0.16)",
-  background: "rgba(0,0,0,0.24)",
-  color: "#ebf3ff",
+  border: "1px solid rgba(54, 110, 244,0.16)",
+  background: "rgba(0,0,0,0.045)",
+  color: "rgba(0, 0, 0, 0.9)",
   fontSize: 13,
   outline: "none",
   boxSizing: "border-box",
@@ -796,9 +796,9 @@ const selectStyle: React.CSSProperties = {
 const previewBtnStyle: React.CSSProperties = {
   padding: "8px 14px",
   borderRadius: 8,
-  border: "1px solid rgba(127,208,255,0.2)",
-  background: "rgba(74,163,255,0.08)",
-  color: "#7fd0ff",
+  border: "1px solid rgba(54, 110, 244,0.2)",
+  background: "rgba(0, 82, 217,0.08)",
+  color: "#366ef4",
   fontSize: 12,
   fontWeight: 600,
   cursor: "pointer",
@@ -814,9 +814,9 @@ const primaryBtnStyle: React.CSSProperties = {
   gap: 7,
   padding: "9px 18px",
   borderRadius: 10,
-  border: "1px solid rgba(74,163,255,0.3)",
-  background: "linear-gradient(135deg, rgba(74,163,255,0.2), rgba(74,163,255,0.1))",
-  color: "#7fd0ff",
+  border: "1px solid rgba(0, 82, 217,0.3)",
+  background: "linear-gradient(135deg, rgba(0, 82, 217,0.2), rgba(0, 82, 217,0.1))",
+  color: "#366ef4",
   fontSize: 13,
   fontWeight: 700,
   cursor: "pointer",
@@ -828,7 +828,7 @@ const advancedToggleStyle: React.CSSProperties = {
   gap: 6,
   background: "transparent",
   border: "none",
-  color: "#6a7f97",
+  color: "rgba(0, 0, 0, 0.6)",
   fontSize: 12,
   cursor: "pointer",
   padding: 0,
@@ -837,12 +837,12 @@ const advancedToggleStyle: React.CSSProperties = {
 const previewCardStyle: React.CSSProperties = {
   padding: 14,
   borderRadius: 10,
-  border: "1px solid rgba(76,195,138,0.18)",
-  background: "rgba(76,195,138,0.04)",
+  border: "1px solid rgba(43, 164, 113,0.18)",
+  background: "rgba(43, 164, 113,0.04)",
 };
 
 const previewTitleStyle: React.CSSProperties = {
-  color: "#ebf3ff",
+  color: "rgba(0, 0, 0, 0.9)",
   fontSize: 15,
   fontWeight: 800,
   letterSpacing: "-0.03em",
@@ -873,9 +873,9 @@ const successBoxStyle: React.CSSProperties = {
   gap: 8,
   padding: "8px 12px",
   borderRadius: 8,
-  border: "1px solid rgba(76,195,138,0.22)",
-  background: "rgba(76,195,138,0.06)",
-  color: "#4cc38a",
+  border: "1px solid rgba(43, 164, 113,0.22)",
+  background: "rgba(43, 164, 113,0.06)",
+  color: "#2ba471",
   fontSize: 12,
 };
 
@@ -885,9 +885,9 @@ const errorBoxStyle: React.CSSProperties = {
   gap: 8,
   padding: "8px 12px",
   borderRadius: 8,
-  border: "1px solid rgba(255,157,175,0.22)",
-  background: "rgba(255,157,175,0.06)",
-  color: "#ff9daf",
+  border: "1px solid rgba(213, 73, 65,0.22)",
+  background: "rgba(213, 73, 65,0.06)",
+  color: "#d54941",
   fontSize: 12,
 };
 
@@ -902,12 +902,12 @@ const modeTabBase: React.CSSProperties = {
 
 const modeTabIdle: React.CSSProperties = {
   background: "transparent",
-  color: "#8fa8c6",
-  borderColor: "rgba(127,208,255,0.1)",
+  color: "rgba(0, 0, 0, 0.6)",
+  borderColor: "rgba(54, 110, 244,0.1)",
 };
 
 const modeTabActive: React.CSSProperties = {
-  background: "rgba(74,163,255,0.14)",
-  color: "#ebf3ff",
-  borderColor: "rgba(127,208,255,0.24)",
+  background: "rgba(0, 82, 217,0.14)",
+  color: "rgba(0, 0, 0, 0.9)",
+  borderColor: "rgba(54, 110, 244,0.24)",
 };

@@ -48,20 +48,20 @@ export const temporalOverlayPlugin: GraphPlugin = {
             gap: 10,
             padding: "8px 12px",
             borderRadius: 999,
-            border: "1px solid rgba(127, 208, 255, 0.18)",
+            border: "1px solid rgba(54, 110, 244, 0.18)",
             background: "linear-gradient(135deg, rgba(6, 15, 27, 0.88), rgba(11, 22, 39, 0.76))",
             boxShadow: "0 12px 30px rgba(0, 0, 0, 0.28)",
-            color: "#dce9f8",
+            color: "rgba(0, 0, 0, 0.9)",
             fontSize: 11,
             letterSpacing: "0.05em",
             textTransform: "uppercase",
             pointerEvents: "none",
           }}
         >
-          <span style={{ color: "#7fc6ff", fontWeight: 700 }}>时间</span>
+          <span style={{ color: "#366ef4", fontWeight: 700 }}>时间</span>
           <span>{label}</span>
           {typeof temporal.activeNodeCount === "number" ? (
-            <span style={{ color: "#8ea4be" }}>{temporal.activeNodeCount.toLocaleString()} 个活跃</span>
+            <span style={{ color: "rgba(0, 0, 0, 0.6)" }}>{temporal.activeNodeCount.toLocaleString()} 个活跃</span>
           ) : null}
         </div>
       ),
@@ -113,7 +113,7 @@ const panelBodyStyle: CSSProperties = {
 };
 
 const panelEyebrowStyle: CSSProperties = {
-  color: "#8ea4be",
+  color: "rgba(0, 0, 0, 0.6)",
   fontSize: 11,
   fontWeight: 700,
   letterSpacing: "0.08em",
@@ -126,17 +126,17 @@ const detailRowStyle: CSSProperties = {
   gap: 16,
   padding: "8px 10px",
   borderRadius: 12,
-  border: "1px solid rgba(255,255,255,0.06)",
-  background: "rgba(255,255,255,0.025)",
+  border: "1px solid rgba(0, 0, 0, 0.06)",
+  background: "rgba(0, 0, 0, 0.025)",
 };
 
 const detailLabelStyle: CSSProperties = {
-  color: "#8ea4be",
+  color: "rgba(0, 0, 0, 0.6)",
   fontSize: 12,
 };
 
 const detailValueStyle: CSSProperties = {
-  color: "#f3f7fd",
+  color: "rgba(0, 0, 0, 0.9)",
   fontSize: 12,
   fontWeight: 600,
 };

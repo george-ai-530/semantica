@@ -58,10 +58,10 @@ function parseDuplicates(raw: RawDuplicateItem[]): DedupPair[] {
 
 function ScoreBar({ score }: { score: number }) {
   const pct = Math.min(100, Math.round(score * 100));
-  const color = score >= 0.9 ? "#ff7b72" : score >= 0.75 ? "#f2b66d" : "#4cc38a";
+  const color = score >= 0.9 ? "#d54941" : score >= 0.75 ? "#e37318" : "#2ba471";
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-      <div style={{ flex: 1, height: 4, borderRadius: 999, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
+      <div style={{ flex: 1, height: 4, borderRadius: 999, background: "rgba(0, 0, 0, 0.06)", overflow: "hidden" }}>
         <div style={{ width: `${pct}%`, height: "100%", borderRadius: 999, background: color, transition: "width 300ms ease" }} />
       </div>
       <span style={{ fontSize: 11, fontWeight: 700, color, minWidth: 34, textAlign: "right" }}>
@@ -101,7 +101,7 @@ function PairRow({
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
             <span style={entityChipStyle}>{pair.a.label || pair.a.id}</span>
-            <span style={{ color: "#f2b66d", fontSize: 12, fontWeight: 700 }}>≈</span>
+            <span style={{ color: "#e37318", fontSize: 12, fontWeight: 700 }}>≈</span>
             <span style={entityChipStyle}>{pair.b.label || pair.b.id}</span>
           </div>
           <div style={{ marginTop: 8 }}>
@@ -116,9 +116,9 @@ function PairRow({
             disabled={merging}
             style={{
               ...actionBtnStyle,
-              background: "rgba(76,195,138,0.12)",
-              border: "1px solid rgba(76,195,138,0.28)",
-              color: "#4cc38a",
+              background: "rgba(43, 164, 113,0.12)",
+              border: "1px solid rgba(43, 164, 113,0.28)",
+              color: "#2ba471",
             }}
           >
             {merging ? <Loader2 size={12} className="animate-spin" /> : <GitMerge size={12} />}
@@ -134,16 +134,16 @@ function PairRow({
       {expanded ? (
         <div style={{ marginTop: 12, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
           {[
-            { label: "主实体（保留）", entity: pair.a, accentColor: "#4aa3ff" },
-            { label: "重复项（移除）", entity: pair.b, accentColor: "#ff7b72" },
+            { label: "主实体（保留）", entity: pair.a, accentColor: "#0052d9" },
+            { label: "重复项（移除）", entity: pair.b, accentColor: "#d54941" },
           ].map(({ label, entity, accentColor }) => (
             <div key={entity.id} style={{ ...diffCardStyle, borderColor: `${accentColor}33` }}>
               <div style={{ color: accentColor, fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 6 }}>
                 {label}
               </div>
-              <div style={{ color: "#e6edf3", fontSize: 13, fontWeight: 600 }}>{entity.label || entity.id}</div>
-              <div style={{ color: "#8b949e", fontSize: 11, marginTop: 3 }}>{entity.type}</div>
-              <div style={{ color: "#6a7f97", fontSize: 10, marginTop: 4, fontFamily: "monospace" }}>{entity.id}</div>
+              <div style={{ color: "rgba(0, 0, 0, 0.9)", fontSize: 13, fontWeight: 600 }}>{entity.label || entity.id}</div>
+              <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 11, marginTop: 3 }}>{entity.type}</div>
+              <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 10, marginTop: 4, fontFamily: "monospace" }}>{entity.id}</div>
             </div>
           ))}
         </div>
@@ -224,10 +224,10 @@ export function EntityResolutionTab() {
       {/* Header */}
       <div style={headerStyle}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <ScanSearch size={18} color="#f2b66d" />
+          <ScanSearch size={18} color="#e37318" />
           <div>
-            <div style={{ color: "#ebf3ff", fontSize: 16, fontWeight: 700 }}>实体消解</div>
-            <div style={{ color: "#8b949e", fontSize: 12 }}>检测并合并知识图谱中的重复实体</div>
+            <div style={{ color: "rgba(0, 0, 0, 0.9)", fontSize: 16, fontWeight: 700 }}>实体消解</div>
+            <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 12 }}>检测并合并知识图谱中的重复实体</div>
           </div>
         </div>
       </div>
@@ -237,8 +237,8 @@ export function EntityResolutionTab() {
         <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
           <div style={{ flex: 1, minWidth: 240 }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-              <label style={{ color: "#c6d4e3", fontSize: 12, fontWeight: 600 }}>相似度阈值</label>
-              <span style={{ color: "#f2b66d", fontSize: 12, fontWeight: 700 }}>{threshold.toFixed(2)}</span>
+              <label style={{ color: "rgba(0, 0, 0, 0.7)", fontSize: 12, fontWeight: 600 }}>相似度阈值</label>
+              <span style={{ color: "#e37318", fontSize: 12, fontWeight: 700 }}>{threshold.toFixed(2)}</span>
             </div>
             <input
               type="range"
@@ -247,9 +247,9 @@ export function EntityResolutionTab() {
               step={0.01}
               value={threshold}
               onChange={(e) => setThreshold(parseFloat(e.target.value))}
-              style={{ width: "100%", accentColor: "#f2b66d", cursor: "pointer" }}
+              style={{ width: "100%", accentColor: "#e37318", cursor: "pointer" }}
             />
-            <div style={{ display: "flex", justifyContent: "space-between", color: "#6a7f97", fontSize: 10, marginTop: 2 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", color: "rgba(0, 0, 0, 0.6)", fontSize: 10, marginTop: 2 }}>
               <span>更多结果（0.50）</span>
               <span>更少但置信度更高（0.99）</span>
             </div>
@@ -264,7 +264,7 @@ export function EntityResolutionTab() {
           </button>
         </div>
         {scanError ? (
-          <div style={{ color: "#ff7b72", fontSize: 12, marginTop: 8 }}>{scanError}</div>
+          <div style={{ color: "#d54941", fontSize: 12, marginTop: 8 }}>{scanError}</div>
         ) : null}
       </div>
 
@@ -274,7 +274,7 @@ export function EntityResolutionTab() {
           {pairs.length > 0 ? (
             <>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
-                <div style={{ color: "#8b949e", fontSize: 12, fontWeight: 600 }}>
+                <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 12, fontWeight: 600 }}>
                   {pairs.length} 对疑似重复项
                 </div>
                 <button onClick={() => setPairs([])} style={clearAllBtnStyle}>全部清除</button>
@@ -290,11 +290,11 @@ export function EntityResolutionTab() {
             </>
           ) : (
             <div style={emptyStateStyle}>
-              <ScanSearch size={36} color="rgba(242,182,109,0.15)" />
-              <div style={{ color: "#8b949e", fontSize: 14, marginTop: 12, fontWeight: 500 }}>
+              <ScanSearch size={36} color="rgba(227, 115, 24,0.15)" />
+              <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 14, marginTop: 12, fontWeight: 500 }}>
                 暂无疑似重复项
               </div>
-              <div style={{ color: "#6a7f97", fontSize: 12, marginTop: 4, textAlign: "center", maxWidth: 280 }}>
+              <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 12, marginTop: 4, textAlign: "center", maxWidth: 280 }}>
                 设置相似度阈值并运行去重扫描，以检测潜在的重复实体。
               </div>
             </div>
@@ -304,18 +304,18 @@ export function EntityResolutionTab() {
         {/* Merge history sidebar */}
         {mergeHistory.length > 0 ? (
           <div style={historyPanelStyle}>
-            <div style={{ color: "#8b949e", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 10 }}>
+            <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 10 }}>
               合并历史
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
               {mergeHistory.map((entry) => (
                 <div key={entry.id} style={historyRowStyle}>
-                  <GitMerge size={11} color="#f2b66d" />
+                  <GitMerge size={11} color="#e37318" />
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ color: "#c6d4e3", fontSize: 11, fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    <div style={{ color: "rgba(0, 0, 0, 0.7)", fontSize: 11, fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                       {entry.summary}
                     </div>
-                    <div style={{ color: "#6a7f97", fontSize: 10 }}>
+                    <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 10 }}>
                       {entry.timestamp.toLocaleTimeString()}
                     </div>
                   </div>
@@ -336,13 +336,13 @@ const shellStyle: React.CSSProperties = {
   flexDirection: "column",
   width: "100%",
   height: "100%",
-  background: "#0d1117",
+  background: "#eeeeee",
   overflow: "hidden",
 };
 
 const headerStyle: React.CSSProperties = {
   padding: "20px 24px 16px",
-  borderBottom: "1px solid rgba(88,166,255,0.1)",
+  borderBottom: "1px solid rgba(0, 82, 217,0.1)",
   flexShrink: 0,
 };
 
@@ -350,8 +350,8 @@ const controlsCardStyle: React.CSSProperties = {
   margin: "16px 24px",
   padding: "16px 20px",
   borderRadius: 14,
-  background: "linear-gradient(135deg, rgba(13,17,23,0.75), rgba(22,27,34,0.6))",
-  border: "1px solid rgba(242,182,109,0.18)",
+  background: "linear-gradient(135deg, rgba(255, 255, 255,0.75), rgba(255, 255, 255,0.6))",
+  border: "1px solid rgba(227, 115, 24,0.18)",
   flexShrink: 0,
 };
 
@@ -361,9 +361,9 @@ const scanBtnStyle: React.CSSProperties = {
   gap: 7,
   padding: "10px 18px",
   borderRadius: 10,
-  background: "linear-gradient(135deg, rgba(242,182,109,0.22), rgba(242,182,109,0.1))",
-  border: "1px solid rgba(242,182,109,0.32)",
-  color: "#f2b66d",
+  background: "linear-gradient(135deg, rgba(227, 115, 24,0.22), rgba(227, 115, 24,0.1))",
+  border: "1px solid rgba(227, 115, 24,0.32)",
+  color: "#e37318",
   fontSize: 13,
   fontWeight: 700,
   cursor: "pointer",
@@ -373,17 +373,17 @@ const scanBtnStyle: React.CSSProperties = {
 const pairCardStyle: React.CSSProperties = {
   padding: "12px 14px",
   borderRadius: 12,
-  background: "linear-gradient(135deg, rgba(13,17,23,0.6), rgba(22,27,34,0.4))",
-  border: "1px solid rgba(255,255,255,0.07)",
+  background: "linear-gradient(135deg, rgba(255, 255, 255,0.6), rgba(255, 255, 255,0.4))",
+  border: "1px solid rgba(0, 0, 0, 0.07)",
 };
 
 const entityChipStyle: React.CSSProperties = {
   display: "inline-block",
   padding: "4px 10px",
   borderRadius: 8,
-  background: "rgba(255,255,255,0.04)",
-  border: "1px solid rgba(255,255,255,0.08)",
-  color: "#e6edf3",
+  background: "rgba(0, 0, 0, 0.04)",
+  border: "1px solid rgba(0, 0, 0, 0.08)",
+  color: "rgba(0, 0, 0, 0.9)",
   fontSize: 12,
   fontWeight: 600,
 };
@@ -402,7 +402,7 @@ const actionBtnStyle: React.CSSProperties = {
 const iconBtnStyle: React.CSSProperties = {
   background: "transparent",
   border: "none",
-  color: "#8b949e",
+  color: "rgba(0, 0, 0, 0.6)",
   cursor: "pointer",
   padding: 4,
   borderRadius: 6,
@@ -413,13 +413,13 @@ const iconBtnStyle: React.CSSProperties = {
 const diffCardStyle: React.CSSProperties = {
   padding: "10px 12px",
   borderRadius: 10,
-  background: "rgba(0,0,0,0.2)",
+  background: "rgba(0,0,0,0.04)",
   border: "1px solid transparent",
 };
 
 const historyPanelStyle: React.CSSProperties = {
   width: 240,
-  borderLeft: "1px solid rgba(255,255,255,0.06)",
+  borderLeft: "1px solid rgba(0, 0, 0, 0.06)",
   padding: "16px 16px",
   overflowY: "auto",
   flexShrink: 0,
@@ -430,7 +430,7 @@ const historyRowStyle: React.CSSProperties = {
   alignItems: "flex-start",
   gap: 7,
   padding: "8px 0",
-  borderBottom: "1px solid rgba(255,255,255,0.04)",
+  borderBottom: "1px solid rgba(0, 0, 0, 0.04)",
 };
 
 const emptyStateStyle: React.CSSProperties = {
@@ -446,7 +446,7 @@ const emptyStateStyle: React.CSSProperties = {
 const clearAllBtnStyle: React.CSSProperties = {
   background: "transparent",
   border: "none",
-  color: "#8b949e",
+  color: "rgba(0, 0, 0, 0.6)",
   fontSize: 12,
   cursor: "pointer",
   padding: "2px 6px",

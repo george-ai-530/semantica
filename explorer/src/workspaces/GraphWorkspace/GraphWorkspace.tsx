@@ -518,11 +518,11 @@ const HUD_CSS = `
   }
   .hud-scrollbar::-webkit-scrollbar { width: 6px; }
   .hud-scrollbar::-webkit-scrollbar-track { background: transparent; }
-  .hud-scrollbar::-webkit-scrollbar-thumb { background: rgba(215, 209, 196, 0.22); border-radius: 6px; }
+  .hud-scrollbar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.22); border-radius: 6px; }
   .node-panel-collapse {
     border: 1px solid ${GRAPH_THEME.ui.surface.panelBorder};
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.026);
+    background: rgba(0, 0, 0, 0.026);
     overflow: hidden;
   }
   .node-panel-collapse + .node-panel-collapse {
@@ -586,7 +586,7 @@ const HUD_CSS = `
     height: 10px;
     border-radius: 999px;
     background: linear-gradient(135deg, ${GRAPH_THEME.ui.timeline.playhead}, ${GRAPH_THEME.palette.accent.selected});
-    box-shadow: 0 0 18px rgba(98, 226, 205, 0.28);
+    box-shadow: 0 0 18px rgba(0, 82, 217, 0.28);
     animation: sem-loader-pulse 1.2s ease-in-out infinite;
   }
   .graph-loading-dot:nth-child(2) {
@@ -610,15 +610,15 @@ const HUD_CSS = `
     height: 10px;
     border-radius: 999px;
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.052);
+    background: rgba(0, 0, 0, 0.052);
     border: 1px solid ${GRAPH_THEME.ui.surface.panelBorder};
   }
   .graph-loading-bar > span {
     display: block;
     height: 100%;
     border-radius: 999px;
-    background: linear-gradient(90deg, rgba(98, 226, 205, 0.9), rgba(233, 196, 122, 0.9));
-    box-shadow: 0 0 28px rgba(98, 226, 205, 0.22);
+    background: linear-gradient(90deg, rgba(0, 82, 217, 0.9), rgba(227, 115, 24, 0.9));
+    box-shadow: 0 0 28px rgba(0, 82, 217, 0.22);
     transition: width 180ms ease;
   }
   .explore-shell {
@@ -704,7 +704,7 @@ const HUD_CSS = `
   }
   .explore-plugin-dock-tab[data-active="true"] {
     color: ${GRAPH_THEME.ui.control.activeText};
-    background: rgba(74, 181, 166, 0.18);
+    background: rgba(0, 82, 217, 0.18);
     border-color: ${GRAPH_THEME.ui.control.activeBorder};
   }
   .explore-toolbar {
@@ -736,10 +736,10 @@ const HUD_CSS = `
     border-radius: 16px;
     border: 1px solid ${GRAPH_THEME.ui.control.inputBorder};
     background:
-      linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.018)),
+      linear-gradient(135deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.018)),
       ${GRAPH_THEME.ui.control.inputBg};
     color: ${GRAPH_THEME.ui.text.muted};
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.045), 0 14px 30px rgba(0,0,0,0.16);
+    box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.045), 0 14px 30px rgba(0,0,0,0.16);
   }
   .explore-search-suggestions {
     position: absolute;
@@ -755,7 +755,7 @@ const HUD_CSS = `
     border-radius: 14px;
     border: 1px solid ${GRAPH_THEME.ui.control.inputBorder};
     background: ${GRAPH_THEME.ui.surface.cardStrong};
-    box-shadow: 0 18px 40px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.04);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.14), inset 0 1px 0 rgba(0, 0, 0, 0.04);
   }
   .explore-search-suggestions li {
     display: flex;
@@ -787,7 +787,7 @@ const HUD_CSS = `
   }
   .explore-search-command:focus-within {
     border-color: ${GRAPH_THEME.ui.control.activeBorder};
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 0 0 1px ${GRAPH_THEME.ui.control.focusRing}, 0 16px 32px rgba(0,0,0,0.18);
+    box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.06), 0 0 0 1px ${GRAPH_THEME.ui.control.focusRing}, 0 16px 32px rgba(0,0,0,0.18);
   }
   .explore-search-command input {
     width: 100%;
@@ -811,7 +811,7 @@ const HUD_CSS = `
     font-size: 12px;
     font-weight: 800;
     cursor: pointer;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+    box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.08);
   }
   .explore-search-command button:disabled {
     cursor: not-allowed;
@@ -824,8 +824,8 @@ const HUD_CSS = `
     padding: 4px;
     border-radius: 16px;
     border: 1px solid ${GRAPH_THEME.ui.control.defaultBorder};
-    background: rgba(255, 255, 255, 0.026);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.035);
+    background: rgba(0, 0, 0, 0.026);
+    box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.035);
   }
   .explore-mode-segment {
     min-width: 0;
@@ -846,8 +846,8 @@ const HUD_CSS = `
     min-height: 43px;
     padding: 4px;
     border-radius: 16px;
-    border: 1px solid rgba(211, 205, 190, 0.075);
-    background: rgba(255, 255, 255, 0.022);
+    border: 1px solid rgba(0, 0, 0, 0.075);
+    background: rgba(0, 0, 0, 0.022);
   }
   .explore-tool-cluster-label {
     padding: 0 4px 0 7px;
@@ -880,12 +880,12 @@ const HUD_CSS = `
     line-height: 1;
     cursor: pointer;
     white-space: nowrap;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.035);
+    box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.035);
     transition: background 140ms ease, border-color 140ms ease, color 140ms ease, transform 140ms ease;
   }
   .explore-tool-button:hover:not(:disabled) {
     background: ${GRAPH_THEME.ui.control.hoverBg};
-    border-color: rgba(211, 205, 190, 0.18);
+    border-color: rgba(0, 0, 0, 0.18);
     transform: translateY(-1px);
   }
   .explore-tool-button:disabled {
@@ -898,7 +898,7 @@ const HUD_CSS = `
     color: ${GRAPH_THEME.ui.control.activeText};
     background: ${GRAPH_THEME.ui.control.activeBg};
     border-color: ${GRAPH_THEME.ui.control.activeBorder};
-    box-shadow: 0 0 0 1px ${GRAPH_THEME.ui.control.focusRing}, inset 0 1px 0 rgba(255,255,255,0.06);
+    box-shadow: 0 0 0 1px ${GRAPH_THEME.ui.control.focusRing}, inset 0 1px 0 rgba(0, 0, 0, 0.06);
   }
   .explore-tool-button-primary {
     color: ${GRAPH_THEME.ui.control.primaryText};
@@ -951,7 +951,7 @@ const HUD_CSS = `
     height: 10px;
     flex-shrink: 0;
     border-radius: 50%;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.16);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.16);
   }
   .explore-search-results {
     display: flex;
@@ -3151,18 +3151,18 @@ export function GraphWorkspace({ externalFocusNodeId, externalFocusToken, onDirt
               </div>
 
               {egoModeEnabled && (
-                <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 12, color: "#a0b4cc" }}>
-                  <span style={{ fontWeight: 600, color: "#79c0ff" }}>自我深度：</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 12, color: "rgba(0, 0, 0, 0.55)" }}>
+                  <span style={{ fontWeight: 600, color: "#0052d9" }}>自我深度：</span>
                   <input
                     type="range"
                     min={1}
                     max={8}
                     value={egoMaxHops}
                     onChange={(e) => setEgoMaxHops(Number(e.target.value))}
-                    style={{ width: 90, accentColor: "#79c0ff" }}
+                    style={{ width: 90, accentColor: "#0052d9" }}
                     title={`自我深度：${egoMaxHops} 跳`}
                   />
-                  <span style={{ fontFamily: "monospace", color: "#e6f2ff" }}>{egoMaxHops} 跳</span>
+                  <span style={{ fontFamily: "monospace", color: "rgba(0, 0, 0, 0.85)" }}>{egoMaxHops} 跳</span>
                 </div>
               )}
 
@@ -3206,12 +3206,12 @@ export function GraphWorkspace({ externalFocusNodeId, externalFocusToken, onDirt
                 </div>
               ) : null}
 
-              {searchError ? <div style={{ color: "#ff7b72", fontSize: 12 }}>{searchError}</div> : null}
+              {searchError ? <div style={{ color: "#d54941", fontSize: 12 }}>{searchError}</div> : null}
 
               {searchResults.length ? (
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-                    <span style={{ color: "#8b949e", fontSize: 12 }}>
+                    <span style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 12 }}>
                       {searchResults.length} 条结果
                     </span>
                     <button
@@ -3230,9 +3230,9 @@ export function GraphWorkspace({ externalFocusNodeId, externalFocusToken, onDirt
                         <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
                           <div style={{ minWidth: 0 }}>
                             <div style={{ color: "#fff", fontWeight: 600 }}>{result.node.content || result.node.id}</div>
-                            <div style={{ color: "#8b949e", fontSize: 12 }}>{result.node.type}</div>
+                            <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 12 }}>{result.node.type}</div>
                           </div>
-                          <div style={{ color: "#58a6ff", fontSize: 12, whiteSpace: "nowrap" }}>
+                          <div style={{ color: "#0052d9", fontSize: 12, whiteSpace: "nowrap" }}>
                             {Math.round(result.score)}
                           </div>
                         </div>
@@ -3246,10 +3246,10 @@ export function GraphWorkspace({ externalFocusNodeId, externalFocusToken, onDirt
                 <div style={selectedEdgeCardStyle}>
                   <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "flex-start" }}>
                     <div style={{ minWidth: 0 }}>
-                      <div style={{ color: "rgba(127, 208, 255, 0.76)", fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                      <div style={{ color: "rgba(54, 110, 244, 0.76)", fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
                         关系
                       </div>
-                      <div style={{ color: "#f4f8ff", fontSize: 15, fontWeight: 700, marginTop: 6 }}>
+                      <div style={{ color: "rgba(0, 0, 0, 0.9)", fontSize: 15, fontWeight: 700, marginTop: 6 }}>
                         {selectedEdgeState.edgeType}
                       </div>
                     </div>
@@ -3265,7 +3265,7 @@ export function GraphWorkspace({ externalFocusNodeId, externalFocusToken, onDirt
                     <button style={selectedEdgeNodeChipStyle} onClick={() => focusNode(selectedEdgeState.sourceId)}>
                       {selectedEdgeState.sourceLabel}
                     </button>
-                    <span style={{ color: "#7fa7ce", fontSize: 12 }}>→</span>
+                    <span style={{ color: "rgba(0, 0, 0, 0.45)", fontSize: 12 }}>→</span>
                     <button style={selectedEdgeNodeChipStyle} onClick={() => focusNode(selectedEdgeState.targetId)}>
                       {selectedEdgeState.targetLabel}
                     </button>
@@ -3296,10 +3296,10 @@ export function GraphWorkspace({ externalFocusNodeId, externalFocusToken, onDirt
                     <div style={selectedEdgePropertyGridStyle}>
                       {Object.entries(selectedEdgeState.properties).slice(0, 4).map(([key, value]) => (
                         <div key={key} style={selectedEdgePropertyCardStyle}>
-                          <div style={{ color: "rgba(127, 208, 255, 0.68)", fontSize: 10, letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                          <div style={{ color: "rgba(54, 110, 244, 0.68)", fontSize: 10, letterSpacing: "0.06em", textTransform: "uppercase" }}>
                             {key}
                           </div>
-                          <div style={{ color: "#dce7f4", fontSize: 12, marginTop: 4, wordBreak: "break-word" }}>
+                          <div style={{ color: "rgba(0, 0, 0, 0.9)", fontSize: 12, marginTop: 4, wordBreak: "break-word" }}>
                             {typeof value === "object" ? JSON.stringify(value) : String(value)}
                           </div>
                         </div>
@@ -3432,7 +3432,7 @@ const actionButtonStyle: React.CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
-  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 10px 24px rgba(0,0,0,0.18)",
+  boxShadow: "inset 0 1px 0 rgba(0, 0, 0, 0.07), 0 10px 24px rgba(0,0,0,0.18)",
 };
 
 const secondaryActionButtonStyle: React.CSSProperties = {
@@ -3446,7 +3446,7 @@ const secondaryActionButtonStyle: React.CSSProperties = {
 const predictionCardStyle: React.CSSProperties = {
   textAlign: "left",
   padding: 12,
-  background: "rgba(255, 255, 255, 0.035)",
+  background: "rgba(0, 0, 0, 0.035)",
   border: `1px solid ${GRAPH_THEME.ui.surface.panelBorder}`,
   borderRadius: 10,
   cursor: "pointer",
@@ -3457,10 +3457,10 @@ const selectedEdgeCardStyle: React.CSSProperties = {
   flexDirection: "column",
   gap: 12,
   padding: 14,
-  background: "linear-gradient(135deg, rgba(98, 226, 205, 0.1), rgba(233, 196, 122, 0.045))",
+  background: "linear-gradient(135deg, rgba(0, 82, 217, 0.1), rgba(227, 115, 24, 0.045))",
   border: `1px solid ${GRAPH_THEME.ui.surface.panelBorder}`,
   borderRadius: 14,
-  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.03)",
+  boxShadow: "inset 0 1px 0 rgba(0, 0, 0, 0.03)",
 };
 
 const selectedEdgeNodeChipStyle: React.CSSProperties = {
@@ -3476,10 +3476,10 @@ const distanceStatusStripStyle: React.CSSProperties = {
   gap: 12,
   flexWrap: "wrap",
   border: `1px solid ${GRAPH_THEME.ui.control.activeBorder}`,
-  background: "linear-gradient(135deg, rgba(98, 226, 205, 0.09), rgba(227, 179, 65, 0.045))",
+  background: "linear-gradient(135deg, rgba(0, 82, 217, 0.09), rgba(227, 115, 24, 0.045))",
   borderRadius: 16,
   padding: "9px 12px",
-  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.045)",
+  boxShadow: "inset 0 1px 0 rgba(0, 0, 0, 0.045)",
 };
 
 const distanceStatusTitleStyle: React.CSSProperties = {
@@ -3498,7 +3498,7 @@ const distanceModeBadgeStyle: React.CSSProperties = {
   borderRadius: 999,
   border: `1px solid ${GRAPH_THEME.ui.surface.panelBorder}`,
   color: GRAPH_THEME.palette.accent.path,
-  background: "rgba(215, 144, 86, 0.1)",
+  background: "rgba(227, 115, 24, 0.1)",
   fontSize: 10,
 };
 
@@ -3541,14 +3541,14 @@ const selectedEdgePropertyGridStyle: React.CSSProperties = {
 const selectedEdgePropertyCardStyle: React.CSSProperties = {
   borderRadius: 10,
   padding: 10,
-  background: "rgba(255, 255, 255, 0.03)",
+  background: "rgba(0, 0, 0, 0.03)",
   border: `1px solid ${GRAPH_THEME.ui.surface.panelBorder}`,
 };
 
 const pluginDockContentStyle: React.CSSProperties = {
   borderRadius: 16,
   border: `1px solid ${GRAPH_THEME.ui.surface.panelBorder}`,
-  background: "rgba(255, 255, 255, 0.02)",
+  background: "rgba(0, 0, 0, 0.02)",
   padding: 14,
 };
 

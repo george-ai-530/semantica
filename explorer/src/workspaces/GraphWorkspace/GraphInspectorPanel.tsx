@@ -61,14 +61,14 @@ function sourceAttribution(properties: Record<string, unknown>) {
 /* ─── Path Distance Intelligence Panel ──────────────────────────── */
 
 const BAND_COLORS: Record<string, string> = {
-  direct: "#3fb950",
-  near: "#79c0ff",
-  "mid-range": "#e3b341",
-  distant: "#ff7b72",
+  direct: "#2da44e",
+  near: "#0052d9",
+  "mid-range": "#9a6700",
+  distant: "#d54941",
 };
 
 function PathDistanceIntelPanel({ result }: { result: PathResponse }) {
-  const bandColor = BAND_COLORS[result.distance_band] ?? "#8b949e";
+  const bandColor = BAND_COLORS[result.distance_band] ?? "rgba(0, 0, 0, 0.6)";
   const hasMetrics =
     result.confidence_decay != null ||
     result.semantic_similarity != null ||
@@ -105,7 +105,7 @@ function PathDistanceIntelPanel({ result }: { result: PathResponse }) {
             <div
               style={{
                 ...metricValueStyle,
-                color: result.confidence_decay > 0.6 ? "#3fb950" : result.confidence_decay > 0.3 ? "#e3b341" : "#ff7b72",
+                color: result.confidence_decay > 0.6 ? "#2da44e" : result.confidence_decay > 0.3 ? "#9a6700" : "#d54941",
               }}
             >
               {(result.confidence_decay * 100).toFixed(1)}%
@@ -116,7 +116,7 @@ function PathDistanceIntelPanel({ result }: { result: PathResponse }) {
                   ...metricBarFillStyle,
                   width: `${result.confidence_decay * 100}%`,
                   background:
-                    result.confidence_decay > 0.6 ? "#3fb950" : result.confidence_decay > 0.3 ? "#e3b341" : "#ff7b72",
+                    result.confidence_decay > 0.6 ? "#2da44e" : result.confidence_decay > 0.3 ? "#9a6700" : "#d54941",
                 }}
               />
             </div>
@@ -125,18 +125,18 @@ function PathDistanceIntelPanel({ result }: { result: PathResponse }) {
         {result.semantic_similarity != null && (
           <div style={metricCardStyle}>
             <div style={metricLabelStyle}>语义相似度</div>
-            <div style={{ ...metricValueStyle, color: "#79c0ff" }}>
+            <div style={{ ...metricValueStyle, color: "#0052d9" }}>
               {(result.semantic_similarity * 100).toFixed(1)}%
             </div>
             <div style={metricBarTrackStyle}>
-              <div style={{ ...metricBarFillStyle, width: `${result.semantic_similarity * 100}%`, background: "#79c0ff" }} />
+              <div style={{ ...metricBarFillStyle, width: `${result.semantic_similarity * 100}%`, background: "#0052d9" }} />
             </div>
           </div>
         )}
         {result.path_coherence_score != null && (
           <div style={metricCardStyle}>
             <div style={metricLabelStyle}>路径一致性</div>
-            <div style={{ ...metricValueStyle, color: "#a5d6a7" }}>
+            <div style={{ ...metricValueStyle, color: "#1f7a4d" }}>
               {(result.path_coherence_score * 100).toFixed(1)}%
             </div>
           </div>
@@ -147,7 +147,7 @@ function PathDistanceIntelPanel({ result }: { result: PathResponse }) {
             <div
               style={{
                 ...metricValueStyle,
-                color: "#e3b341",
+                color: "#9a6700",
                 fontSize: 11,
                 overflow: "hidden",
                 textOverflow: "ellipsis",
@@ -166,10 +166,10 @@ function PathDistanceIntelPanel({ result }: { result: PathResponse }) {
         <div
           style={{
             padding: "8px 10px",
-            background: "rgba(88,166,255,0.06)",
+            background: "rgba(0, 82, 217,0.06)",
             borderRadius: 8,
-            border: "1px solid rgba(88,166,255,0.14)",
-            color: "#a0b4cc",
+            border: "1px solid rgba(0, 82, 217,0.14)",
+            color: "rgba(0, 0, 0, 0.55)",
             fontSize: 12,
             lineHeight: 1.5,
           }}
@@ -252,7 +252,7 @@ function PathFlowViz({
                   ...pathNodeChipStyle,
                   cursor: onFocusNode ? "pointer" : "default",
                   ...(nodeId === bottleneckNodeId
-                    ? { border: "1px solid rgba(227,179,65,0.5)", background: "rgba(227,179,65,0.12)" }
+                    ? { border: "1px solid rgba(227, 115, 24,0.5)", background: "rgba(227, 115, 24,0.12)" }
                     : {}),
                 }}
               >
@@ -265,11 +265,11 @@ function PathFlowViz({
               {/* Edge connector */}
               {edgeLabel !== null ? (
                 <div style={pathEdgeConnectorStyle}>
-                  <div style={{ width: 16, height: 1, background: "rgba(88,166,255,0.3)" }} />
+                  <div style={{ width: 16, height: 1, background: "rgba(0, 82, 217,0.3)" }} />
                   <span style={pathEdgeLabelStyle}>{edgeLabel}</span>
                   <div style={{ display: "flex", alignItems: "center" }}>
-                    <div style={{ width: 12, height: 1, background: "rgba(88,166,255,0.3)" }} />
-                    <div style={{ width: 0, height: 0, borderTop: "4px solid transparent", borderBottom: "4px solid transparent", borderLeft: "5px solid rgba(88,166,255,0.4)" }} />
+                    <div style={{ width: 12, height: 1, background: "rgba(0, 82, 217,0.3)" }} />
+                    <div style={{ width: 0, height: 0, borderTop: "4px solid transparent", borderBottom: "4px solid transparent", borderLeft: "5px solid rgba(0, 82, 217,0.4)" }} />
                   </div>
                 </div>
               ) : null}
@@ -280,10 +280,10 @@ function PathFlowViz({
 
       {/* Weight badge */}
       <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 8 }}>
-        <span style={{ color: "#6a7f97", fontSize: 11 }}>总权重：</span>
-        <span style={{ color: "#79c0ff", fontSize: 12, fontWeight: 700 }}>{totalWeight.toFixed(3)}</span>
-        <span style={{ color: "#6a7f97", fontSize: 11 }}>·</span>
-        <span style={{ color: "#6a7f97", fontSize: 11 }}>{path.length} 跳</span>
+        <span style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 11 }}>总权重：</span>
+        <span style={{ color: "#0052d9", fontSize: 12, fontWeight: 700 }}>{totalWeight.toFixed(3)}</span>
+        <span style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 11 }}>·</span>
+        <span style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 11 }}>{path.length} 跳</span>
       </div>
     </div>
   );
@@ -314,7 +314,7 @@ export function GraphInspectorPanel({
   if (!nodeId) {
     return (
       <div style={{ padding: 32, textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: 12, marginTop: 32 }}>
-        <div style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(98, 226, 205, 0.07)", border: `1px solid ${GRAPH_THEME.ui.surface.panelBorder}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(0, 82, 217, 0.07)", border: `1px solid ${GRAPH_THEME.ui.surface.panelBorder}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
           <div style={{ width: 14, height: 14, borderRadius: "50%", background: GRAPH_THEME.ui.timeline.playheadSoft }} />
         </div>
         <p style={{ color: GRAPH_THEME.ui.text.muted, fontSize: 14, margin: 0, lineHeight: 1.6 }}>
@@ -335,7 +335,7 @@ export function GraphInspectorPanel({
       <aside style={{ padding: 24, display: "flex", flexDirection: "column", gap: 16 }}>
         <div style={{ borderBottom: `1px solid ${GRAPH_THEME.ui.surface.divider}`, paddingBottom: 16 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-            <span style={{ background: GRAPH_THEME.ui.timeline.playhead, boxShadow: "0 0 10px rgba(98, 226, 205, 0.34)", width: 8, height: 8, borderRadius: "50%" }} />
+            <span style={{ background: GRAPH_THEME.ui.timeline.playhead, boxShadow: "0 0 10px rgba(0, 82, 217, 0.34)", width: 8, height: 8, borderRadius: "50%" }} />
             <span style={{ color: GRAPH_THEME.ui.timeline.playhead, fontSize: 12, fontWeight: 700 }}>选中项</span>
           </div>
           <h3 style={{ margin: 0, color: GRAPH_THEME.ui.text.strong, fontSize: 20, fontWeight: 700, wordBreak: "break-word" }}>
@@ -366,7 +366,7 @@ export function GraphInspectorPanel({
   };
   const properties = attributes?.properties ?? {};
   const attribution = sourceAttribution(properties);
-  const accentColor = attributes?.color || "#58a6ff";
+  const accentColor = attributes?.color || "#0052d9";
   const propertyEntries = Object.entries(properties).filter(
     ([key]) =>
       !["x","y","valid_from","valid_until","content","source","source_url","pmid","pmids","evidence","provenance","confidence"].includes(key),
@@ -414,7 +414,7 @@ export function GraphInspectorPanel({
 
       {/* Temporal bounds */}
       {(attributes?.valid_from || attributes?.valid_until) ? (
-        <div style={{ padding: "10px 12px", background: "rgba(233, 196, 122, 0.075)", border: "1px solid rgba(233, 196, 122, 0.22)", borderRadius: 8, fontSize: 12, color: GRAPH_THEME.palette.accent.selected, fontFamily: "monospace" }}>
+        <div style={{ padding: "10px 12px", background: "rgba(227, 115, 24, 0.075)", border: "1px solid rgba(227, 115, 24, 0.22)", borderRadius: 8, fontSize: 12, color: GRAPH_THEME.palette.accent.selected, fontFamily: "monospace" }}>
           {attributes?.valid_from ? <div>起：{attributes.valid_from}</div> : null}
           {attributes?.valid_until ? <div>止：{attributes.valid_until}</div> : null}
         </div>
@@ -528,7 +528,7 @@ export function GraphInspectorPanel({
               ))}
             </div>
           ) : isRunningPredictions ? (
-            <div style={{ display: "flex", alignItems: "center", gap: 8, padding: 8, color: "#8b949e", fontSize: 12 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, padding: 8, color: "rgba(0, 0, 0, 0.6)", fontSize: 12 }}>
               <Loader2 size={13} className="animate-spin" />
               <span>正在计算候选链接…</span>
             </div>
@@ -593,13 +593,13 @@ const inputStyle: CSSProperties = {
   borderRadius: 12,
   padding: "11px 13px",
   fontSize: 13,
-  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.035)",
+  boxShadow: "inset 0 1px 0 rgba(0, 0, 0, 0.035)",
 };
 
 const groupedSelectionNoticeStyle: CSSProperties = {
   marginTop: 12,
   padding: "10px 12px",
-  background: "rgba(98, 226, 205, 0.07)",
+  background: "rgba(0, 82, 217, 0.07)",
   border: `1px solid ${GRAPH_THEME.ui.control.activeBorder}`,
   borderRadius: 12,
 };
@@ -616,7 +616,7 @@ const actionButtonStyle: CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
-  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 10px 24px rgba(0,0,0,0.18)",
+  boxShadow: "inset 0 1px 0 rgba(0, 0, 0, 0.07), 0 10px 24px rgba(0,0,0,0.18)",
 };
 
 const secondaryActionButtonStyle: CSSProperties = {
@@ -630,7 +630,7 @@ const secondaryActionButtonStyle: CSSProperties = {
 const predictionCardStyle: CSSProperties = {
   textAlign: "left",
   padding: "10px 12px",
-  background: "rgba(255, 255, 255, 0.035)",
+  background: "rgba(0, 0, 0, 0.035)",
   border: `1px solid ${GRAPH_THEME.ui.surface.panelBorder}`,
   borderRadius: 10,
   cursor: "pointer",
@@ -638,7 +638,7 @@ const predictionCardStyle: CSSProperties = {
 };
 
 const propertyCardStyle: CSSProperties = {
-  background: "rgba(255, 255, 255, 0.028)",
+  background: "rgba(0, 0, 0, 0.028)",
   padding: "10px 12px",
   borderRadius: 10,
   border: `1px solid ${GRAPH_THEME.ui.surface.panelBorder}`,
@@ -651,7 +651,7 @@ const emptyTextStyle: CSSProperties = {
 };
 
 const subtleChipStyle: CSSProperties = {
-  background: "rgba(255, 255, 255, 0.04)",
+  background: "rgba(0, 0, 0, 0.04)",
   color: GRAPH_THEME.ui.text.body,
   padding: "4px 8px",
   borderRadius: 999,
@@ -691,7 +691,7 @@ const pathNodeChipStyle: CSSProperties = {
   gap: 6,
   padding: "5px 10px",
   borderRadius: 999,
-  background: "rgba(98, 226, 205, 0.08)",
+  background: "rgba(0, 82, 217, 0.08)",
   border: `1px solid ${GRAPH_THEME.ui.control.activeBorder}`,
   color: GRAPH_THEME.ui.text.strong,
   fontSize: 12,
@@ -733,17 +733,17 @@ const pathEdgeLabelStyle: CSSProperties = {
 };
 
 const metricCardStyle: CSSProperties = {
-  background: "rgba(0,0,0,0.18)",
+  background: "rgba(0,0,0,0.04)",
   borderRadius: 8,
   padding: "8px 10px",
-  border: "1px solid rgba(255,255,255,0.05)",
+  border: "1px solid rgba(0, 0, 0, 0.05)",
   display: "flex",
   flexDirection: "column",
   gap: 3,
 };
 
 const metricLabelStyle: CSSProperties = {
-  color: "rgba(88,166,255,0.65)",
+  color: "rgba(0, 82, 217,0.65)",
   fontSize: 10,
   fontWeight: 700,
   letterSpacing: "0.06em",
@@ -753,13 +753,13 @@ const metricLabelStyle: CSSProperties = {
 const metricValueStyle: CSSProperties = {
   fontSize: 14,
   fontWeight: 700,
-  color: "#e6edf3",
+  color: "rgba(0, 0, 0, 0.9)",
 };
 
 const metricBarTrackStyle: CSSProperties = {
   height: 3,
   borderRadius: 999,
-  background: "rgba(255,255,255,0.07)",
+  background: "rgba(0, 0, 0, 0.07)",
   overflow: "hidden",
   marginTop: 4,
 };

@@ -58,51 +58,51 @@ const handleStyle: React.CSSProperties = {
   width: 8,
   height: 8,
   border: "1px solid rgba(235, 243, 255, 0.8)",
-  background: "#4aa3ff",
+  background: "#0052d9",
 };
 
 const ontologyFlowThemeCss = `
   .ontology-editor-flow .react-flow__controls {
     overflow: hidden;
-    border: 1px solid rgba(127, 208, 255, 0.2);
+    border: 1px solid rgba(54, 110, 244, 0.2);
     border-radius: 9px;
-    background: rgba(6, 13, 26, 0.96);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.38);
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
   }
 
   .ontology-editor-flow .react-flow__controls-button {
     width: 30px;
     height: 30px;
     background: transparent;
-    border-bottom-color: rgba(127, 208, 255, 0.14);
-    color: #8fa8c6;
+    border-bottom-color: rgba(54, 110, 244, 0.14);
+    color: rgba(0, 0, 0, 0.6);
     transition: color 140ms ease, background 140ms ease;
   }
 
   .ontology-editor-flow .react-flow__controls-button:hover {
-    background: rgba(74, 163, 255, 0.14);
-    color: #ebf3ff;
+    background: rgba(0, 82, 217, 0.14);
+    color: rgba(0, 0, 0, 0.9);
   }
 
   .ontology-editor-flow .react-flow__controls-button:focus-visible {
     position: relative;
     z-index: 1;
-    outline: 2px solid #7fd0ff;
+    outline: 2px solid #366ef4;
     outline-offset: -2px;
   }
 
   .ontology-editor-flow .react-flow__controls-button:disabled {
-    background: rgba(3, 9, 18, 0.32);
-    color: #40566f;
+    background: rgba(255, 255, 255, 0.32);
+    color: rgba(0, 0, 0, 0.4);
   }
 `;
 
 const classNodeStyle: React.CSSProperties = {
   padding: "12px 16px",
   borderRadius: "8px",
-  background: "linear-gradient(135deg, rgba(74, 163, 255, 0.15), rgba(74, 163, 255, 0.05))",
-  border: "1px solid rgba(127, 208, 255, 0.3)",
-  color: "#ebf3ff",
+  background: "linear-gradient(135deg, rgba(0, 82, 217, 0.15), rgba(0, 82, 217, 0.05))",
+  border: "1px solid rgba(54, 110, 244, 0.3)",
+  color: "rgba(0, 0, 0, 0.9)",
   fontSize: "13px",
   fontWeight: "600",
   minWidth: "140px",
@@ -118,7 +118,7 @@ const classNodeHeader: React.CSSProperties = {
 
 const classNodeSub: React.CSSProperties = {
   fontSize: "11px",
-  color: "#8fa8c6",
+  color: "rgba(0, 0, 0, 0.6)",
   fontWeight: "500",
 };
 
@@ -215,9 +215,9 @@ function buildEditorElements(apiNodes: OntologyGraphNode[], apiEdges: OntologyGr
     label: edge.type,
     type: "default",
     markerEnd: { type: MarkerType.ArrowClosed },
-    style: { stroke: "rgba(127, 208, 255, 0.72)", strokeWidth: 1.5 },
-    labelStyle: { fill: "#c8dcf5", fontSize: 11, fontWeight: 600 },
-    labelBgStyle: { fill: "#07111f", fillOpacity: 0.9 },
+    style: { stroke: "rgba(54, 110, 244, 0.72)", strokeWidth: 1.5 },
+    labelStyle: { fill: "rgba(0, 0, 0, 0.75)", fontSize: 11, fontWeight: 600 },
+    labelBgStyle: { fill: "#eeeeee", fillOpacity: 0.9 },
   }));
   return { nodes, edges };
 }
@@ -491,8 +491,8 @@ export function OntologyEditor() {
     display: "flex",
     gap: "8px",
     padding: "12px 16px",
-    background: "rgba(3, 9, 18, 0.92)",
-    borderBottom: "1px solid rgba(140, 192, 255, 0.12)",
+    background: "rgba(255, 255, 255, 0.92)",
+    borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
     flexWrap: "wrap",
   };
 
@@ -502,9 +502,9 @@ export function OntologyEditor() {
     gap: "6px",
     padding: "8px 12px",
     borderRadius: "8px",
-    border: "1px solid rgba(127, 208, 255, 0.18)",
-    background: "rgba(74, 163, 255, 0.08)",
-    color: "#ebf3ff",
+    border: "1px solid rgba(54, 110, 244, 0.18)",
+    background: "rgba(0, 82, 217, 0.08)",
+    color: "rgba(0, 0, 0, 0.9)",
     fontSize: "12px",
     fontWeight: "600",
     cursor: "pointer",
@@ -514,21 +514,21 @@ export function OntologyEditor() {
   const selectStyle: React.CSSProperties = {
     padding: "8px 12px",
     borderRadius: "8px",
-    border: "1px solid rgba(127, 208, 255, 0.18)",
-    background: "rgba(3, 9, 18, 0.88)",
-    color: "#ebf3ff",
+    border: "1px solid rgba(54, 110, 244, 0.18)",
+    background: "rgba(255, 255, 255, 0.88)",
+    color: "rgba(0, 0, 0, 0.9)",
     fontSize: "12px",
     minWidth: "260px",
   };
 
   const contextMenuStyle: React.CSSProperties = {
     position: "fixed",
-    background: "rgba(9, 19, 34, 0.95)",
-    border: "1px solid rgba(127, 208, 255, 0.3)",
+    background: "rgba(255, 255, 255, 0.95)",
+    border: "1px solid rgba(54, 110, 244, 0.3)",
     borderRadius: "8px",
     padding: "8px 0",
     minWidth: "180px",
-    boxShadow: "0 8px 24px rgba(0, 0, 0, 0.4)",
+    boxShadow: "0 8px 24px rgba(0, 0, 0, 0.14)",
     zIndex: 1000,
   };
 
@@ -537,7 +537,7 @@ export function OntologyEditor() {
     display: "flex",
     alignItems: "center",
     gap: "10px",
-    color: "#ebf3ff",
+    color: "rgba(0, 0, 0, 0.9)",
     fontSize: "13px",
     cursor: "pointer",
     transition: "160ms ease",
@@ -548,15 +548,15 @@ export function OntologyEditor() {
     width: "320px",
     minWidth: "320px",
     boxSizing: "border-box",
-    background: "rgba(9, 19, 34, 0.95)",
-    borderLeft: "1px solid rgba(140, 192, 255, 0.12)",
+    background: "rgba(255, 255, 255, 0.95)",
+    borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
     padding: "20px",
     overflow: "auto",
     backdropFilter: "blur(18px)",
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%", background: "#07111f" }}>
+    <div style={{ display: "flex", flexDirection: "column", height: "100%", background: "#eeeeee" }}>
       <style>{ontologyFlowThemeCss}</style>
       <div style={toolbarStyle}>
         <select
@@ -624,9 +624,9 @@ export function OntologyEditor() {
             onEdgeContextMenu={handleEdgeContextMenu}
             nodeTypes={nodeTypes}
             fitView
-            style={{ background: "#07111f" }}
+            style={{ background: "#eeeeee" }}
           >
-            <Background color="#1a2d3d" gap={20} />
+            <Background color="#e0e0e0" gap={20} />
             <Controls />
             <MiniMap {...ONTOLOGY_MINIMAP_THEME} />
           </ReactFlow>
@@ -635,10 +635,10 @@ export function OntologyEditor() {
             <div style={canvasMessageStyle}>正在加载本体结构…</div>
           )}
           {!isLoadingGraph && graphError && (
-            <div style={{ ...canvasMessageStyle, color: "#ff9a8d" }}>{graphError}</div>
+            <div style={{ ...canvasMessageStyle, color: "#d54941" }}>{graphError}</div>
           )}
           {!isLoadingGraph && !graphError && unownedEntity && (
-            <div style={{ ...canvasMessageStyle, color: "#f2b66d" }}>
+            <div style={{ ...canvasMessageStyle, color: "#e37318" }}>
               没有已注册的本体拥有 {unownedEntity}。请在上方选择一个本体开始编辑。
             </div>
           )}
@@ -662,7 +662,7 @@ export function OntologyEditor() {
                   </div>
                 </>
               ) : (
-                <div style={{ ...contextItemStyle, cursor: "default", color: "#8fa8c6" }}>
+                <div style={{ ...contextItemStyle, cursor: "default", color: "rgba(0, 0, 0, 0.6)" }}>
                   该术语为只读
                 </div>
               )}
@@ -672,7 +672,7 @@ export function OntologyEditor() {
 
         {selectedElement && (
           <div style={detailPanelStyle}>
-            <h3 style={{ margin: "0 0 16px", color: "#ebf3ff", fontSize: "16px" }}>
+            <h3 style={{ margin: "0 0 16px", color: "rgba(0, 0, 0, 0.9)", fontSize: "16px" }}>
               {"source" in selectedElement
                 ? "关系详情"
                 : selectedElement.data.entityType === "property"
@@ -684,17 +684,17 @@ export function OntologyEditor() {
                       : "类详情"}
             </h3>
             <div style={{ marginBottom: "12px" }}>
-              <label style={{ display: "block", color: "#8fa8c6", fontSize: "12px", marginBottom: "4px" }}>
+              <label style={{ display: "block", color: "rgba(0, 0, 0, 0.6)", fontSize: "12px", marginBottom: "4px" }}>
                 ID
               </label>
-              <div style={{ color: "#ebf3ff", fontSize: "13px", wordBreak: "break-all" }}>
+              <div style={{ color: "rgba(0, 0, 0, 0.9)", fontSize: "13px", wordBreak: "break-all" }}>
                 {selectedElement.id}
               </div>
             </div>
             {!("source" in selectedElement) && (
               <>
                 <div style={{ marginBottom: "12px" }}>
-                  <label style={{ display: "block", color: "#8fa8c6", fontSize: "12px", marginBottom: "4px" }}>
+                  <label style={{ display: "block", color: "rgba(0, 0, 0, 0.6)", fontSize: "12px", marginBottom: "4px" }}>
                     标签
                   </label>
                   <input
@@ -731,18 +731,18 @@ export function OntologyEditor() {
                       width: "100%",
                       padding: "8px",
                       borderRadius: "6px",
-                      border: "1px solid rgba(127, 208, 255, 0.2)",
-                      background: "rgba(3, 9, 18, 0.8)",
-                      color: "#ebf3ff",
+                      border: "1px solid rgba(54, 110, 244, 0.2)",
+                      background: "rgba(255, 255, 255, 0.8)",
+                      color: "rgba(0, 0, 0, 0.9)",
                       fontSize: "13px",
                     }}
                   />
                 </div>
                 <div style={{ marginBottom: "12px" }}>
-                  <label style={{ display: "block", color: "#8fa8c6", fontSize: "12px", marginBottom: "4px" }}>
+                  <label style={{ display: "block", color: "rgba(0, 0, 0, 0.6)", fontSize: "12px", marginBottom: "4px" }}>
                     类型
                   </label>
-                  <div style={{ color: "#ebf3ff", fontSize: "13px" }}>
+                  <div style={{ color: "rgba(0, 0, 0, 0.9)", fontSize: "13px" }}>
                     {selectedElement.data.type || "owl:Class"}
                   </div>
                 </div>
@@ -762,9 +762,9 @@ const canvasMessageStyle: React.CSSProperties = {
   transform: "translate(-50%, -50%)",
   padding: "10px 14px",
   borderRadius: "8px",
-  border: "1px solid rgba(127, 208, 255, 0.18)",
-  background: "rgba(3, 9, 18, 0.9)",
-  color: "#8fa8c6",
+  border: "1px solid rgba(54, 110, 244, 0.18)",
+  background: "rgba(255, 255, 255, 0.9)",
+  color: "rgba(0, 0, 0, 0.6)",
   fontSize: "13px",
   pointerEvents: "none",
 };

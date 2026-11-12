@@ -37,21 +37,21 @@ interface OntologyEntry {
 type RightPanel = "none" | "search" | "skos";
 
 const STATUS_COLORS: Record<string, string> = {
-  published: "#4cc38a",
-  draft: "#f2b66d",
-  external: "#58a6ff",
+  published: "#2ba471",
+  draft: "#e37318",
+  external: "#0052d9",
 };
 
 const FORMAT_COLORS: Record<string, string> = {
-  turtle: "#9ee8d7",
-  xml: "#ff9daf",
-  "json-ld": "#f2b66d",
-  nt: "#d2a8ff",
-  unknown: "#6a7f97",
+  turtle: "#1f7a4d",
+  xml: "#d54941",
+  "json-ld": "#e37318",
+  nt: "#5e3ab8",
+  unknown: "rgba(0, 0, 0, 0.6)",
 };
 
 function StatusBadge({ status }: { status: string }) {
-  const color = STATUS_COLORS[status] || "#6a7f97";
+  const color = STATUS_COLORS[status] || "rgba(0, 0, 0, 0.6)";
   return (
     <span
       style={{
@@ -93,10 +93,10 @@ function FormatBadge({ format }: { format: string }) {
 function Stat({ value, label }: { value: number; label: string }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 1 }}>
-      <span style={{ color: "#ebf3ff", fontSize: 14, fontWeight: 800 }}>
+      <span style={{ color: "rgba(0, 0, 0, 0.9)", fontSize: 14, fontWeight: 800 }}>
         {value.toLocaleString()}
       </span>
-      <span style={{ color: "#6a7f97", fontSize: 10 }}>{label}</span>
+      <span style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 10 }}>{label}</span>
     </div>
   );
 }
@@ -148,11 +148,11 @@ function RegistryRow({
       style={{
         ...rowStyle,
         background: selected
-          ? "rgba(74,163,255,0.1)"
-          : "rgba(255,255,255,0.02)",
+          ? "rgba(0, 82, 217,0.1)"
+          : "rgba(0, 0, 0, 0.02)",
         borderColor: selected
-          ? "rgba(127,208,255,0.26)"
-          : "rgba(127,208,255,0.1)",
+          ? "rgba(54, 110, 244,0.26)"
+          : "rgba(54, 110, 244,0.1)",
         opacity: entry.enabled ? 1 : 0.55,
       }}
     >
@@ -196,9 +196,9 @@ function RegistryRow({
           {busyToggle ? (
             <Loader2 size={13} style={{ animation: "spin 0.8s linear infinite" }} />
           ) : entry.enabled ? (
-            <ToggleRight size={15} color="#4cc38a" />
+            <ToggleRight size={15} color="#2ba471" />
           ) : (
-            <ToggleLeft size={15} color="#6a7f97" />
+            <ToggleLeft size={15} color="rgba(0, 0, 0, 0.6)" />
           )}
         </button>
 
@@ -212,7 +212,7 @@ function RegistryRow({
             {busyRefresh ? (
               <Loader2 size={13} style={{ animation: "spin 0.8s linear infinite" }} />
             ) : (
-              <RefreshCw size={13} color="#58a6ff" />
+              <RefreshCw size={13} color="#0052d9" />
             )}
           </button>
         )}
@@ -221,7 +221,7 @@ function RegistryRow({
           title="从注册表中移除"
           onClick={handleRemove}
           disabled={busyRemove}
-          style={{ ...actionBtnStyle, color: "#ff9daf" }}
+          style={{ ...actionBtnStyle, color: "#d54941" }}
         >
           {busyRemove ? (
             <Loader2 size={13} style={{ animation: "spin 0.8s linear infinite" }} />
@@ -379,7 +379,7 @@ export function OntologyManager() {
         {/* Toolbar */}
         <div style={toolbarStyle}>
           <div style={searchBoxStyle}>
-            <Search size={14} color="#6a7f97" />
+            <Search size={14} color="rgba(0, 0, 0, 0.6)" />
             <input
               value={searchQ}
               onChange={(e) => setSearchQ(e.target.value)}
@@ -430,13 +430,13 @@ export function OntologyManager() {
               ...actionMsgStyle,
               borderColor:
                 actionMsg.type === "ok"
-                  ? "rgba(76,195,138,0.22)"
-                  : "rgba(255,157,175,0.22)",
+                  ? "rgba(43, 164, 113,0.22)"
+                  : "rgba(213, 73, 65,0.22)",
               background:
                 actionMsg.type === "ok"
-                  ? "rgba(76,195,138,0.06)"
-                  : "rgba(255,157,175,0.06)",
-              color: actionMsg.type === "ok" ? "#4cc38a" : "#ff9daf",
+                  ? "rgba(43, 164, 113,0.06)"
+                  : "rgba(213, 73, 65,0.06)",
+              color: actionMsg.type === "ok" ? "#2ba471" : "#d54941",
             }}
           >
             {actionMsg.type === "ok" ? (
@@ -454,19 +454,19 @@ export function OntologyManager() {
           <div style={listPanelStyle}>
             {loading ? (
               <div style={centerStyle}>
-                <Loader2 size={22} color="#4aa3ff" style={{ animation: "spin 1s linear infinite" }} />
-                <span style={{ color: "#8fa8c6", fontSize: 13, marginTop: 10 }}>正在加载注册表…</span>
+                <Loader2 size={22} color="#0052d9" style={{ animation: "spin 1s linear infinite" }} />
+                <span style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 13, marginTop: 10 }}>正在加载注册表…</span>
               </div>
             ) : filteredEntries.length === 0 ? (
               <div style={emptyStateStyle}>
-                <BookMarked size={36} color="rgba(74,163,255,0.18)" />
-                <div style={{ color: "#8fa8c6", fontSize: 14, fontWeight: 600, marginTop: 14 }}>
+                <BookMarked size={36} color="rgba(0, 82, 217,0.18)" />
+                <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 14, fontWeight: 600, marginTop: 14 }}>
                   {searchQ ? "没有匹配您搜索的本体" : "尚未加载任何本体"}
                 </div>
-                <div style={{ color: "#6a7f97", fontSize: 12, marginTop: 6, textAlign: "center", maxWidth: 300, lineHeight: 1.6 }}>
+                <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 12, marginTop: 6, textAlign: "center", maxWidth: 300, lineHeight: 1.6 }}>
                   {searchQ
                     ? "请尝试其他搜索词或清除筛选。"
-                    : <>从 URL 导入、上传文件或创建新本体即可开始。点击上方的<strong style={{ color: "#7fd0ff" }}>加载本体</strong>。</>}
+                    : <>从 URL 导入、上传文件或创建新本体即可开始。点击上方的<strong style={{ color: "#366ef4" }}>加载本体</strong>。</>}
                 </div>
                 {!searchQ && (
                   <button onClick={() => setShowLoader(true)} style={{ ...primaryToolBtnStyle, marginTop: 18 }}>
@@ -527,13 +527,13 @@ export function OntologyManager() {
               </div>
               <div style={detailBodyStyle}>
                 <DetailSection label="URI">
-                  <span style={{ fontFamily: "monospace", fontSize: 11, wordBreak: "break-all", color: "#c6d4e3" }}>
+                  <span style={{ fontFamily: "monospace", fontSize: 11, wordBreak: "break-all", color: "rgba(0, 0, 0, 0.7)" }}>
                     {selectedEntry.uri}
                   </span>
                 </DetailSection>
                 {selectedEntry.description && (
                   <DetailSection label="描述">
-                    <span style={{ color: "#c6d4e3", fontSize: 13, lineHeight: 1.6 }}>
+                    <span style={{ color: "rgba(0, 0, 0, 0.7)", fontSize: 13, lineHeight: 1.6 }}>
                       {selectedEntry.description}
                     </span>
                   </DetailSection>
@@ -544,7 +544,7 @@ export function OntologyManager() {
                       href={selectedEntry.source_url}
                       target="_blank"
                       rel="noreferrer"
-                      style={{ color: "#58a6ff", fontSize: 11, wordBreak: "break-all" }}
+                      style={{ color: "#0052d9", fontSize: 11, wordBreak: "break-all" }}
                     >
                       {selectedEntry.source_url}
                     </a>
@@ -552,20 +552,20 @@ export function OntologyManager() {
                 )}
                 {selectedEntry.version && (
                   <DetailSection label="版本">
-                    <span style={{ color: "#c6d4e3", fontSize: 12 }}>{selectedEntry.version}</span>
+                    <span style={{ color: "rgba(0, 0, 0, 0.7)", fontSize: 12 }}>{selectedEntry.version}</span>
                   </DetailSection>
                 )}
                 {selectedEntry.loaded_at && (
                   <DetailSection label="加载时间">
-                    <span style={{ color: "#c6d4e3", fontSize: 12 }}>
+                    <span style={{ color: "rgba(0, 0, 0, 0.7)", fontSize: 12 }}>
                       {new Date(selectedEntry.loaded_at).toLocaleString()}
                     </span>
                   </DetailSection>
                 )}
                 <div style={statRowStyle}>
-                  <StatBlock value={selectedEntry.class_count} label="类" color="#d2a8ff" />
-                  <StatBlock value={selectedEntry.concept_count} label="概念" color="#9ee8d7" />
-                  <StatBlock value={selectedEntry.property_count} label="属性" color="#f2b66d" />
+                  <StatBlock value={selectedEntry.class_count} label="类" color="#5e3ab8" />
+                  <StatBlock value={selectedEntry.concept_count} label="概念" color="#1f7a4d" />
+                  <StatBlock value={selectedEntry.property_count} label="属性" color="#e37318" />
                 </div>
                 {selectedEntry.tags.length > 0 && (
                   <DetailSection label="标签">
@@ -605,8 +605,8 @@ export function OntologyManager() {
 
 function DetailSection({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: 10, paddingBottom: 2 }}>
-      <div style={{ color: "#6a7f97", fontSize: 10, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: "0.07em", marginBottom: 4 }}>
+    <div style={{ borderTop: "1px solid rgba(0, 0, 0, 0.05)", paddingTop: 10, paddingBottom: 2 }}>
+      <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 10, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: "0.07em", marginBottom: 4 }}>
         {label}
       </div>
       {children}
@@ -616,9 +616,9 @@ function DetailSection({ label, children }: { label: string; children: React.Rea
 
 function StatBlock({ value, label, color }: { value: number; label: string; color: string }) {
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 2, padding: "10px 6px", background: "rgba(255,255,255,0.02)", borderRadius: 8, border: "1px solid rgba(255,255,255,0.05)" }}>
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 2, padding: "10px 6px", background: "rgba(0, 0, 0, 0.02)", borderRadius: 8, border: "1px solid rgba(0, 0, 0, 0.05)" }}>
       <span style={{ color, fontSize: 18, fontWeight: 800 }}>{value.toLocaleString()}</span>
-      <span style={{ color: "#6a7f97", fontSize: 10 }}>{label}</span>
+      <span style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 10 }}>{label}</span>
     </div>
   );
 }
@@ -630,7 +630,7 @@ const shellStyle: React.CSSProperties = {
   flexDirection: "column",
   width: "100%",
   height: "100%",
-  background: "#0a1525",
+  background: "#ffffff",
   overflow: "hidden",
 };
 
@@ -639,8 +639,8 @@ const toolbarStyle: React.CSSProperties = {
   alignItems: "center",
   gap: 10,
   padding: "12px 18px",
-  borderBottom: "1px solid rgba(127,208,255,0.1)",
-  background: "rgba(5,12,22,0.72)",
+  borderBottom: "1px solid rgba(54, 110, 244,0.1)",
+  background: "rgba(255, 255, 255,0.72)",
   flexWrap: "wrap",
   flexShrink: 0,
 };
@@ -651,8 +651,8 @@ const searchBoxStyle: React.CSSProperties = {
   gap: 8,
   padding: "7px 12px",
   borderRadius: 10,
-  border: "1px solid rgba(127,208,255,0.14)",
-  background: "rgba(0,0,0,0.24)",
+  border: "1px solid rgba(54, 110, 244,0.14)",
+  background: "rgba(0,0,0,0.045)",
   flex: "0 0 280px",
 };
 
@@ -660,7 +660,7 @@ const searchInputStyle: React.CSSProperties = {
   background: "transparent",
   border: "none",
   outline: "none",
-  color: "#ebf3ff",
+  color: "rgba(0, 0, 0, 0.9)",
   fontSize: 12,
   width: "100%",
 };
@@ -677,14 +677,14 @@ const filterPillBase: React.CSSProperties = {
 
 const filterPillIdle: React.CSSProperties = {
   background: "transparent",
-  color: "#8fa8c6",
-  borderColor: "rgba(127,208,255,0.1)",
+  color: "rgba(0, 0, 0, 0.6)",
+  borderColor: "rgba(54, 110, 244,0.1)",
 };
 
 const filterPillActive: React.CSSProperties = {
-  background: "rgba(74,163,255,0.14)",
-  color: "#ebf3ff",
-  borderColor: "rgba(127,208,255,0.26)",
+  background: "rgba(0, 82, 217,0.14)",
+  color: "rgba(0, 0, 0, 0.9)",
+  borderColor: "rgba(54, 110, 244,0.26)",
 };
 
 const toolBtnStyle: React.CSSProperties = {
@@ -693,18 +693,18 @@ const toolBtnStyle: React.CSSProperties = {
   gap: 6,
   padding: "7px 12px",
   borderRadius: 8,
-  border: "1px solid rgba(127,208,255,0.16)",
-  background: "rgba(74,163,255,0.06)",
-  color: "#8fa8c6",
+  border: "1px solid rgba(54, 110, 244,0.16)",
+  background: "rgba(0, 82, 217,0.06)",
+  color: "rgba(0, 0, 0, 0.6)",
   fontSize: 12,
   fontWeight: 600,
   cursor: "pointer",
 };
 
 const toolBtnActive: React.CSSProperties = {
-  background: "rgba(74,163,255,0.16)",
-  color: "#ebf3ff",
-  borderColor: "rgba(127,208,255,0.28)",
+  background: "rgba(0, 82, 217,0.16)",
+  color: "rgba(0, 0, 0, 0.9)",
+  borderColor: "rgba(54, 110, 244,0.28)",
 };
 
 const primaryToolBtnStyle: React.CSSProperties = {
@@ -713,9 +713,9 @@ const primaryToolBtnStyle: React.CSSProperties = {
   gap: 7,
   padding: "7px 14px",
   borderRadius: 9,
-  border: "1px solid rgba(74,163,255,0.3)",
-  background: "linear-gradient(135deg, rgba(74,163,255,0.2), rgba(74,163,255,0.08))",
-  color: "#7fd0ff",
+  border: "1px solid rgba(0, 82, 217,0.3)",
+  background: "linear-gradient(135deg, rgba(0, 82, 217,0.2), rgba(0, 82, 217,0.08))",
+  color: "#366ef4",
   fontSize: 12,
   fontWeight: 700,
   cursor: "pointer",
@@ -742,7 +742,7 @@ const listPanelStyle: React.CSSProperties = {
   flex: 1,
   minWidth: 0,
   overflowY: "auto",
-  borderRight: "1px solid rgba(127,208,255,0.08)",
+  borderRight: "1px solid rgba(54, 110, 244,0.08)",
 };
 
 const listStyle: React.CSSProperties = {
@@ -757,7 +757,7 @@ const listHeaderStyle: React.CSSProperties = {
 };
 
 const listHeaderTextStyle: React.CSSProperties = {
-  color: "#6a7f97",
+  color: "rgba(0, 0, 0, 0.6)",
   fontSize: 11,
   fontWeight: 700,
 };
@@ -782,13 +782,13 @@ const rowMainStyle: React.CSSProperties = {
 };
 
 const rowNameStyle: React.CSSProperties = {
-  color: "#ebf3ff",
+  color: "rgba(0, 0, 0, 0.9)",
   fontSize: 14,
   fontWeight: 700,
 };
 
 const rowUriStyle: React.CSSProperties = {
-  color: "#6a7f97",
+  color: "rgba(0, 0, 0, 0.6)",
   fontSize: 11,
   fontFamily: "monospace",
   overflow: "hidden",
@@ -800,7 +800,7 @@ const sourceLinkStyle: React.CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
   gap: 4,
-  color: "#58a6ff",
+  color: "#0052d9",
   fontSize: 11,
   textDecoration: "none",
 };
@@ -825,7 +825,7 @@ const actionBtnStyle: React.CSSProperties = {
   borderRadius: 6,
   display: "grid",
   placeItems: "center",
-  color: "#8fa8c6",
+  color: "rgba(0, 0, 0, 0.6)",
 };
 
 const rightPanelStyle: React.CSSProperties = {
@@ -833,8 +833,8 @@ const rightPanelStyle: React.CSSProperties = {
   flexShrink: 0,
   display: "flex",
   flexDirection: "column",
-  borderLeft: "1px solid rgba(127,208,255,0.1)",
-  background: "rgba(5,12,22,0.6)",
+  borderLeft: "1px solid rgba(54, 110, 244,0.1)",
+  background: "rgba(255, 255, 255,0.6)",
   overflow: "hidden",
 };
 
@@ -843,12 +843,12 @@ const rightPanelHeaderStyle: React.CSSProperties = {
   alignItems: "center",
   justifyContent: "space-between",
   padding: "14px 16px",
-  borderBottom: "1px solid rgba(127,208,255,0.1)",
+  borderBottom: "1px solid rgba(54, 110, 244,0.1)",
   flexShrink: 0,
 };
 
 const rightPanelTitleStyle: React.CSSProperties = {
-  color: "#ebf3ff",
+  color: "rgba(0, 0, 0, 0.9)",
   fontSize: 13,
   fontWeight: 700,
   overflow: "hidden",
@@ -859,7 +859,7 @@ const rightPanelTitleStyle: React.CSSProperties = {
 const closePanelBtnStyle: React.CSSProperties = {
   background: "transparent",
   border: "none",
-  color: "#8fa8c6",
+  color: "rgba(0, 0, 0, 0.6)",
   cursor: "pointer",
   fontSize: 18,
   lineHeight: 1,
@@ -872,9 +872,9 @@ const browseBtnStyle: React.CSSProperties = {
   gap: 5,
   padding: "4px 10px",
   borderRadius: 7,
-  border: "1px solid rgba(127,208,255,0.18)",
-  background: "rgba(74,163,255,0.06)",
-  color: "#7fd0ff",
+  border: "1px solid rgba(54, 110, 244,0.18)",
+  background: "rgba(0, 82, 217,0.06)",
+  color: "#366ef4",
   fontSize: 11,
   fontWeight: 600,
   cursor: "pointer",
@@ -899,9 +899,9 @@ const statRowStyle: React.CSSProperties = {
 const tagChipStyle: React.CSSProperties = {
   padding: "3px 8px",
   borderRadius: 999,
-  background: "rgba(255,255,255,0.04)",
-  border: "1px solid rgba(255,255,255,0.08)",
-  color: "#8fa8c6",
+  background: "rgba(0, 0, 0, 0.04)",
+  border: "1px solid rgba(0, 0, 0, 0.08)",
+  color: "rgba(0, 0, 0, 0.6)",
   fontSize: 11,
 };
 
@@ -910,9 +910,9 @@ const disabledBadgeStyle: React.CSSProperties = {
   borderRadius: 999,
   fontSize: 10,
   fontWeight: 700,
-  background: "rgba(106,127,151,0.12)",
-  border: "1px solid rgba(106,127,151,0.2)",
-  color: "#6a7f97",
+  background: "rgba(0,0,0,0.04)",
+  border: "1px solid rgba(0, 0, 0,0.2)",
+  color: "rgba(0, 0, 0, 0.6)",
 };
 
 const centerStyle: React.CSSProperties = {

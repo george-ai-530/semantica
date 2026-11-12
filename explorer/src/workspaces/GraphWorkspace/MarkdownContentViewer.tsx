@@ -287,8 +287,8 @@ export function MarkdownContentViewer({
             <button type="button" onClick={() => void handleCopy()} style={copyBtnStyle} title="复制原始内容">
               {copied ? (
                 <>
-                  <Check size={12} color="#3fb950" style={{ marginRight: 4 }} aria-hidden="true" />
-                  <span style={{ color: "#3fb950", fontSize: 11 }}>已复制</span>
+                  <Check size={12} color="#2da44e" style={{ marginRight: 4 }} aria-hidden="true" />
+                  <span style={{ color: "#2da44e", fontSize: 11 }}>已复制</span>
                 </>
               ) : (
                 <>
@@ -460,7 +460,7 @@ const MARKDOWN_COMPONENTS: Components = {
       <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>{children}</table>
     </div>
   ),
-  thead: ({ children }) => <thead style={{ background: "rgba(255, 255, 255, 0.04)" }}>{children}</thead>,
+  thead: ({ children }) => <thead style={{ background: "rgba(0, 0, 0, 0.04)" }}>{children}</thead>,
   tbody: ({ children }) => <tbody>{children}</tbody>,
   tr: ({ children }) => <tr style={{ borderBottom: `1px solid ${GRAPH_THEME.ui.surface.panelBorder}` }}>{children}</tr>,
   th: ({ children }) => <th style={{ padding: "6px 8px", textAlign: "left", fontWeight: 700, color: GRAPH_THEME.ui.text.strong, borderRight: `1px solid ${GRAPH_THEME.ui.surface.panelBorder}` }}>{children}</th>,
@@ -483,7 +483,7 @@ const MARKDOWN_COMPONENTS: Components = {
 const viewerContainerStyle: CSSProperties = {
   display: "flex",
   flexDirection: "column",
-  background: "rgba(255, 255, 255, 0.025)",
+  background: "rgba(0, 0, 0, 0.025)",
   border: `1px solid ${GRAPH_THEME.ui.surface.panelBorder}`,
   borderRadius: 12,
   overflow: "hidden",
@@ -496,7 +496,7 @@ const viewerHeaderStyle: CSSProperties = {
   gap: 8,
   flexWrap: "wrap",
   padding: "6px 10px",
-  background: "rgba(0, 0, 0, 0.2)",
+  background: "rgba(0,0,0,0.04)",
   borderBottom: `1px solid ${GRAPH_THEME.ui.surface.panelBorder}`,
 };
 
@@ -526,7 +526,7 @@ const copyBtnStyle: CSSProperties = {
   padding: "3px 8px",
   borderRadius: 6,
   border: `1px solid ${GRAPH_THEME.ui.surface.panelBorder}`,
-  background: "rgba(255, 255, 255, 0.04)",
+  background: "rgba(0, 0, 0, 0.04)",
   color: GRAPH_THEME.ui.text.subtle,
   fontSize: 11,
   cursor: "pointer",
@@ -546,9 +546,9 @@ const errorStyle: CSSProperties = {
   justifyContent: "space-between",
   gap: 8,
   padding: "8px 12px",
-  color: "#ffb4ad",
-  background: "rgba(248, 81, 73, 0.1)",
-  borderBottom: "1px solid rgba(248, 81, 73, 0.25)",
+  color: "#d54941",
+  background: "rgba(213, 73, 65, 0.1)",
+  borderBottom: "1px solid rgba(213, 73, 65, 0.25)",
   fontSize: 12,
   lineHeight: 1.5,
 };
@@ -556,8 +556,8 @@ const errorStyle: CSSProperties = {
 const errorActionStyle: CSSProperties = {
   ...copyBtnStyle,
   flexShrink: 0,
-  color: "#ffb4ad",
-  border: "1px solid rgba(248, 81, 73, 0.32)",
+  color: "#d54941",
+  border: "1px solid rgba(213, 73, 65, 0.32)",
 };
 
 const viewerBodyStyle: CSSProperties = {
@@ -575,7 +575,7 @@ const editorStyle: CSSProperties = {
   padding: 10,
   borderRadius: 8,
   border: `1px solid ${GRAPH_THEME.ui.control.activeBorder}`,
-  background: "rgba(0, 0, 0, 0.3)",
+  background: "rgba(0,0,0,0.045)",
   color: GRAPH_THEME.ui.text.strong,
   fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
   fontSize: 12,
@@ -593,8 +593,8 @@ const sourcePreStyle: CSSProperties = {
   margin: 0,
   padding: 10,
   borderRadius: 8,
-  background: "rgba(0, 0, 0, 0.3)",
-  border: "1px solid rgba(255, 255, 255, 0.05)",
+  background: "rgba(0,0,0,0.045)",
+  border: "1px solid rgba(0, 0, 0, 0.05)",
   overflowX: "auto",
 };
 
@@ -653,14 +653,14 @@ const blockquoteStyle: CSSProperties = {
   margin: "8px 0",
   padding: "6px 12px",
   borderLeft: `3px solid ${GRAPH_THEME.ui.timeline.playhead}`,
-  background: "rgba(98, 226, 205, 0.05)",
+  background: "rgba(0, 82, 217, 0.05)",
   borderRadius: "0 6px 6px 0",
   color: GRAPH_THEME.ui.text.body,
   fontStyle: "italic",
 };
 
 const linkStyle: CSSProperties = {
-  color: "#79c0ff",
+  color: "#0052d9",
   textDecoration: "underline",
   textUnderlineOffset: "3px",
   wordBreak: "break-all",
@@ -670,7 +670,7 @@ const imageBadgeStyle: CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
   padding: "3px 7px",
-  background: "rgba(255, 255, 255, 0.04)",
+  background: "rgba(0, 0, 0, 0.04)",
   border: `1px solid ${GRAPH_THEME.ui.surface.panelBorder}`,
   borderRadius: 6,
   color: GRAPH_THEME.ui.text.muted,
@@ -683,17 +683,17 @@ const inlineCodeStyle: CSSProperties = {
   fontSize: 12,
   padding: "2px 5px",
   borderRadius: 4,
-  background: "rgba(255, 255, 255, 0.07)",
-  color: "#e6edf3",
-  border: "1px solid rgba(255, 255, 255, 0.08)",
+  background: "rgba(0, 0, 0, 0.07)",
+  color: "rgba(0, 0, 0, 0.9)",
+  border: "1px solid rgba(0, 0, 0, 0.08)",
 };
 
 const preBlockStyle: CSSProperties = {
   margin: "8px 0",
   padding: 10,
   borderRadius: 8,
-  background: "rgba(0, 0, 0, 0.35)",
-  border: "1px solid rgba(255, 255, 255, 0.08)",
+  background: "rgba(0,0,0,0.05)",
+  border: "1px solid rgba(0, 0, 0, 0.08)",
   overflowX: "auto",
 };
 
@@ -701,5 +701,5 @@ const blockCodeStyle: CSSProperties = {
   fontFamily: "'JetBrains Mono', monospace",
   fontSize: 12,
   lineHeight: 1.5,
-  color: "#e6edf3",
+  color: "rgba(0, 0, 0, 0.9)",
 };

@@ -151,7 +151,7 @@ export function LoadingState({
         width: 24,
         height: 24,
         borderRadius: "999px",
-        border: "2px solid rgba(103, 182, 255, 0.18)",
+        border: "2px solid rgba(0, 82, 217, 0.18)",
         borderTopColor: "rgba(158, 217, 255, 0.92)",
         marginBottom: 12,
       }} />

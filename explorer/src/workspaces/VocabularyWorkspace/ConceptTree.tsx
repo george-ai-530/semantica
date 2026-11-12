@@ -49,15 +49,15 @@ export const ConceptTree: React.FC<ConceptTreeProps> = ({ data, onSelectConcept 
                 padding: '0 8px',
                 cursor: 'pointer',
                 backgroundColor: node.isSelected
-                  ? 'rgba(88,166,255,0.12)'
+                  ? 'rgba(0, 82, 217,0.12)'
                   : 'transparent',
                 userSelect: 'none',
-                borderBottom: '1px solid rgba(255,255,255,0.04)',
+                borderBottom: '1px solid rgba(0, 0, 0, 0.04)',
                 transition: 'background 0.15s',
               }}
               onMouseEnter={(e) => {
                 if (!node.isSelected) {
-                  (e.currentTarget as HTMLDivElement).style.background = 'rgba(88,166,255,0.06)';
+                  (e.currentTarget as HTMLDivElement).style.background = 'rgba(0, 82, 217,0.06)';
                 }
               }}
               onMouseLeave={(e) => {
@@ -69,20 +69,20 @@ export const ConceptTree: React.FC<ConceptTreeProps> = ({ data, onSelectConcept 
               <span style={{ width: 20, display: 'flex', justifyContent: 'center' }}>
                 {isFolder ? (
                   node.isOpen
-                    ? <ChevronDown size={14} color="#8b949e" />
-                    : <ChevronRight size={14} color="#8b949e" />
+                    ? <ChevronDown size={14} color="rgba(0, 0, 0, 0.6)" />
+                    : <ChevronRight size={14} color="rgba(0, 0, 0, 0.6)" />
                 ) : null}
               </span>
 
               <span style={{ marginRight: 8, display: 'flex', alignItems: 'center' }}>
                 {isFolder
-                  ? <Folder size={14} color="#d2a8ff" />
-                  : <FileText size={14} color="#484f58" />
+                  ? <Folder size={14} color="#5e3ab8" />
+                  : <FileText size={14} color="rgba(0, 0, 0, 0.26)" />
                 }
               </span>
 
               <span style={{
-                fontSize: 13, color: '#c9d1d9',
+                fontSize: 13, color: 'rgba(0, 0, 0, 0.85)',
                 whiteSpace: 'nowrap', overflow: 'hidden',
                 textOverflow: 'ellipsis',
               }}>

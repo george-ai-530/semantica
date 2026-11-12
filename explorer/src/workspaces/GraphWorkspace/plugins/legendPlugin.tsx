@@ -49,7 +49,7 @@ export const legendPlugin: GraphPlugin = {
                     style={{
                       ...swatchStyle,
                       background: item.color,
-                      boxShadow: `0 0 0 1px rgba(255,255,255,0.06), 0 0 18px ${item.color}44`,
+                      boxShadow: `0 0 0 1px rgba(0, 0, 0, 0.06), 0 0 18px ${item.color}44`,
                     }}
                   />
                   <div style={{ minWidth: 0, flex: 1 }}>
@@ -75,7 +75,7 @@ const panelBodyStyle: CSSProperties = {
 };
 
 const panelEyebrowStyle: CSSProperties = {
-  color: "#8ea4be",
+  color: "rgba(0, 0, 0, 0.6)",
   fontSize: 11,
   fontWeight: 700,
   letterSpacing: "0.08em",
@@ -88,8 +88,8 @@ const legendRowStyle: CSSProperties = {
   gap: 10,
   padding: "8px 10px",
   borderRadius: 12,
-  border: "1px solid rgba(255,255,255,0.06)",
-  background: "rgba(255,255,255,0.025)",
+  border: "1px solid rgba(0, 0, 0, 0.06)",
+  background: "rgba(0, 0, 0, 0.025)",
 };
 
 const swatchStyle: CSSProperties = {
@@ -100,7 +100,7 @@ const swatchStyle: CSSProperties = {
 };
 
 const rowTitleStyle: CSSProperties = {
-  color: "#f3f7fd",
+  color: "rgba(0, 0, 0, 0.9)",
   fontSize: 13,
   fontWeight: 600,
   overflow: "hidden",
@@ -109,12 +109,12 @@ const rowTitleStyle: CSSProperties = {
 };
 
 const rowMetaStyle: CSSProperties = {
-  color: "#8ea4be",
+  color: "rgba(0, 0, 0, 0.6)",
   fontSize: 12,
 };
 
 const emptyTextStyle: CSSProperties = {
-  color: "#8ea4be",
+  color: "rgba(0, 0, 0, 0.6)",
   fontSize: 12,
   lineHeight: 1.5,
 };

@@ -31,10 +31,10 @@ function TypeBar({ label, count, total, color }: { label: string; count: number;
   const pct = total > 0 ? Math.round((count / total) * 100) : 0;
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "5px 0" }}>
-      <div style={{ width: 120, flexShrink: 0, color: "#c6d4e3", fontSize: 12, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={label}>
+      <div style={{ width: 120, flexShrink: 0, color: "rgba(0, 0, 0, 0.7)", fontSize: 12, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={label}>
         {label}
       </div>
-      <div style={{ flex: 1, height: 6, borderRadius: 999, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
+      <div style={{ flex: 1, height: 6, borderRadius: 999, background: "rgba(0, 0, 0, 0.06)", overflow: "hidden" }}>
         <div
           style={{
             width: `${pct}%`,
@@ -46,15 +46,15 @@ function TypeBar({ label, count, total, color }: { label: string; count: number;
         />
       </div>
       <div style={{ width: 52, textAlign: "right", flexShrink: 0, display: "flex", gap: 6, justifyContent: "flex-end" }}>
-        <span style={{ color: "#8b949e", fontSize: 11 }}>{count.toLocaleString()}</span>
-        <span style={{ color: "#6a7f97", fontSize: 11 }}>{pct}%</span>
+        <span style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 11 }}>{count.toLocaleString()}</span>
+        <span style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 11 }}>{pct}%</span>
       </div>
     </div>
   );
 }
 
-const NODE_COLORS = ["#3E79F2", "#149287", "#2F9F61", "#555FD6", "#8A56D8", "#B65473", "#C9922E", "#4aa3ff", "#f2b66d"];
-const EDGE_COLORS = ["#4cc38a", "#79c0ff", "#d2a8ff", "#f2b66d", "#ff7b72", "#58a6ff", "#4aa3ff", "#8A56D8"];
+const NODE_COLORS = ["#3E79F2", "#149287", "#2F9F61", "#555FD6", "#8A56D8", "#B65473", "#A0771D", "#0052d9", "#e37318"];
+const EDGE_COLORS = ["#2ba471", "#0052d9", "#5e3ab8", "#e37318", "#d54941", "#0052d9", "#0052d9", "#8A56D8"];
 
 function buildTypeMap(nodes: NodeItem[], key: keyof NodeItem): Record<string, number> {
   const map: Record<string, number> = {};
@@ -198,7 +198,7 @@ export function KGOverviewTab() {
   return (
     <div className="ws-page">
       {error ? (
-        <div style={{ margin: "16px 22px 0 22px", padding: 12, borderRadius: 14, color: "#ffb4c2", background: "rgba(255,157,175,0.1)", border: "1px solid rgba(255,157,175,0.18)" }}>
+        <div style={{ margin: "16px 22px 0 22px", padding: 12, borderRadius: 14, color: "#d54941", background: "rgba(213, 73, 65,0.1)", border: "1px solid rgba(213, 73, 65,0.18)" }}>
           {error}
         </div>
       ) : null}
@@ -273,7 +273,7 @@ export function KGOverviewTab() {
             <div className="ws-eyebrow" style={{ marginBottom: 12 }}>连接最多的节点（按度数）</div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 8 }}>
               {topNodes.map(({ node, neighborCount }, rank) => (
-                <div key={node.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", borderRadius: "var(--ws-radius-sm)", background: "rgba(0,0,0,0.18)", border: "1px solid var(--ws-border)" }}>
+                <div key={node.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", borderRadius: "var(--ws-radius-sm)", background: "rgba(0,0,0,0.04)", border: "1px solid var(--ws-border)" }}>
                   <div style={{ color: "var(--ws-text-dim)", fontSize: 11, fontWeight: 700, minWidth: 22 }}>#{rank + 1}</div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ color: "var(--ws-text)", fontSize: 12, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{node.content || node.id}</div>

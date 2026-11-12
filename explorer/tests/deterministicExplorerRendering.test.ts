@@ -45,8 +45,8 @@ function loadDeterministicTestGraph() {
         x: 0,
         y: 0,
         size: 8,
-        color: "#63E6FF",
-        baseColor: "#63E6FF",
+        color: "#0052d9",
+        baseColor: "#0052d9",
         nodeType: "Person",
         semanticGroup: "Person",
         properties: {},
@@ -60,8 +60,8 @@ function loadDeterministicTestGraph() {
         x: -50,
         y: 0,
         size: 8,
-        color: "#63E6FF",
-        baseColor: "#63E6FF",
+        color: "#0052d9",
+        baseColor: "#0052d9",
         nodeType: "Person",
         semanticGroup: "Person",
         properties: {},
@@ -75,8 +75,8 @@ function loadDeterministicTestGraph() {
         x: 50,
         y: 0,
         size: 8,
-        color: "#A78BFA",
-        baseColor: "#A78BFA",
+        color: "#7b53d8",
+        baseColor: "#7b53d8",
         nodeType: "Organization",
         semanticGroup: "Organization",
         properties: {},
@@ -156,15 +156,15 @@ test("deterministic graph contains exactly 4 nodes and 3 edges in store", () => 
 
   assert.equal(alice.label, "Alice");
   assert.equal(alice.nodeType, "Person");
-  assert.equal(alice.color, "#63E6FF");
+  assert.equal(alice.color, "#0052d9");
 
   assert.equal(bob.label, "Bob");
   assert.equal(bob.nodeType, "Person");
-  assert.equal(bob.color, "#63E6FF");
+  assert.equal(bob.color, "#0052d9");
 
   assert.equal(acme.label, "Acme");
   assert.equal(acme.nodeType, "Organization");
-  assert.equal(acme.color, "#A78BFA");
+  assert.equal(acme.color, "#7b53d8");
 
   assert.equal(newYork.label, "New York");
   assert.equal(newYork.nodeType, "Location");

@@ -25,37 +25,37 @@ const LOADING_OVERLAY_CSS = `
     width: min(540px, calc(100% - 48px));
     border-radius: 24px;
     padding: 20px 20px 18px;
-    border: 1px solid rgba(127, 208, 255, 0.18);
+    border: 1px solid rgba(54, 110, 244, 0.18);
     background:
-      radial-gradient(circle at top right, rgba(242, 182, 109, 0.12), transparent 28%),
-      radial-gradient(circle at top left, rgba(127, 208, 255, 0.14), transparent 30%),
-      linear-gradient(145deg, rgba(7, 17, 31, 0.94), rgba(12, 25, 43, 0.82));
-    box-shadow: 0 26px 90px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255,255,255,0.05);
+      radial-gradient(circle at top right, rgba(227, 115, 24, 0.12), transparent 28%),
+      radial-gradient(circle at top left, rgba(54, 110, 244, 0.14), transparent 30%),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.94), rgba(12, 25, 43, 0.82));
+    box-shadow: 0 26px 90px rgba(0, 0, 0, 0.14), inset 0 1px 0 rgba(0, 0, 0, 0.05);
     backdrop-filter: blur(18px) saturate(1.08);
     -webkit-backdrop-filter: blur(18px) saturate(1.08);
   }
   .graph-stage-loader-card[data-live="true"] {
     width: min(500px, calc(100% - 56px));
     background:
-      radial-gradient(circle at top right, rgba(242, 182, 109, 0.08), transparent 26%),
-      radial-gradient(circle at top left, rgba(127, 208, 255, 0.12), transparent 28%),
-      linear-gradient(145deg, rgba(7, 17, 31, 0.84), rgba(11, 24, 40, 0.72));
-    box-shadow: 0 18px 54px rgba(0, 0, 0, 0.26), inset 0 1px 0 rgba(255,255,255,0.04);
+      radial-gradient(circle at top right, rgba(227, 115, 24, 0.08), transparent 26%),
+      radial-gradient(circle at top left, rgba(54, 110, 244, 0.12), transparent 28%),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.72));
+    box-shadow: 0 18px 54px rgba(0, 0, 0, 0.26), inset 0 1px 0 rgba(0, 0, 0, 0.04);
   }
   .graph-stage-loader-beacon {
     position: relative;
     width: 12px;
     height: 12px;
     border-radius: 999px;
-    background: linear-gradient(135deg, rgba(127, 208, 255, 0.98), rgba(242, 182, 109, 0.94));
-    box-shadow: 0 0 18px rgba(127, 208, 255, 0.4);
+    background: linear-gradient(135deg, rgba(54, 110, 244, 0.98), rgba(227, 115, 24, 0.94));
+    box-shadow: 0 0 18px rgba(54, 110, 244, 0.4);
   }
   .graph-stage-loader-beacon::after {
     content: "";
     position: absolute;
     inset: -7px;
     border-radius: inherit;
-    border: 1px solid rgba(127, 208, 255, 0.18);
+    border: 1px solid rgba(54, 110, 244, 0.18);
     animation: graph-loader-beacon 1.9s ease-out infinite;
   }
   .graph-stage-loader-track {
@@ -71,20 +71,20 @@ const LOADING_OVERLAY_CSS = `
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    border: 1px solid rgba(127, 208, 255, 0.08);
-    color: rgba(143, 168, 198, 0.72);
-    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(54, 110, 244, 0.08);
+    color: rgba(0, 0, 0, 0.72);
+    background: rgba(0, 0, 0, 0.02);
   }
   .graph-stage-loader-step[data-state="done"] {
     color: rgba(214, 232, 250, 0.92);
-    border-color: rgba(127, 208, 255, 0.18);
-    background: rgba(89, 155, 220, 0.14);
+    border-color: rgba(54, 110, 244, 0.18);
+    background: rgba(0, 82, 217, 0.14);
   }
   .graph-stage-loader-step[data-state="active"] {
-    color: #eff7ff;
-    border-color: rgba(242, 182, 109, 0.24);
-    background: linear-gradient(135deg, rgba(49, 108, 172, 0.28), rgba(242, 182, 109, 0.16));
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    color: rgba(0, 0, 0, 0.85);
+    border-color: rgba(227, 115, 24, 0.24);
+    background: linear-gradient(135deg, rgba(0, 82, 217, 0.28), rgba(227, 115, 24, 0.16));
+    box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.06);
   }
   .graph-stage-loader-bar {
     position: relative;
@@ -92,15 +92,15 @@ const LOADING_OVERLAY_CSS = `
     height: 12px;
     overflow: hidden;
     border-radius: 999px;
-    border: 1px solid rgba(127, 208, 255, 0.1);
-    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(54, 110, 244, 0.1);
+    background: rgba(0, 0, 0, 0.05);
   }
   .graph-stage-loader-bar-fill {
     display: block;
     height: 100%;
     border-radius: inherit;
-    background: linear-gradient(90deg, rgba(74, 163, 255, 0.9), rgba(127, 208, 255, 0.96), rgba(242, 182, 109, 0.92));
-    box-shadow: 0 0 30px rgba(74, 163, 255, 0.28);
+    background: linear-gradient(90deg, rgba(0, 82, 217, 0.9), rgba(54, 110, 244, 0.96), rgba(227, 115, 24, 0.92));
+    box-shadow: 0 0 30px rgba(0, 82, 217, 0.28);
     transition: width 220ms ease;
   }
   .graph-stage-loader-bar-indeterminate::before {
@@ -110,8 +110,8 @@ const LOADING_OVERLAY_CSS = `
     bottom: 1px;
     width: 34%;
     border-radius: 999px;
-    background: linear-gradient(90deg, rgba(74, 163, 255, 0), rgba(127, 208, 255, 0.94), rgba(242, 182, 109, 0.82), rgba(74, 163, 255, 0));
-    box-shadow: 0 0 26px rgba(127, 208, 255, 0.18);
+    background: linear-gradient(90deg, rgba(0, 82, 217, 0), rgba(54, 110, 244, 0.94), rgba(227, 115, 24, 0.82), rgba(0, 82, 217, 0));
+    box-shadow: 0 0 26px rgba(54, 110, 244, 0.18);
     animation: graph-loader-sweep 1.5s cubic-bezier(0.22, 1, 0.36, 1) infinite;
   }
   @keyframes graph-loader-beacon {
@@ -124,10 +124,10 @@ const LOADING_OVERLAY_CSS = `
   }
   .graph-stage-loader-card[data-error="true"] {
     pointer-events: auto;
-    border-color: rgba(255, 123, 114, 0.32);
+    border-color: rgba(213, 73, 65, 0.32);
     background:
-      radial-gradient(circle at top left, rgba(255, 123, 114, 0.12), transparent 32%),
-      linear-gradient(145deg, rgba(7, 17, 31, 0.96), rgba(24, 14, 18, 0.86));
+      radial-gradient(circle at top left, rgba(213, 73, 65, 0.12), transparent 32%),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(24, 14, 18, 0.86));
   }
   .graph-stage-loader-error-mark {
     width: 38px;
@@ -136,16 +136,16 @@ const LOADING_OVERLAY_CSS = `
     border-radius: 12px;
     display: grid;
     place-items: center;
-    color: #ff9e97;
-    background: rgba(255, 123, 114, 0.12);
-    border: 1px solid rgba(255, 123, 114, 0.28);
+    color: #d54941;
+    background: rgba(213, 73, 65, 0.12);
+    border: 1px solid rgba(213, 73, 65, 0.28);
   }
   .graph-stage-loader-error-detail {
     padding: 10px 12px;
     border-radius: 10px;
-    background: rgba(0, 0, 0, 0.32);
-    border: 1px solid rgba(255, 123, 114, 0.18);
-    color: #ffb4ae;
+    background: rgba(213, 73, 65, 0.08);
+    border: 1px solid rgba(213, 73, 65, 0.18);
+    color: #d54941;
     font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
     font-size: 12px;
     line-height: 1.55;
@@ -160,18 +160,18 @@ const LOADING_OVERLAY_CSS = `
     font-size: 13px;
     font-weight: 700;
     cursor: pointer;
-    border: 1px solid rgba(127, 208, 255, 0.4);
-    background: linear-gradient(135deg, rgba(74, 163, 255, 0.28), rgba(56, 210, 160, 0.16));
-    color: #e8f6ff;
+    border: 1px solid rgba(54, 110, 244, 0.4);
+    background: linear-gradient(135deg, rgba(0, 82, 217, 0.28), rgba(43, 164, 113, 0.16));
+    color: rgba(0, 0, 0, 0.9);
     transition: 160ms ease;
   }
   .graph-stage-loader-retry:hover {
-    border-color: rgba(127, 208, 255, 0.62);
-    background: linear-gradient(135deg, rgba(74, 163, 255, 0.4), rgba(56, 210, 160, 0.24));
+    border-color: rgba(54, 110, 244, 0.62);
+    background: linear-gradient(135deg, rgba(0, 82, 217, 0.4), rgba(43, 164, 113, 0.24));
     transform: translateY(-1px);
   }
   .graph-stage-loader-retry:focus-visible {
-    outline: 2px solid #7fd0ff;
+    outline: 2px solid #366ef4;
     outline-offset: 2px;
   }
 `;
@@ -212,9 +212,9 @@ const loadingMetricStyle = {
   gap: 6,
   padding: "7px 10px",
   borderRadius: 999,
-  border: "1px solid rgba(127, 208, 255, 0.12)",
-  background: "rgba(255, 255, 255, 0.03)",
-  color: "#b8cade",
+  border: "1px solid rgba(54, 110, 244, 0.12)",
+  background: "rgba(0, 0, 0, 0.03)",
+  color: "rgba(0, 0, 0, 0.6)",
   fontSize: 11,
   fontWeight: 600,
 } satisfies CSSProperties;
@@ -300,7 +300,7 @@ export function GraphLoadingOverlay({
               <div style={{ color: "#ffffff", fontSize: 20, fontWeight: 700, letterSpacing: "-0.03em", marginBottom: 6 }}>
                 无法加载图谱
               </div>
-              <div style={{ color: "#8fa8c6", fontSize: 13, lineHeight: 1.5 }}>
+              <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 13, lineHeight: 1.5 }}>
                 API 未返回图谱数据。请确认后端已启动且可访问，然后重试。
               </div>
             </div>
@@ -345,13 +345,13 @@ export function GraphLoadingOverlay({
             <div style={{ color: "#ffffff", fontSize: 20, fontWeight: 700, letterSpacing: "-0.03em", marginBottom: 6 }}>
               {activeProgress.title}
             </div>
-            <div style={{ color: "#8fa8c6", fontSize: 13, lineHeight: 1.5 }}>
+            <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 13, lineHeight: 1.5 }}>
               {activeProgress.message}
             </div>
           </div>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
             <div className="graph-stage-loader-beacon" aria-hidden="true" />
-            <div style={{ color: "#d7e9fb", fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+            <div style={{ color: "rgba(0, 0, 0, 0.7)", fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
               阶段 {activeProgress.stageIndex ?? 1}/{activeProgress.stageCount ?? GRAPH_LOAD_STAGE_SEQUENCE.length}
             </div>
           </div>
@@ -370,12 +370,12 @@ export function GraphLoadingOverlay({
         </div>
 
         <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "baseline", marginBottom: 8 }}>
-          <div style={{ color: "#dce9f6", fontSize: 12, fontWeight: 600 }}>
+          <div style={{ color: "rgba(0, 0, 0, 0.7)", fontSize: 12, fontWeight: 600 }}>
             {activeProgress.progressKind === "determinate" && activeProgress.total
               ? `当前阶段 ${(activeProgress.loaded ?? 0).toLocaleString()} / ${activeProgress.total.toLocaleString()}`
               : "正在处理当前阶段"}
           </div>
-          <div style={{ color: "#90a8c5", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase" }}>
+          <div style={{ color: "rgba(0, 0, 0, 0.5)", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase" }}>
             {activeProgress.progressKind === "determinate" && determinateRatio !== null
               ? `${Math.round(determinateRatio * 100)}%`
               : "实时"}
@@ -398,7 +398,7 @@ export function GraphLoadingOverlay({
             {activeProgress.edgesTotal ? ` / ${activeProgress.edgesTotal.toLocaleString()}` : ""} 条关系
           </span>
           {layoutSource ? (
-            <span style={{ ...loadingMetricStyle, color: "#a9ddff", borderColor: withAlpha(GRAPH_THEME.palette.accent.hovered, 0.22) }}>
+            <span style={{ ...loadingMetricStyle, color: "#366ef4", borderColor: withAlpha(GRAPH_THEME.palette.accent.hovered, 0.22) }}>
               {layoutSource}
               {layoutState ? ` · ${layoutState}` : ""}
             </span>

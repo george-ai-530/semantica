@@ -47,7 +47,7 @@ export function DiffMergeWorkspace() {
       <div className="ws-padded" style={{ display: "flex", flexDirection: "column", gap: 22, maxWidth: 1000, margin: "0 auto", width: "100%" }}>
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <div style={{ width: 42, height: 42, borderRadius: 13, background: "var(--ws-purple-soft)", border: "1px solid rgba(192,132,252,0.3)", display: "grid", placeItems: "center", color: "var(--ws-purple)", flexShrink: 0 }}>
+          <div style={{ width: 42, height: 42, borderRadius: 13, background: "var(--ws-purple-soft)", border: "1px solid rgba(123, 83, 216,0.3)", display: "grid", placeItems: "center", color: "var(--ws-purple)", flexShrink: 0 }}>
             <GitMerge size={20} />
           </div>
           <div>
@@ -73,20 +73,20 @@ export function DiffMergeWorkspace() {
 
         {/* Diff table */}
         <div className="ws-card" style={{ padding: 0, overflow: "hidden" }}>
-          <div style={{ padding: "6px 16px", background: "rgba(242,182,109,0.06)", borderBottom: "1px solid rgba(242,182,109,0.15)", display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{ padding: "6px 16px", background: "rgba(227, 115, 24,0.06)", borderBottom: "1px solid rgba(227, 115, 24,0.15)", display: "flex", alignItems: "center", gap: 6 }}>
             <span style={{ fontSize: 10, fontWeight: 700, color: "var(--ws-amber)", letterSpacing: "0.08em", textTransform: "uppercase" }}>示例预览</span>
             <span style={{ fontSize: 11, color: "var(--ws-text-dim)" }}>— 连接后端后，字段对比将从图谱加载</span>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "140px 1fr 1fr", background: "rgba(0,0,0,0.28)", borderBottom: "1px solid var(--ws-border)" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "140px 1fr 1fr", background: "rgba(0,0,0,0.045)", borderBottom: "1px solid var(--ws-border)" }}>
             <div style={{ padding: "10px 16px", fontSize: 11, fontWeight: 700, color: "var(--ws-text-dim)", letterSpacing: "0.08em", textTransform: "uppercase" }}>字段</div>
             <div style={{ padding: "10px 16px", fontSize: 11, fontWeight: 700, color: "var(--ws-accent)", letterSpacing: "0.08em", textTransform: "uppercase", borderLeft: "1px solid var(--ws-border)" }}>主数据（保留）</div>
-            <div style={{ padding: "10px 16px", fontSize: 11, fontWeight: 700, color: "#fca5a5", letterSpacing: "0.08em", textTransform: "uppercase", borderLeft: "1px solid var(--ws-border)" }}>重复数据（移除）</div>
+            <div style={{ padding: "10px 16px", fontSize: 11, fontWeight: 700, color: "#d54941", letterSpacing: "0.08em", textTransform: "uppercase", borderLeft: "1px solid var(--ws-border)" }}>重复数据（移除）</div>
           </div>
           {MOCK_FIELDS.map((row) => (
-            <div key={row.label} style={{ display: "grid", gridTemplateColumns: "140px 1fr 1fr", borderBottom: "1px solid rgba(74,163,255,0.06)", background: row.differs ? "rgba(242,182,109,0.03)" : "transparent" }}>
+            <div key={row.label} style={{ display: "grid", gridTemplateColumns: "140px 1fr 1fr", borderBottom: "1px solid rgba(0, 82, 217,0.06)", background: row.differs ? "rgba(227, 115, 24,0.03)" : "transparent" }}>
               <div style={{ padding: "12px 16px", fontSize: 12, fontWeight: 600, color: "var(--ws-text-dim)" }}>{row.label}</div>
               <div style={{ padding: "12px 16px", fontSize: 13, color: "var(--ws-text)", borderLeft: "1px solid var(--ws-border)" }}>{row.primary}</div>
-              <div style={{ padding: "12px 16px", fontSize: 13, color: row.differs ? "#fbbf24" : "var(--ws-text)", fontWeight: row.differs ? 700 : 400, borderLeft: "1px solid var(--ws-border)" }}>
+              <div style={{ padding: "12px 16px", fontSize: 13, color: row.differs ? "#e37318" : "var(--ws-text)", fontWeight: row.differs ? 700 : 400, borderLeft: "1px solid var(--ws-border)" }}>
                 {row.duplicate}
                 {row.differs && <span className="ws-pill ws-pill--amber" style={{ marginLeft: 8, fontSize: 9 }}>差异</span>}
               </div>
@@ -97,12 +97,12 @@ export function DiffMergeWorkspace() {
         {/* Status & action */}
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           {status === "success" && (
-            <div style={{ display: "flex", alignItems: "center", gap: 7, color: "#6ee7b7", fontSize: 13 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 7, color: "#2ba471", fontSize: 13 }}>
               <CheckCircle2 size={15} />{msg}
             </div>
           )}
           {status === "error" && (
-            <div style={{ display: "flex", alignItems: "center", gap: 7, color: "#fca5a5", fontSize: 13 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 7, color: "#d54941", fontSize: 13 }}>
               <AlertCircle size={15} />{msg}
             </div>
           )}

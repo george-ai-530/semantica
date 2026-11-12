@@ -145,11 +145,11 @@ export function ReasoningWorkspace() {
                 onChange={(e) => setApplyToGraph(e.target.checked)}
                 style={{ opacity: 0, position: "absolute", inset: 0, cursor: "pointer", margin: 0 }}
               />
-              <div style={{ position: "absolute", inset: 0, borderRadius: 999, background: applyToGraph ? "var(--ws-green)" : "rgba(255,255,255,0.12)", transition: "background 180ms ease" }} />
-              <div style={{ position: "absolute", top: 3, left: applyToGraph ? 19 : 3, width: 14, height: 14, borderRadius: 999, background: "#fff", transition: "left 180ms ease", boxShadow: "0 1px 4px rgba(0,0,0,0.4)" }} />
+              <div style={{ position: "absolute", inset: 0, borderRadius: 999, background: applyToGraph ? "var(--ws-green)" : "rgba(0, 0, 0, 0.12)", transition: "background 180ms ease" }} />
+              <div style={{ position: "absolute", top: 3, left: applyToGraph ? 19 : 3, width: 14, height: 14, borderRadius: 999, background: "#fff", transition: "left 180ms ease", boxShadow: "0 1px 4px rgba(0,0,0,0.2)" }} />
             </div>
             <div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: applyToGraph ? "#6ee7b7" : "var(--ws-text-muted)" }}>将推断事实写入图谱</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: applyToGraph ? "#2ba471" : "var(--ws-text-muted)" }}>将推断事实写入图谱</div>
               <div style={{ fontSize: 11, color: "var(--ws-text-dim)" }}>推断的二元事实将作为边添加</div>
             </div>
           </label>
@@ -194,7 +194,7 @@ export function ReasoningWorkspace() {
 
         <div className="ws-scroll ws-padded" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           {error && (
-            <div className="ws-animate-in" style={{ display: "flex", gap: 10, padding: "12px 14px", borderRadius: "var(--ws-radius-sm)", background: "var(--ws-red-soft)", border: "1px solid rgba(255,123,114,0.28)", color: "#fca5a5", fontSize: 13 }}>
+            <div className="ws-animate-in" style={{ display: "flex", gap: 10, padding: "12px 14px", borderRadius: "var(--ws-radius-sm)", background: "var(--ws-red-soft)", border: "1px solid rgba(213, 73, 65,0.28)", color: "#d54941", fontSize: 13 }}>
               <AlertCircle size={16} style={{ flexShrink: 0, marginTop: 1 }} />
               <div>{error}</div>
             </div>
@@ -218,7 +218,7 @@ export function ReasoningWorkspace() {
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {result.inferred_facts!.map((fact, i) => (
                     <div key={`${fact}-${i}`} style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "12px 14px", borderRadius: "var(--ws-radius-sm)", background: "var(--ws-surface)", border: "1px solid var(--ws-border)" }}>
-                      <div style={{ width: 20, height: 20, borderRadius: 6, background: "var(--ws-green-soft)", border: "1px solid rgba(76,195,138,0.28)", display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
+                      <div style={{ width: 20, height: 20, borderRadius: 6, background: "var(--ws-green-soft)", border: "1px solid rgba(43, 164, 113,0.28)", display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
                         <CheckCircle2 size={11} color="var(--ws-green)" />
                       </div>
                       <code style={{ fontFamily: "'JetBrains Mono','Fira Code',monospace", fontSize: 12, color: "var(--ws-text)", lineHeight: 1.6, wordBreak: "break-all" }}>{fact}</code>

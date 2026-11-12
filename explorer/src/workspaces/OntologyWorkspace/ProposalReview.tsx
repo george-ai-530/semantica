@@ -168,11 +168,11 @@ export function ProposalReview({ proposalId }: { proposalId: string }) {
   const getChangeIcon = (type: string) => {
     switch (type) {
       case "added":
-        return <Plus size={14} color="#4cc38a" />;
+        return <Plus size={14} color="#2ba471" />;
       case "removed":
-        return <Minus size={14} color="#ff6b6b" />;
+        return <Minus size={14} color="#d54941" />;
       case "modified":
-        return <Edit size={14} color="#f2b66d" />;
+        return <Edit size={14} color="#e37318" />;
       default:
         return null;
     }
@@ -181,15 +181,15 @@ export function ProposalReview({ proposalId }: { proposalId: string }) {
   const getStateIcon = (state: string) => {
     switch (state) {
       case "published":
-        return <CheckCircle size={20} color="#4cc38a" />;
+        return <CheckCircle size={20} color="#2ba471" />;
       case "approved":
-        return <CheckCircle size={20} color="#4aa3ff" />;
+        return <CheckCircle size={20} color="#0052d9" />;
       case "rejected":
-        return <XCircle size={20} color="#ff6b6b" />;
+        return <XCircle size={20} color="#d54941" />;
       case "proposed":
-        return <AlertCircle size={20} color="#f2b66d" />;
+        return <AlertCircle size={20} color="#e37318" />;
       default:
-        return <Clock size={20} color="#8fa8c6" />;
+        return <Clock size={20} color="rgba(0, 0, 0, 0.6)" />;
     }
   };
 
@@ -197,7 +197,7 @@ export function ProposalReview({ proposalId }: { proposalId: string }) {
     display: "flex",
     flexDirection: "column",
     height: "100%",
-    background: "#07111f",
+    background: "#eeeeee",
     padding: "20px",
     overflow: "auto",
   };
@@ -208,12 +208,12 @@ export function ProposalReview({ proposalId }: { proposalId: string }) {
     alignItems: "center",
     marginBottom: "20px",
     paddingBottom: "16px",
-    borderBottom: "1px solid rgba(140, 192, 255, 0.12)",
+    borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
   };
 
   const titleStyle: React.CSSProperties = {
     margin: 0,
-    color: "#ebf3ff",
+    color: "rgba(0, 0, 0, 0.9)",
     fontSize: "20px",
     fontWeight: "700",
   };
@@ -227,18 +227,18 @@ export function ProposalReview({ proposalId }: { proposalId: string }) {
 
   const diffPanelStyle: React.CSSProperties = {
     flex: 1,
-    background: "rgba(9, 19, 34, 0.8)",
+    background: "rgba(255, 255, 255, 0.8)",
     borderRadius: "8px",
-    border: "1px solid rgba(127, 208, 255, 0.12)",
+    border: "1px solid rgba(54, 110, 244, 0.12)",
     padding: "16px",
     overflow: "auto",
   };
 
   const commentsPanelStyle: React.CSSProperties = {
     width: "320px",
-    background: "rgba(9, 19, 34, 0.8)",
+    background: "rgba(255, 255, 255, 0.8)",
     borderRadius: "8px",
-    border: "1px solid rgba(127, 208, 255, 0.12)",
+    border: "1px solid rgba(54, 110, 244, 0.12)",
     padding: "16px",
     display: "flex",
     flexDirection: "column",
@@ -250,7 +250,7 @@ export function ProposalReview({ proposalId }: { proposalId: string }) {
     gap: "10px",
     padding: "10px 12px",
     borderRadius: "6px",
-    background: "rgba(3, 9, 18, 0.6)",
+    background: "rgba(255, 255, 255, 0.6)",
     marginBottom: "8px",
     cursor: "pointer",
     transition: "160ms ease",
@@ -262,9 +262,9 @@ export function ProposalReview({ proposalId }: { proposalId: string }) {
     gap: "6px",
     padding: "8px 14px",
     borderRadius: "6px",
-    border: "1px solid rgba(127, 208, 255, 0.2)",
-    background: "rgba(74, 163, 255, 0.1)",
-    color: "#ebf3ff",
+    border: "1px solid rgba(54, 110, 244, 0.2)",
+    background: "rgba(0, 82, 217, 0.1)",
+    color: "rgba(0, 0, 0, 0.9)",
     fontSize: "12px",
     fontWeight: "600",
     cursor: "pointer",
@@ -275,9 +275,9 @@ export function ProposalReview({ proposalId }: { proposalId: string }) {
     width: "100%",
     padding: "10px 12px",
     borderRadius: "6px",
-    border: "1px solid rgba(127, 208, 255, 0.2)",
-    background: "rgba(3, 9, 18, 0.8)",
-    color: "#ebf3ff",
+    border: "1px solid rgba(54, 110, 244, 0.2)",
+    background: "rgba(255, 255, 255, 0.8)",
+    color: "rgba(0, 0, 0, 0.9)",
     fontSize: "13px",
     resize: "vertical",
     minHeight: "80px",
@@ -286,7 +286,7 @@ export function ProposalReview({ proposalId }: { proposalId: string }) {
   if (!proposal) {
     return (
       <div style={containerStyle}>
-        <div style={{ color: "#8fa8c6", fontSize: "14px" }}>正在加载提案...</div>
+        <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: "14px" }}>正在加载提案...</div>
       </div>
     );
   }
@@ -298,7 +298,7 @@ export function ProposalReview({ proposalId }: { proposalId: string }) {
           {getStateIcon(proposal.state)}
           <div>
             <h1 style={titleStyle}>{proposal.summary}</h1>
-            <div style={{ color: "#8fa8c6", fontSize: "12px", marginTop: "4px" }}>
+            <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: "12px", marginTop: "4px" }}>
               {proposal.author} • {new Date(proposal.created_at).toLocaleString()}
             </div>
           </div>
@@ -327,28 +327,28 @@ export function ProposalReview({ proposalId }: { proposalId: string }) {
 
       <div style={contentStyle}>
         <div style={diffPanelStyle}>
-          <h2 style={{ margin: "0 0 16px", color: "#ebf3ff", fontSize: "14px", fontWeight: "600" }}>
+          <h2 style={{ margin: "0 0 16px", color: "rgba(0, 0, 0, 0.9)", fontSize: "14px", fontWeight: "600" }}>
             <GitMerge size={16} style={{ marginRight: "8px", verticalAlign: "middle" }} />
             差异对比视图
           </h2>
           {diff.length === 0 ? (
-            <div style={{ color: "#8fa8c6", fontSize: "13px" }}>未检测到更改</div>
+            <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: "13px" }}>未检测到更改</div>
           ) : (
             diff.map((change, index) => (
               <div
                 key={index}
                 style={{
                   ...diffItemStyle,
-                  border: selectedElement === change.element ? "1px solid rgba(74, 163, 255, 0.4)" : "1px solid transparent",
+                  border: selectedElement === change.element ? "1px solid rgba(0, 82, 217, 0.4)" : "1px solid transparent",
                 }}
                 onClick={() => setSelectedElement(change.element)}
               >
                 {getChangeIcon(change.type)}
                 <div style={{ flex: 1 }}>
-                  <div style={{ color: "#ebf3ff", fontSize: "13px", fontWeight: "600" }}>
+                  <div style={{ color: "rgba(0, 0, 0, 0.9)", fontSize: "13px", fontWeight: "600" }}>
                     {change.element}
                   </div>
-                  <div style={{ color: "#8fa8c6", fontSize: "11px" }}>
+                  <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: "11px" }}>
                     {change.type}
                   </div>
                 </div>
@@ -356,52 +356,52 @@ export function ProposalReview({ proposalId }: { proposalId: string }) {
             ))
           )}
 
-          <div style={{ marginTop: "20px", paddingTop: "16px", borderTop: "1px solid rgba(140, 192, 255, 0.12)" }}>
-            <h3 style={{ margin: "0 0 12px", color: "#ebf3ff", fontSize: "13px", fontWeight: "600" }}>
+          <div style={{ marginTop: "20px", paddingTop: "16px", borderTop: "1px solid rgba(0, 0, 0, 0.12)" }}>
+            <h3 style={{ margin: "0 0 12px", color: "rgba(0, 0, 0, 0.9)", fontSize: "13px", fontWeight: "600" }}>
               影响分析
             </h3>
-            <pre style={{ background: "rgba(3, 9, 18, 0.8)", padding: "12px", borderRadius: "6px", color: "#ebf3ff", fontSize: "12px", overflow: "auto" }}>
+            <pre style={{ background: "rgba(255, 255, 255, 0.8)", padding: "12px", borderRadius: "6px", color: "rgba(0, 0, 0, 0.9)", fontSize: "12px", overflow: "auto" }}>
               {JSON.stringify(proposal.impact_analysis, null, 2)}
             </pre>
           </div>
 
           <div style={{ marginTop: "16px" }}>
-            <h3 style={{ margin: "0 0 12px", color: "#ebf3ff", fontSize: "13px", fontWeight: "600" }}>
+            <h3 style={{ margin: "0 0 12px", color: "rgba(0, 0, 0, 0.9)", fontSize: "13px", fontWeight: "600" }}>
               SHACL 校验
             </h3>
-            <pre style={{ background: "rgba(3, 9, 18, 0.8)", padding: "12px", borderRadius: "6px", color: "#ebf3ff", fontSize: "12px", overflow: "auto" }}>
+            <pre style={{ background: "rgba(255, 255, 255, 0.8)", padding: "12px", borderRadius: "6px", color: "rgba(0, 0, 0, 0.9)", fontSize: "12px", overflow: "auto" }}>
               {JSON.stringify(proposal.shacl_validation, null, 2)}
             </pre>
           </div>
         </div>
 
         <div style={commentsPanelStyle}>
-          <h2 style={{ margin: "0 0 16px", color: "#ebf3ff", fontSize: "14px", fontWeight: "600" }}>
+          <h2 style={{ margin: "0 0 16px", color: "rgba(0, 0, 0, 0.9)", fontSize: "14px", fontWeight: "600" }}>
             <MessageSquare size={16} style={{ marginRight: "8px", verticalAlign: "middle" }} />
             评论 ({proposal.comments.length})
           </h2>
           <div style={{ flex: 1, overflow: "auto", marginBottom: "12px" }}>
             {proposal.comments.length === 0 ? (
-              <div style={{ color: "#8fa8c6", fontSize: "13px" }}>暂无评论</div>
+              <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: "13px" }}>暂无评论</div>
             ) : (
               proposal.comments.map((comment) => (
                 <div
                   key={comment.id}
                   style={{
                     padding: "10px",
-                    background: "rgba(3, 9, 18, 0.6)",
+                    background: "rgba(255, 255, 255, 0.6)",
                     borderRadius: "6px",
                     marginBottom: "8px",
                   }}
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px" }}>
-                    <User size={12} color="#8fa8c6" />
-                    <span style={{ color: "#ebf3ff", fontSize: "12px", fontWeight: "600" }}>
+                    <User size={12} color="rgba(0, 0, 0, 0.6)" />
+                    <span style={{ color: "rgba(0, 0, 0, 0.9)", fontSize: "12px", fontWeight: "600" }}>
                       {comment.author}
                     </span>
                   </div>
-                  <div style={{ color: "#8fa8c6", fontSize: "12px", marginBottom: "4px" }}>{comment.text}</div>
-                  <div style={{ color: "#5a7a9a", fontSize: "10px" }}>
+                  <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: "12px", marginBottom: "4px" }}>{comment.text}</div>
+                  <div style={{ color: "rgba(0, 0, 0, 0.4)", fontSize: "10px" }}>
                     {new Date(comment.created_at).toLocaleString()}
                   </div>
                 </div>

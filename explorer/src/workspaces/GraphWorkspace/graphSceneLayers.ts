@@ -266,8 +266,8 @@ function renderDensityField(
       (GRAPH_THEME.effects.semanticRegions.splatRadius + sample.size * 0.9) * scale,
     );
     const gradient = context.createRadialGradient(x, y, 0, x, y, radius);
-    gradient.addColorStop(0, "rgba(255,255,255,0.05)");
-    gradient.addColorStop(0.58, "rgba(255,255,255,0.02)");
+    gradient.addColorStop(0, "rgba(0, 0, 0, 0.05)");
+    gradient.addColorStop(0.58, "rgba(0, 0, 0, 0.02)");
     gradient.addColorStop(1, "rgba(255,255,255,0)");
     context.fillStyle = gradient;
     context.beginPath();
@@ -393,10 +393,10 @@ function drawMaskContour(
 
 function buildRegionRenderColors(color: string) {
   return {
-    fogColor: blendHex("#0E1927", color, 0.46),
-    innerContourColor: blendHex("#1C2C3F", color, 0.78),
-    outerContourColor: blendHex("#132131", color, 0.6),
-    labelBorderColor: blendHex("#2B3F57", color, 0.78),
+    fogColor: blendHex("#e9edf3", color, 0.46),
+    innerContourColor: blendHex("#c8d2de", color, 0.78),
+    outerContourColor: blendHex("#d8dfe8", color, 0.6),
+    labelBorderColor: blendHex("#aab8c8", color, 0.78),
   };
 }
 
@@ -446,7 +446,7 @@ function drawRegionLabel(
   const left = x - width / 2;
   const top = y - height / 2;
 
-  context.fillStyle = "rgba(8, 14, 24, 0.84)";
+  context.fillStyle = "rgba(255, 255, 255, 0.84)";
   context.strokeStyle = withAlpha(color, 0.24);
   context.lineWidth = 1;
   context.beginPath();

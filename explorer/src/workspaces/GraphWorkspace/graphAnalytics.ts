@@ -64,7 +64,7 @@ function getNodeLabel(graphRef: GraphRef, nodeId: string): string {
 
 function getNodeColor(graphRef: GraphRef, nodeId: string): string {
   const attrs = graphRef.getNodeAttributes(nodeId) as NodeAttributes;
-  return String(attrs.baseColor || attrs.color || "#63E6FF");
+  return String(attrs.baseColor || attrs.color || "#0052d9");
 }
 
 function getNodeSemanticGroup(graphRef: GraphRef, nodeId: string): string {

@@ -12,15 +12,15 @@ const OP_META: Record<
   RegistryEntryOp,
   { label: string; color: string; bg: string; border: string }
 > = {
-  import:       { label: "导入",       color: "#4aa3ff", bg: "rgba(74,163,255,0.12)",  border: "rgba(74,163,255,0.28)" },
-  export:       { label: "导出",       color: "#8fa8c6", bg: "rgba(143,168,198,0.08)", border: "rgba(143,168,198,0.18)" },
-  merge:        { label: "合并",        color: "#f2b66d", bg: "rgba(242,182,109,0.12)", border: "rgba(242,182,109,0.28)" },
-  "add-node":   { label: "添加节点",     color: "#4cc38a", bg: "rgba(76,195,138,0.12)",  border: "rgba(76,195,138,0.28)" },
-  "update-node": { label: "更新节点",  color: "#79c0ff", bg: "rgba(121,192,255,0.10)", border: "rgba(121,192,255,0.24)" },
-  "add-edge":   { label: "添加边",     color: "#4cc38a", bg: "rgba(76,195,138,0.10)",  border: "rgba(76,195,138,0.22)" },
-  delete:       { label: "删除",       color: "#ff7b72", bg: "rgba(255,123,114,0.12)", border: "rgba(255,123,114,0.28)" },
-  infer:        { label: "推断",        color: "#d2a8ff", bg: "rgba(210,168,255,0.12)", border: "rgba(210,168,255,0.28)" },
-  "vocab-import": { label: "词汇",      color: "#79c0ff", bg: "rgba(121,192,255,0.12)", border: "rgba(121,192,255,0.28)" },
+  import:       { label: "导入",       color: "#0052d9", bg: "rgba(0, 82, 217,0.12)",  border: "rgba(0, 82, 217,0.28)" },
+  export:       { label: "导出",       color: "rgba(0, 0, 0, 0.6)", bg: "rgba(0, 0, 0,0.08)", border: "rgba(0, 0, 0,0.18)" },
+  merge:        { label: "合并",        color: "#e37318", bg: "rgba(227, 115, 24,0.12)", border: "rgba(227, 115, 24,0.28)" },
+  "add-node":   { label: "添加节点",     color: "#2ba471", bg: "rgba(43, 164, 113,0.12)",  border: "rgba(43, 164, 113,0.28)" },
+  "update-node": { label: "更新节点",  color: "#0052d9", bg: "rgba(0, 82, 217,0.10)", border: "rgba(0, 82, 217,0.24)" },
+  "add-edge":   { label: "添加边",     color: "#2ba471", bg: "rgba(43, 164, 113,0.10)",  border: "rgba(43, 164, 113,0.22)" },
+  delete:       { label: "删除",       color: "#d54941", bg: "rgba(213, 73, 65,0.12)", border: "rgba(213, 73, 65,0.28)" },
+  infer:        { label: "推断",        color: "#5e3ab8", bg: "rgba(123, 83, 216,0.12)", border: "rgba(123, 83, 216,0.28)" },
+  "vocab-import": { label: "词汇",      color: "#0052d9", bg: "rgba(0, 82, 217,0.12)", border: "rgba(0, 82, 217,0.28)" },
 };
 
 const ALL_OPS: (RegistryEntryOp | "all")[] = [
@@ -64,10 +64,10 @@ function EntryRow({ entry }: { entry: ReturnType<typeof useRegistry>[number] }) 
 
         {/* Content */}
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ color: "#e6edf3", fontSize: 13, fontWeight: 500, wordBreak: "break-word" }}>
+          <div style={{ color: "rgba(0, 0, 0, 0.9)", fontSize: 13, fontWeight: 500, wordBreak: "break-word" }}>
             {entry.summary}
           </div>
-          <div style={{ color: "#8b949e", fontSize: 11, marginTop: 3 }}>
+          <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 11, marginTop: 3 }}>
             {formatDate(entry.timestamp)} · {formatTimestamp(entry.timestamp)}
           </div>
         </div>
@@ -107,16 +107,16 @@ export function RegistryTab() {
       {/* Header */}
       <div style={headerStyle}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <ClipboardList size={18} color="#4aa3ff" />
+          <ClipboardList size={18} color="#0052d9" />
           <div>
-            <div style={{ color: "#ebf3ff", fontSize: 16, fontWeight: 700 }}>文档注册表</div>
-            <div style={{ color: "#8b949e", fontSize: 12 }}>
+            <div style={{ color: "rgba(0, 0, 0, 0.9)", fontSize: 16, fontWeight: 700 }}>文档注册表</div>
+            <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 12 }}>
               本次会话中所有知识图谱与本体变更的审计日志
             </div>
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ color: "#8fa8c6", fontSize: 12 }}>
+          <span style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 12 }}>
             {entries.length} 个事件
           </span>
           {entries.length > 0 ? (
@@ -134,7 +134,7 @@ export function RegistryTab() {
 
       {/* Filter pills */}
       <div style={filterBarStyle}>
-        <Filter size={13} color="#8fa8c6" />
+        <Filter size={13} color="rgba(0, 0, 0, 0.6)" />
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
           {ALL_OPS.map((op) => {
             const isActive = op === activeFilter;
@@ -150,14 +150,14 @@ export function RegistryTab() {
                   fontWeight: 600,
                   cursor: "pointer",
                   border: isActive
-                    ? `1px solid ${meta?.border ?? "rgba(127,208,255,0.35)"}`
-                    : "1px solid rgba(255,255,255,0.06)",
+                    ? `1px solid ${meta?.border ?? "rgba(54, 110, 244,0.35)"}`
+                    : "1px solid rgba(0, 0, 0, 0.06)",
                   background: isActive
-                    ? (meta?.bg ?? "rgba(74,163,255,0.14)")
+                    ? (meta?.bg ?? "rgba(0, 82, 217,0.14)")
                     : "transparent",
                   color: isActive
-                    ? (meta?.color ?? "#8ed3ff")
-                    : "#8b949e",
+                    ? (meta?.color ?? "#0052d9")
+                    : "rgba(0, 0, 0, 0.6)",
                   transition: "all 140ms ease",
                 }}
               >
@@ -172,11 +172,11 @@ export function RegistryTab() {
       <div style={feedStyle}>
         {filtered.length === 0 ? (
           <div style={emptyStateStyle}>
-            <ClipboardList size={36} color="rgba(127,208,255,0.15)" />
-            <div style={{ color: "#8b949e", fontSize: 14, marginTop: 12, fontWeight: 500 }}>
+            <ClipboardList size={36} color="rgba(54, 110, 244,0.15)" />
+            <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 14, marginTop: 12, fontWeight: 500 }}>
               暂无事件记录
             </div>
-            <div style={{ color: "#6a7f97", fontSize: 12, marginTop: 4, textAlign: "center", maxWidth: 300 }}>
+            <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 12, marginTop: 4, textAlign: "center", maxWidth: 300 }}>
               导入文件、运行推理或合并实体后，相关活动将显示在此处。
             </div>
           </div>
@@ -195,7 +195,7 @@ const shellStyle: React.CSSProperties = {
   flexDirection: "column",
   width: "100%",
   height: "100%",
-  background: "#0d1117",
+  background: "#eeeeee",
   overflow: "hidden",
 };
 
@@ -204,7 +204,7 @@ const headerStyle: React.CSSProperties = {
   alignItems: "center",
   justifyContent: "space-between",
   padding: "20px 24px 16px",
-  borderBottom: "1px solid rgba(88,166,255,0.1)",
+  borderBottom: "1px solid rgba(0, 82, 217,0.1)",
   flexShrink: 0,
 };
 
@@ -213,7 +213,7 @@ const filterBarStyle: React.CSSProperties = {
   alignItems: "center",
   gap: 10,
   padding: "12px 24px",
-  borderBottom: "1px solid rgba(255,255,255,0.05)",
+  borderBottom: "1px solid rgba(0, 0, 0, 0.05)",
   flexShrink: 0,
 };
 
@@ -229,16 +229,16 @@ const feedStyle: React.CSSProperties = {
 const entryCardStyle: React.CSSProperties = {
   padding: "12px 14px",
   borderRadius: 12,
-  background: "linear-gradient(135deg, rgba(13,17,23,0.6), rgba(22,27,34,0.4))",
-  border: "1px solid rgba(255,255,255,0.06)",
-  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.03)",
+  background: "linear-gradient(135deg, rgba(255, 255, 255,0.6), rgba(255, 255, 255,0.4))",
+  border: "1px solid rgba(0, 0, 0, 0.06)",
+  boxShadow: "inset 0 1px 0 rgba(0, 0, 0, 0.03)",
 };
 
 const expandBtnStyle: React.CSSProperties = {
   flexShrink: 0,
   background: "transparent",
   border: "none",
-  color: "#8b949e",
+  color: "rgba(0, 0, 0, 0.6)",
   cursor: "pointer",
   padding: 4,
   borderRadius: 6,
@@ -250,9 +250,9 @@ const detailPreStyle: React.CSSProperties = {
   marginTop: 10,
   padding: "10px 12px",
   borderRadius: 8,
-  background: "rgba(0,0,0,0.28)",
-  border: "1px solid rgba(255,255,255,0.06)",
-  color: "#79c0ff",
+  background: "rgba(0,0,0,0.045)",
+  border: "1px solid rgba(0, 0, 0, 0.06)",
+  color: "#0052d9",
   fontSize: 11,
   fontFamily: "'JetBrains Mono', monospace",
   overflowX: "auto",
@@ -266,9 +266,9 @@ const clearBtnStyle: React.CSSProperties = {
   gap: 5,
   padding: "5px 10px",
   borderRadius: 8,
-  border: "1px solid rgba(255,123,114,0.22)",
-  background: "rgba(255,123,114,0.06)",
-  color: "#ff7b72",
+  border: "1px solid rgba(213, 73, 65,0.22)",
+  background: "rgba(213, 73, 65,0.06)",
+  color: "#d54941",
   fontSize: 12,
   fontWeight: 600,
   cursor: "pointer",

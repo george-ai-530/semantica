@@ -15,7 +15,7 @@ export function PropertyPanel({ concept }: PropertyPanelProps) {
     return (
       <div style={{
         display: 'flex', flexDirection: 'column', alignItems: 'center',
-        justifyContent: 'center', height: '100%', color: '#8b949e',
+        justifyContent: 'center', height: '100%', color: 'rgba(0, 0, 0, 0.6)',
         textAlign: 'center', padding: 40,
       }}>
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
@@ -32,13 +32,13 @@ export function PropertyPanel({ concept }: PropertyPanelProps) {
   return (
     <div style={{ padding: 28, overflowY: 'auto', height: '100%' }}>
       {/* Header */}
-      <div style={{ borderBottom: '1px solid rgba(88,166,255,0.2)', paddingBottom: 20, marginBottom: 24 }}>
+      <div style={{ borderBottom: '1px solid rgba(0, 82, 217,0.2)', paddingBottom: 20, marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
           <span style={{
             display: 'inline-block', width: 8, height: 8, borderRadius: '50%',
-            background: '#d2a8ff', boxShadow: '0 0 8px rgba(210,168,255,0.6)',
+            background: '#5e3ab8', boxShadow: '0 0 8px rgba(123, 83, 216,0.6)',
           }} />
-          <span style={{ color: '#d2a8ff', fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+          <span style={{ color: '#5e3ab8', fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
             SKOS 概念
           </span>
         </div>
@@ -50,9 +50,9 @@ export function PropertyPanel({ concept }: PropertyPanelProps) {
       {/* URI Badge */}
       <div style={{
         marginBottom: 20, padding: '8px 14px',
-        background: 'rgba(88,166,255,0.08)',
-        border: '1px solid rgba(88,166,255,0.2)',
-        borderRadius: 6, fontSize: 13, color: '#79c0ff',
+        background: 'rgba(0, 82, 217,0.08)',
+        border: '1px solid rgba(0, 82, 217,0.2)',
+        borderRadius: 6, fontSize: 13, color: '#0052d9',
         fontFamily: "'JetBrains Mono', monospace",
         wordBreak: 'break-all',
       }}>
@@ -63,7 +63,7 @@ export function PropertyPanel({ concept }: PropertyPanelProps) {
       {concept.alt_labels && concept.alt_labels.length > 0 && (
         <section style={{ marginBottom: 24 }}>
           <h4 style={{
-            color: '#8b949e', fontSize: 12, textTransform: 'uppercase',
+            color: 'rgba(0, 0, 0, 0.6)', fontSize: 12, textTransform: 'uppercase',
             letterSpacing: '0.08em', marginBottom: 10,
           }}>
             可选标签
@@ -71,9 +71,9 @@ export function PropertyPanel({ concept }: PropertyPanelProps) {
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {concept.alt_labels.map((lbl, i) => (
               <span key={i} style={{
-                background: '#21262d', color: '#c9d1d9',
+                background: '#f3f3f3', color: 'rgba(0, 0, 0, 0.85)',
                 padding: '4px 10px', borderRadius: 4, fontSize: 13,
-                border: '1px solid rgba(255,255,255,0.06)',
+                border: '1px solid rgba(0, 0, 0, 0.06)',
               }}>
                 {lbl}
               </span>
@@ -84,11 +84,11 @@ export function PropertyPanel({ concept }: PropertyPanelProps) {
 
       {/* Children summary */}
       <section style={{
-        background: 'rgba(0,0,0,0.2)', padding: 16, borderRadius: 8,
-        border: '1px solid rgba(255,255,255,0.05)',
+        background: 'rgba(0,0,0,0.04)', padding: 16, borderRadius: 8,
+        border: '1px solid rgba(0, 0, 0, 0.05)',
       }}>
         <h4 style={{
-          color: '#8b949e', fontSize: 12, textTransform: 'uppercase',
+          color: 'rgba(0, 0, 0, 0.6)', fontSize: 12, textTransform: 'uppercase',
           letterSpacing: '0.08em', marginBottom: 10,
         }}>
           下位概念
@@ -97,16 +97,16 @@ export function PropertyPanel({ concept }: PropertyPanelProps) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             {concept.children.map((child) => (
               <span key={child.uri} style={{
-                color: '#c9d1d9', fontSize: 13, padding: '6px 10px',
-                background: 'rgba(88,166,255,0.06)', borderRadius: 4,
-                border: '1px solid rgba(88,166,255,0.12)',
+                color: 'rgba(0, 0, 0, 0.85)', fontSize: 13, padding: '6px 10px',
+                background: 'rgba(0, 82, 217,0.06)', borderRadius: 4,
+                border: '1px solid rgba(0, 82, 217,0.12)',
               }}>
                 {child.pref_label}
               </span>
             ))}
           </div>
         ) : (
-          <p style={{ margin: 0, color: '#484f58', fontStyle: 'italic', fontSize: 13 }}>
+          <p style={{ margin: 0, color: 'rgba(0, 0, 0, 0.26)', fontStyle: 'italic', fontSize: 13 }}>
             叶子概念 — 无下位概念。
           </p>
         )}

@@ -51,8 +51,8 @@ export const ImportDropzone: React.FC = () => {
       <div
         {...getRootProps()}
         style={{
-          border: `2px dashed ${isDragActive ? '#58a6ff' : 'rgba(88,166,255,0.25)'}`,
-          backgroundColor: isDragActive ? 'rgba(88,166,255,0.06)' : 'rgba(0,0,0,0.2)',
+          border: `2px dashed ${isDragActive ? '#0052d9' : 'rgba(0, 82, 217,0.25)'}`,
+          backgroundColor: isDragActive ? 'rgba(0, 82, 217,0.06)' : 'rgba(0,0,0,0.2)',
           borderRadius: 8,
           padding: '16px 12px',
           textAlign: 'center',
@@ -63,22 +63,22 @@ export const ImportDropzone: React.FC = () => {
         <input {...getInputProps()} />
 
         {importMutation.isPending ? (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#8b949e' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: 'rgba(0, 0, 0, 0.6)' }}>
             <Loader2 className="animate-spin" size={20} style={{ marginBottom: 6 }} />
             <span style={{ fontSize: 12 }}>正在上传 {file?.name}…</span>
           </div>
         ) : importResult ? (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#3fb950' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#2da44e' }}>
             <CheckCircle2 size={20} style={{ marginBottom: 6 }} />
             <span style={{ fontSize: 12, fontWeight: 500 }}>导入成功！</span>
-            <span style={{ fontSize: 11, marginTop: 2, color: '#56d364' }}>
+            <span style={{ fontSize: 11, marginTop: 2, color: '#2da44e' }}>
               +{importResult.nodes_added} 个概念 · +{importResult.edges_added} 个链接
             </span>
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#8b949e' }}>
-            <UploadCloud size={20} style={{ marginBottom: 6, color: isDragActive ? '#58a6ff' : '#484f58' }} />
-            <span style={{ fontSize: 12, fontWeight: 500, color: '#c9d1d9' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: 'rgba(0, 0, 0, 0.6)' }}>
+            <UploadCloud size={20} style={{ marginBottom: 6, color: isDragActive ? '#0052d9' : 'rgba(0, 0, 0, 0.26)' }} />
+            <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(0, 0, 0, 0.85)' }}>
               {isDragActive ? "拖放到此处…" : "导入词汇表"}
             </span>
             <span style={{ fontSize: 11, marginTop: 2 }}>.ttl 或 .rdf</span>
@@ -86,7 +86,7 @@ export const ImportDropzone: React.FC = () => {
         )}
       </div>
       {importMutation.isError && (
-        <p style={{ color: '#f85149', fontSize: 11, marginTop: 6, textAlign: 'center' }}>
+        <p style={{ color: '#d54941', fontSize: 11, marginTop: 6, textAlign: 'center' }}>
           上传失败。请查看控制台。
         </p>
       )}

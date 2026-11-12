@@ -36,12 +36,12 @@ interface EntityDetail {
 }
 
 const ENTITY_TYPE_COLORS: Record<string, string> = {
-  class: "#d2a8ff",
-  property: "#f2b66d",
-  individual: "#9ee8d7",
-  concept: "#58a6ff",
-  scheme: "#7fd0ff",
-  unknown: "#6a7f97",
+  class: "#5e3ab8",
+  property: "#e37318",
+  individual: "#1f7a4d",
+  concept: "#0052d9",
+  scheme: "#366ef4",
+  unknown: "rgba(0, 0, 0, 0.6)",
 };
 
 const ENTITY_TYPE_LABELS: Record<string, string> = {
@@ -82,7 +82,7 @@ function UriRef({ uri }: { uri: string }) {
   return (
     <span
       title={uri}
-      style={{ color: "#58a6ff", fontSize: 11, fontFamily: "monospace", cursor: "help" }}
+      style={{ color: "#0052d9", fontSize: 11, fontFamily: "monospace", cursor: "help" }}
     >
       {short}
     </span>
@@ -110,26 +110,26 @@ function ResultRow({
         border: "1px solid",
         cursor: "pointer",
         transition: "160ms ease",
-        background: selected ? "rgba(74,163,255,0.1)" : "rgba(255,255,255,0.02)",
-        borderColor: selected ? "rgba(127,208,255,0.24)" : "rgba(127,208,255,0.08)",
+        background: selected ? "rgba(0, 82, 217,0.1)" : "rgba(0, 0, 0, 0.02)",
+        borderColor: selected ? "rgba(54, 110, 244,0.24)" : "rgba(54, 110, 244,0.08)",
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-        <span style={{ color: "#ebf3ff", fontSize: 13, fontWeight: 700, flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+        <span style={{ color: "rgba(0, 0, 0, 0.9)", fontSize: 13, fontWeight: 700, flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {result.label || result.uri}
         </span>
         <TypeBadge entityType={result.entity_type} />
       </div>
-      <div style={{ color: "#6a7f97", fontSize: 10, fontFamily: "monospace", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+      <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 10, fontFamily: "monospace", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
         {result.uri}
       </div>
       {result.definition && (
-        <div style={{ color: "#8fa8c6", fontSize: 12, lineHeight: 1.4, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as const }}>
+        <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 12, lineHeight: 1.4, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as const }}>
           {result.definition}
         </div>
       )}
       {result.source_ontology && (
-        <div style={{ color: "#5a7a9a", fontSize: 10 }}>
+        <div style={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 10 }}>
           来源：{result.source_ontology}
         </div>
       )}
@@ -148,18 +148,18 @@ function CollapsibleList({ label, items }: { label: string; items: string[] }) {
       >
         {open ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
         <span>{label}</span>
-        <span style={{ color: "#6a7f97", fontSize: 10 }}>({items.length})</span>
+        <span style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 10 }}>({items.length})</span>
       </button>
       {open && (
         <div style={{ marginLeft: 16, marginTop: 4, display: "flex", flexDirection: "column", gap: 3 }}>
           {items.slice(0, 12).map((uri) => (
             <div key={uri} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{ color: "#6a7f97", fontSize: 10 }}>→</span>
+              <span style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 10 }}>→</span>
               <UriRef uri={uri} />
             </div>
           ))}
           {items.length > 12 && (
-            <span style={{ color: "#5a7a9a", fontSize: 10 }}>还有 {items.length - 12} 项</span>
+            <span style={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 10 }}>还有 {items.length - 12} 项</span>
           )}
         </div>
       )}
@@ -211,8 +211,8 @@ function DetailPanel({
     <div style={detailPanelStyle}>
       <div style={detailHeaderStyle}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
-          <BookOpen size={14} color="#d2a8ff" />
-          <span style={{ color: "#ebf3ff", fontSize: 13, fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          <BookOpen size={14} color="#5e3ab8" />
+          <span style={{ color: "rgba(0, 0, 0, 0.9)", fontSize: 13, fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             实体详情
           </span>
         </div>
@@ -223,14 +223,14 @@ function DetailPanel({
 
       {loading && (
         <div style={centerStyle}>
-          <Loader2 size={18} color="#4aa3ff" style={{ animation: "spin 1s linear infinite" }} />
+          <Loader2 size={18} color="#0052d9" style={{ animation: "spin 1s linear infinite" }} />
         </div>
       )}
 
       {error && (
         <div style={centerStyle}>
-          <AlertCircle size={16} color="#ff9daf" />
-          <span style={{ color: "#ff9daf", fontSize: 12, marginTop: 6 }}>{error}</span>
+          <AlertCircle size={16} color="#d54941" />
+          <span style={{ color: "#d54941", fontSize: 12, marginTop: 6 }}>{error}</span>
         </div>
       )}
 
@@ -238,19 +238,19 @@ function DetailPanel({
         <div style={detailBodyStyle}>
           <div style={{ marginBottom: 14 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 4 }}>
-              <h3 style={{ margin: 0, color: "#ebf3ff", fontSize: 17, fontWeight: 800, letterSpacing: "-0.03em" }}>
+              <h3 style={{ margin: 0, color: "rgba(0, 0, 0, 0.9)", fontSize: 17, fontWeight: 800, letterSpacing: "-0.03em" }}>
                 {detail.label || detail.uri.split("/").pop()}
               </h3>
               <TypeBadge entityType={detail.entity_type} />
             </div>
-            <div style={{ color: "#5a7a9a", fontSize: 10, fontFamily: "monospace", wordBreak: "break-all" }}>
+            <div style={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 10, fontFamily: "monospace", wordBreak: "break-all" }}>
               {detail.uri}
             </div>
           </div>
 
           {detail.definition && (
             <DetailSection label="定义">
-              <p style={{ margin: 0, color: "#c6d4e3", fontSize: 13, lineHeight: 1.6 }}>
+              <p style={{ margin: 0, color: "rgba(0, 0, 0, 0.7)", fontSize: 13, lineHeight: 1.6 }}>
                 {detail.definition}
               </p>
             </DetailSection>
@@ -258,7 +258,7 @@ function DetailPanel({
 
           {detail.instance_count > 0 && (
             <DetailSection label="实例">
-              <span style={{ color: "#9ee8d7", fontSize: 14, fontWeight: 800 }}>
+              <span style={{ color: "#1f7a4d", fontSize: 14, fontWeight: 800 }}>
                 {detail.instance_count.toLocaleString()}
               </span>
             </DetailSection>
@@ -271,7 +271,7 @@ function DetailPanel({
 
           {detail.source_ontology && (
             <DetailSection label="来源本体">
-              <span style={{ color: "#c6d4e3", fontSize: 12, fontFamily: "monospace" }}>
+              <span style={{ color: "rgba(0, 0, 0, 0.7)", fontSize: 12, fontFamily: "monospace" }}>
                 {detail.source_ontology}
               </span>
             </DetailSection>
@@ -294,8 +294,8 @@ function DetailPanel({
 
 function DetailSection({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div style={{ paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.05)", marginTop: 10 }}>
-      <div style={{ color: "#6a7f97", fontSize: 10, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: "0.07em", marginBottom: 5 }}>
+    <div style={{ paddingTop: 10, borderTop: "1px solid rgba(0, 0, 0, 0.05)", marginTop: 10 }}>
+      <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 10, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: "0.07em", marginBottom: 5 }}>
         {label}
       </div>
       {children}
@@ -345,7 +345,7 @@ export function OntologySearch() {
       {/* Search input */}
       <div style={searchTopStyle}>
         <div style={searchBarStyle}>
-          <Search size={14} color="#6a7f97" />
+          <Search size={14} color="rgba(0, 0, 0, 0.6)" />
           <input
             autoFocus
             value={query}
@@ -353,7 +353,7 @@ export function OntologySearch() {
             placeholder="搜索类、属性、概念…"
             style={searchInputStyle}
           />
-          {searching && <Loader2 size={13} color="#4aa3ff" style={{ animation: "spin 0.8s linear infinite", flexShrink: 0 }} />}
+          {searching && <Loader2 size={13} color="#0052d9" style={{ animation: "spin 0.8s linear infinite", flexShrink: 0 }} />}
           {query && !searching && (
             <button onClick={() => { setQuery(""); setResults([]); }} style={clearBtnStyle}>
               <X size={12} />
@@ -382,8 +382,8 @@ export function OntologySearch() {
         <div style={resultListStyle}>
           {!query && (
             <div style={hintStyle}>
-              <Search size={20} color="rgba(74,163,255,0.2)" />
-              <span style={{ color: "#6a7f97", fontSize: 12, marginTop: 8 }}>
+              <Search size={20} color="rgba(0, 82, 217,0.2)" />
+              <span style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 12, marginTop: 8 }}>
                 输入以搜索所有已加载的本体
               </span>
             </div>
@@ -391,13 +391,13 @@ export function OntologySearch() {
 
           {query && results.length === 0 && !searching && (
             <div style={hintStyle}>
-              <span style={{ color: "#6a7f97", fontSize: 12 }}>没有与“{query}”匹配的结果</span>
+              <span style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 12 }}>没有与“{query}”匹配的结果</span>
             </div>
           )}
 
           {results.length > 0 && (
             <div style={{ padding: "10px 12px", display: "flex", flexDirection: "column", gap: 6 }}>
-              <div style={{ color: "#6a7f97", fontSize: 11, fontWeight: 700, marginBottom: 2 }}>
+              <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 11, fontWeight: 700, marginBottom: 2 }}>
                 {results.length} 个结果
               </div>
               {results.map((r) => (
@@ -431,7 +431,7 @@ const searchShellStyle: React.CSSProperties = {
 
 const searchTopStyle: React.CSSProperties = {
   padding: "12px 14px 10px",
-  borderBottom: "1px solid rgba(127,208,255,0.08)",
+  borderBottom: "1px solid rgba(54, 110, 244,0.08)",
   display: "flex",
   flexDirection: "column",
   gap: 8,
@@ -444,8 +444,8 @@ const searchBarStyle: React.CSSProperties = {
   gap: 8,
   padding: "7px 12px",
   borderRadius: 10,
-  border: "1px solid rgba(127,208,255,0.14)",
-  background: "rgba(0,0,0,0.24)",
+  border: "1px solid rgba(54, 110, 244,0.14)",
+  background: "rgba(0,0,0,0.045)",
 };
 
 const searchInputStyle: React.CSSProperties = {
@@ -453,14 +453,14 @@ const searchInputStyle: React.CSSProperties = {
   background: "transparent",
   border: "none",
   outline: "none",
-  color: "#ebf3ff",
+  color: "rgba(0, 0, 0, 0.9)",
   fontSize: 13,
 };
 
 const clearBtnStyle: React.CSSProperties = {
   background: "transparent",
   border: "none",
-  color: "#6a7f97",
+  color: "rgba(0, 0, 0, 0.6)",
   cursor: "pointer",
   padding: 2,
   display: "grid",
@@ -485,14 +485,14 @@ const typeFilterBtnBase: React.CSSProperties = {
 
 const typeFilterBtnIdle: React.CSSProperties = {
   background: "transparent",
-  color: "#8fa8c6",
-  borderColor: "rgba(127,208,255,0.1)",
+  color: "rgba(0, 0, 0, 0.6)",
+  borderColor: "rgba(54, 110, 244,0.1)",
 };
 
 const typeFilterBtnActive: React.CSSProperties = {
-  background: "rgba(74,163,255,0.14)",
-  color: "#ebf3ff",
-  borderColor: "rgba(127,208,255,0.26)",
+  background: "rgba(0, 82, 217,0.14)",
+  color: "rgba(0, 0, 0, 0.9)",
+  borderColor: "rgba(54, 110, 244,0.26)",
 };
 
 const searchBodyStyle: React.CSSProperties = {
@@ -522,8 +522,8 @@ const detailPanelStyle: React.CSSProperties = {
   flexShrink: 0,
   display: "flex",
   flexDirection: "column",
-  borderLeft: "1px solid rgba(127,208,255,0.1)",
-  background: "rgba(3,9,18,0.5)",
+  borderLeft: "1px solid rgba(54, 110, 244,0.1)",
+  background: "rgba(255, 255, 255,0.5)",
   overflow: "hidden",
 };
 
@@ -532,14 +532,14 @@ const detailHeaderStyle: React.CSSProperties = {
   alignItems: "center",
   justifyContent: "space-between",
   padding: "12px 14px",
-  borderBottom: "1px solid rgba(127,208,255,0.08)",
+  borderBottom: "1px solid rgba(54, 110, 244,0.08)",
   flexShrink: 0,
 };
 
 const closeDetailBtnStyle: React.CSSProperties = {
   background: "transparent",
   border: "none",
-  color: "#8fa8c6",
+  color: "rgba(0, 0, 0, 0.6)",
   cursor: "pointer",
   padding: 2,
   display: "grid",
@@ -570,7 +570,7 @@ const collapseHdrStyle: React.CSSProperties = {
   gap: 5,
   background: "transparent",
   border: "none",
-  color: "#8fa8c6",
+  color: "rgba(0, 0, 0, 0.6)",
   fontSize: 12,
   fontWeight: 600,
   cursor: "pointer",
@@ -584,7 +584,7 @@ const openUriStyle: React.CSSProperties = {
   alignItems: "center",
   gap: 5,
   marginTop: 14,
-  color: "#58a6ff",
+  color: "#0052d9",
   fontSize: 11,
   textDecoration: "none",
 };

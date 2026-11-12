@@ -174,7 +174,7 @@ function renderRegionsAndSignals(
                 style={{
                   ...legendSwatchStyle,
                   background: region.color,
-                  boxShadow: `0 0 0 1px rgba(255,255,255,0.06), 0 0 14px ${region.color}40`,
+                  boxShadow: `0 0 0 1px rgba(0, 0, 0, 0.06), 0 0 14px ${region.color}40`,
                 }}
               />
               <div style={{ minWidth: 0, flex: 1 }}>
@@ -249,7 +249,7 @@ function renderRegionsAndSignals(
                 style={{
                   ...legendSwatchStyle,
                   background: item.color,
-                  boxShadow: `0 0 0 1px rgba(255,255,255,0.06), 0 0 14px ${item.color}40`,
+                  boxShadow: `0 0 0 1px rgba(0, 0, 0, 0.06), 0 0 14px ${item.color}40`,
                 }}
               />
               <div style={{ minWidth: 0, flex: 1 }}>
@@ -375,7 +375,7 @@ const panelBodyStyle: CSSProperties = {
 };
 
 const panelEyebrowStyle: CSSProperties = {
-  color: "#8ea4be",
+  color: "rgba(0, 0, 0, 0.6)",
   fontSize: 11,
   fontWeight: 700,
   letterSpacing: "0.08em",
@@ -388,18 +388,18 @@ const sectionStyle: CSSProperties = {
   gap: 8,
   padding: "10px 12px",
   borderRadius: 14,
-  border: "1px solid rgba(255,255,255,0.06)",
-  background: "rgba(255,255,255,0.025)",
+  border: "1px solid rgba(0, 0, 0, 0.06)",
+  background: "rgba(0, 0, 0, 0.025)",
 };
 
 const sectionTitleStyle: CSSProperties = {
-  color: "#dce9f8",
+  color: "rgba(0, 0, 0, 0.9)",
   fontSize: 12,
   fontWeight: 700,
 };
 
 const subsectionTitleStyle: CSSProperties = {
-  color: "#9cc4ec",
+  color: "rgba(0, 0, 0, 0.6)",
   fontSize: 11,
   fontWeight: 700,
   letterSpacing: "0.05em",
@@ -414,19 +414,19 @@ const toggleRowStyle: CSSProperties = {
 };
 
 const rowTitleStyle: CSSProperties = {
-  color: "#f3f7fd",
+  color: "rgba(0, 0, 0, 0.9)",
   fontSize: 13,
   fontWeight: 600,
 };
 
 const rowDescriptionStyle: CSSProperties = {
-  color: "#a1b7cf",
+  color: "rgba(0, 0, 0, 0.6)",
   fontSize: 12,
   lineHeight: 1.45,
 };
 
 const rowMetaStyle: CSSProperties = {
-  color: "#7fc6ff",
+  color: "#366ef4",
   fontSize: 11,
   lineHeight: 1.45,
 };
@@ -435,9 +435,9 @@ const toggleButtonStyle: CSSProperties = {
   minWidth: 52,
   padding: "8px 10px",
   borderRadius: 999,
-  border: "1px solid rgba(255,255,255,0.08)",
-  background: "rgba(255,255,255,0.03)",
-  color: "#cfe0f4",
+  border: "1px solid rgba(0, 0, 0, 0.08)",
+  background: "rgba(0, 0, 0, 0.03)",
+  color: "rgba(0, 0, 0, 0.7)",
   fontSize: 12,
   fontWeight: 700,
   cursor: "pointer",
@@ -445,9 +445,9 @@ const toggleButtonStyle: CSSProperties = {
 
 const toggleButtonActiveStyle: CSSProperties = {
   ...toggleButtonStyle,
-  background: "rgba(31, 111, 235, 0.24)",
-  border: "1px solid rgba(127, 208, 255, 0.28)",
-  color: "#eef6ff",
+  background: "rgba(0, 82, 217, 0.24)",
+  border: "1px solid rgba(54, 110, 244, 0.28)",
+  color: "rgba(0, 0, 0, 0.9)",
 };
 
 const legendRowStyle: CSSProperties = {
@@ -456,8 +456,8 @@ const legendRowStyle: CSSProperties = {
   gap: 10,
   padding: "8px 10px",
   borderRadius: 12,
-  border: "1px solid rgba(255,255,255,0.06)",
-  background: "rgba(255,255,255,0.025)",
+  border: "1px solid rgba(0, 0, 0, 0.06)",
+  background: "rgba(0, 0, 0, 0.025)",
 };
 
 const legendSwatchStyle: CSSProperties = {
@@ -473,16 +473,16 @@ const signalRowStyle: CSSProperties = {
   gap: 10,
   padding: "8px 10px",
   borderRadius: 12,
-  border: "1px solid rgba(255,255,255,0.05)",
-  background: "rgba(255,255,255,0.02)",
+  border: "1px solid rgba(0, 0, 0, 0.05)",
+  background: "rgba(0, 0, 0, 0.02)",
 };
 
 const signalBadgeStyle: CSSProperties = {
   padding: "5px 8px",
   borderRadius: 999,
-  background: "rgba(31, 111, 235, 0.16)",
-  border: "1px solid rgba(127, 208, 255, 0.16)",
-  color: "#dce9f8",
+  background: "rgba(0, 82, 217, 0.16)",
+  border: "1px solid rgba(54, 110, 244, 0.16)",
+  color: "rgba(0, 0, 0, 0.9)",
   fontSize: 11,
   fontWeight: 700,
   whiteSpace: "nowrap",
@@ -490,15 +490,15 @@ const signalBadgeStyle: CSSProperties = {
 
 const detailsStyle: CSSProperties = {
   borderRadius: 12,
-  border: "1px solid rgba(255,255,255,0.05)",
-  background: "rgba(0,0,0,0.14)",
+  border: "1px solid rgba(0, 0, 0, 0.05)",
+  background: "rgba(0,0,0,0.05)",
   overflow: "hidden",
 };
 
 const summaryStyle: CSSProperties = {
   cursor: "pointer",
   padding: "10px 12px",
-  color: "#c6d4e3",
+  color: "rgba(0, 0, 0, 0.7)",
   fontSize: 12,
   fontWeight: 700,
   letterSpacing: "0.04em",
@@ -508,7 +508,7 @@ const summaryStyle: CSSProperties = {
 const diagnosticsPreStyle: CSSProperties = {
   margin: 0,
   padding: "0 12px 12px",
-  color: "#dce9f8",
+  color: "rgba(0, 0, 0, 0.9)",
   fontSize: 11,
   lineHeight: 1.55,
   whiteSpace: "pre-wrap",
@@ -516,7 +516,7 @@ const diagnosticsPreStyle: CSSProperties = {
 };
 
 const emptyTextStyle: CSSProperties = {
-  color: "#8ea4be",
+  color: "rgba(0, 0, 0, 0.6)",
   fontSize: 12,
   lineHeight: 1.5,
 };

@@ -33,23 +33,23 @@ export function SparqlWorkspace() {
           ],
         },
       });
-      monacoIns.editor.defineTheme("sparql-dark", {
-        base: "vs-dark",
+      monacoIns.editor.defineTheme("sparql-light", {
+        base: "vs",
         inherit: true,
         rules: [
-          { token: "keyword", foreground: "58a6ff", fontStyle: "bold" },
-          { token: "variable.name", foreground: "a5d6ff" },
-          { token: "string.uri", foreground: "7ee787" },
-          { token: "string", foreground: "a5d6ff" },
-          { token: "comment", foreground: "4a6a85", fontStyle: "italic" },
-          { token: "number", foreground: "f2b66d" },
+          { token: "keyword", foreground: "0052d9", fontStyle: "bold" },
+          { token: "variable.name", foreground: "0b60c9" },
+          { token: "string.uri", foreground: "116329" },
+          { token: "string", foreground: "0b60c9" },
+          { token: "comment", foreground: "8a8f98", fontStyle: "italic" },
+          { token: "number", foreground: "b5500a" },
         ],
         colors: {
-          "editor.background": "#050c18",
-          "editor.lineHighlightBackground": "#0a1628",
-          "editorLineNumber.foreground": "#2a4060",
-          "editorCursor.foreground": "#4aa3ff",
-          "editor.selectionBackground": "#1e3a5a",
+          "editor.background": "#ffffff",
+          "editor.lineHighlightBackground": "#f3f3f3",
+          "editorLineNumber.foreground": "#b0b0b0",
+          "editorCursor.foreground": "#0052d9",
+          "editor.selectionBackground": "#d9e1ff",
         },
       });
     }
@@ -131,7 +131,7 @@ export function SparqlWorkspace() {
     <div className="ws-page">
       <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
         {/* ── Toolbar ── */}
-        <div style={{ padding: "10px 16px", borderBottom: "1px solid var(--ws-border)", display: "flex", alignItems: "center", gap: 8, flexShrink: 0, background: "rgba(0,0,0,0.18)" }}>
+        <div style={{ padding: "10px 16px", borderBottom: "1px solid var(--ws-border)", display: "flex", alignItems: "center", gap: 8, flexShrink: 0, background: "rgba(0,0,0,0.04)" }}>
           <div style={{ display: "flex", gap: 6, flex: 1, flexWrap: "wrap" }}>
             <span className="ws-eyebrow" style={{ alignSelf: "center", marginRight: 4 }}>模板：</span>
             {TEMPLATES.map((t) => (
@@ -170,7 +170,7 @@ export function SparqlWorkspace() {
             <Editor
               height="100%"
               defaultLanguage="sparql"
-              theme="sparql-dark"
+              theme="sparql-light"
               value={query}
               onChange={(v) => setQuery(v || "")}
               beforeMount={handleEditorWillMount}
@@ -189,7 +189,7 @@ export function SparqlWorkspace() {
           </div>
 
           {/* Results */}
-          <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", overflow: "hidden", background: "rgba(0,0,0,0.12)" }}>
+          <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", overflow: "hidden", background: "rgba(0,0,0,0.035)" }}>
             <div style={{ padding: "10px 16px", borderBottom: "1px solid var(--ws-border)", display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 7, color: "var(--ws-text-muted)", fontSize: 13, fontWeight: 700 }}>
                 <Table2 size={14} />
@@ -211,7 +211,7 @@ export function SparqlWorkspace() {
               )}
 
               {result?.error && !isLoading && (
-                <div className="ws-animate-in" style={{ margin: 16, display: "flex", gap: 10, padding: "12px 14px", borderRadius: "var(--ws-radius-sm)", background: "var(--ws-red-soft)", border: "1px solid rgba(255,123,114,0.28)", color: "#fca5a5", fontSize: 13 }}>
+                <div className="ws-animate-in" style={{ margin: 16, display: "flex", gap: 10, padding: "12px 14px", borderRadius: "var(--ws-radius-sm)", background: "var(--ws-red-soft)", border: "1px solid rgba(213, 73, 65,0.28)", color: "#d54941", fontSize: 13 }}>
                   <AlertCircle size={16} style={{ flexShrink: 0, marginTop: 1 }} />
                   {result.error}
                 </div>
@@ -227,7 +227,7 @@ export function SparqlWorkspace() {
                   ) : (
                     <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12, color: "var(--ws-text)" }}>
                       <thead>
-                        <tr style={{ borderBottom: "1px solid var(--ws-border)", background: "rgba(0,0,0,0.2)" }}>
+                        <tr style={{ borderBottom: "1px solid var(--ws-border)", background: "rgba(0,0,0,0.04)" }}>
                           <th style={{ padding: "8px 14px", textAlign: "left", color: "var(--ws-text-dim)", fontFamily: "monospace", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", width: 40 }}>#</th>
                           {result.columns.map((c) => (
                             <th key={c} style={{ padding: "8px 14px", textAlign: "left", color: "var(--ws-text-muted)", fontFamily: "monospace", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em" }}>?{c}</th>
@@ -236,13 +236,13 @@ export function SparqlWorkspace() {
                       </thead>
                       <tbody>
                         {result.rows.map((r, i) => (
-                          <tr key={i} style={{ borderBottom: "1px solid rgba(74,163,255,0.06)" }}>
+                          <tr key={i} style={{ borderBottom: "1px solid rgba(0, 82, 217,0.06)" }}>
                             <td style={{ padding: "7px 14px", color: "var(--ws-text-dim)", fontFamily: "monospace", fontSize: 11 }}>{i + 1}</td>
                             {(result.columns ?? []).map((c) => (
                               <td key={c} style={{ padding: "7px 14px", maxWidth: 300, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontFamily: "monospace" }} title={String(r[c] ?? "")}>
                                 {r[c] != null ? (
                                   String(r[c]).startsWith("urn:") || String(r[c]).startsWith("http")
-                                    ? <span style={{ color: "#7ee787" }}>{String(r[c])}</span>
+                                    ? <span style={{ color: "#1a7f37" }}>{String(r[c])}</span>
                                     : String(r[c])
                                 ) : <span style={{ color: "var(--ws-text-dim)", fontStyle: "italic" }}>null</span>}
                               </td>

@@ -31,18 +31,18 @@ export function Sidebar({ onSelectConcept }: SidebarProps) {
   return (
     <div style={{
       width: 340, display: 'flex', flexDirection: 'column',
-      borderRight: '1px solid rgba(88,166,255,0.15)',
-      backgroundColor: '#010409', overflow: 'hidden',
+      borderRight: '1px solid rgba(0, 82, 217,0.15)',
+      backgroundColor: '#ffffff', overflow: 'hidden',
     }}>
       {/* Header */}
       <div style={{
         padding: '20px 20px 16px',
-        borderBottom: '1px solid rgba(88,166,255,0.15)',
+        borderBottom: '1px solid rgba(0, 82, 217,0.15)',
       }}>
-        <h2 style={{ fontSize: 18, color: '#c9d1d9', margin: '0 0 4px 0', fontWeight: 600 }}>
+        <h2 style={{ fontSize: 18, color: 'rgba(0, 0, 0, 0.85)', margin: '0 0 4px 0', fontWeight: 600 }}>
           本体与词汇表
         </h2>
-        <p style={{ color: '#8b949e', fontSize: 13, margin: 0 }}>
+        <p style={{ color: 'rgba(0, 0, 0, 0.6)', fontSize: 13, margin: 0 }}>
           {schemes.length
             ? `${schemes.length} 个词汇表方案`
             : '未加载词汇表'}
@@ -50,11 +50,11 @@ export function Sidebar({ onSelectConcept }: SidebarProps) {
       </div>
 
       {/* Scheme selector */}
-      <div style={{ padding: '12px 16px', borderBottom: '1px solid rgba(88,166,255,0.1)' }}>
+      <div style={{ padding: '12px 16px', borderBottom: '1px solid rgba(0, 82, 217,0.1)' }}>
         {schemesLoading ? (
-          <div style={{ color: '#8b949e', fontSize: 13 }}>正在加载方案…</div>
+          <div style={{ color: 'rgba(0, 0, 0, 0.6)', fontSize: 13 }}>正在加载方案…</div>
         ) : schemes.length === 0 ? (
-          <div style={{ color: '#484f58', fontSize: 13, fontStyle: 'italic' }}>
+          <div style={{ color: 'rgba(0, 0, 0, 0.26)', fontSize: 13, fontStyle: 'italic' }}>
             未找到方案。请在下方导入 .ttl 或 .rdf 文件。
           </div>
         ) : (
@@ -63,15 +63,15 @@ export function Sidebar({ onSelectConcept }: SidebarProps) {
             onChange={(e) => setActiveScheme(e.target.value)}
             style={{
               width: '100%', appearance: 'none',
-              background: 'rgba(0,0,0,0.3)',
-              border: '1px solid rgba(88,166,255,0.2)',
-              color: '#c9d1d9', padding: '8px 12px',
+              background: '#ffffff',
+              border: '1px solid rgba(0, 82, 217,0.2)',
+              color: 'rgba(0, 0, 0, 0.85)', padding: '8px 12px',
               borderRadius: 6, fontSize: 13, cursor: 'pointer',
               outline: 'none',
             }}
           >
             {schemes.map((s: VocabularyScheme) => (
-              <option key={s.uri} value={s.uri} style={{ background: '#0d1117' }}>
+              <option key={s.uri} value={s.uri} style={{ background: '#eeeeee' }}>
                 {s.label}
               </option>
             ))}
@@ -84,11 +84,11 @@ export function Sidebar({ onSelectConcept }: SidebarProps) {
         flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column',
       }}>
         {treeLoading ? (
-          <div style={{ padding: 20, color: '#8b949e', fontSize: 13, textAlign: 'center' }}>
+          <div style={{ padding: 20, color: 'rgba(0, 0, 0, 0.6)', fontSize: 13, textAlign: 'center' }}>
             正在加载层级…
           </div>
         ) : hierarchy.length === 0 ? (
-          <div style={{ padding: 20, color: '#484f58', fontSize: 13, textAlign: 'center', fontStyle: 'italic' }}>
+          <div style={{ padding: 20, color: 'rgba(0, 0, 0, 0.26)', fontSize: 13, textAlign: 'center', fontStyle: 'italic' }}>
             {selectedSchemeUri
               ? '此方案中没有概念。'
               : '请选择一个方案以浏览概念。'}
@@ -103,7 +103,7 @@ export function Sidebar({ onSelectConcept }: SidebarProps) {
       {/* Import area */}
       <div style={{
         padding: '12px 16px',
-        borderTop: '1px solid rgba(88,166,255,0.15)',
+        borderTop: '1px solid rgba(0, 82, 217,0.15)',
       }}>
         <ImportDropzone />
       </div>

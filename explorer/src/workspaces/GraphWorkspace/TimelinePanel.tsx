@@ -47,7 +47,7 @@ const VIS_OVERRIDE_CSS = `
     border-radius: 3px !important;
     padding: 1px 5px !important;
     white-space: nowrap !important;
-    box-shadow: 0 0 8px rgba(98, 226, 205, 0.45) !important;
+    box-shadow: 0 0 8px rgba(0, 82, 217, 0.45) !important;
   }
   .sem-timeline-wrap .vis-current-time { display: none !important; }
   .sem-timeline-wrap .vis-panel.vis-left { display: none !important; }
@@ -168,7 +168,7 @@ export function TimelinePanel({ onTimeChange, minDate, maxDate }: TimelinePanelP
           id="temporal-play-btn"
           onClick={togglePlay}
           title={isPlaying ? "暂停演化" : "播放演化"}
-          style={{ width: 34, height: 34, borderRadius: "50%", border: `1.5px solid ${isPlaying ? GRAPH_THEME.ui.control.activeBorder : GRAPH_THEME.ui.control.defaultBorder}`, background: isPlaying ? GRAPH_THEME.ui.timeline.playheadSoft : GRAPH_THEME.ui.control.defaultBg, color: GRAPH_THEME.ui.timeline.playhead, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.2s", boxShadow: isPlaying ? "0 0 10px rgba(98, 226, 205, 0.32)" : "none" }}
+          style={{ width: 34, height: 34, borderRadius: "50%", border: `1.5px solid ${isPlaying ? GRAPH_THEME.ui.control.activeBorder : GRAPH_THEME.ui.control.defaultBorder}`, background: isPlaying ? GRAPH_THEME.ui.timeline.playheadSoft : GRAPH_THEME.ui.control.defaultBg, color: GRAPH_THEME.ui.timeline.playhead, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.2s", boxShadow: isPlaying ? "0 0 10px rgba(0, 82, 217, 0.32)" : "none" }}
         >
           {isPlaying ? (
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" /></svg>

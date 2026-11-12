@@ -2651,7 +2651,7 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, GraphCanvasProps>(
               bottom: 24,
               left: 24,
               padding: "8px 16px",
-              background: "linear-gradient(135deg, rgba(27, 79, 170, 0.9), rgba(53, 123, 255, 0.84))",
+              background: "linear-gradient(135deg, #366ef4, #0052d9)",
               color: "#fff",
               border: `1px solid ${GRAPH_THEME.palette.background.shellBorder}`,
               borderRadius: 10,

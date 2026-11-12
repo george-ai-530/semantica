@@ -7,25 +7,25 @@ import { ReactFlow, Background, Controls } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
 const THEME_CSS = `
-  .react-flow { background: var(--ws-bg, #060d1a); }
+  .react-flow { background: var(--ws-bg, #eeeeee); }
   .react-flow__node-group {
-    background: rgba(74,163,255,0.04);
-    border: 1px dashed rgba(74,163,255,0.18);
+    background: rgba(0, 82, 217,0.04);
+    border: 1px dashed rgba(0, 82, 217,0.18);
     border-radius: 10px;
   }
   .react-flow__node-default {
-    background: rgba(6,13,26,0.92);
-    color: var(--ws-text, #ddeeff);
-    border: 1px solid rgba(74,163,255,0.22);
+    background: rgba(255, 255, 255,0.92);
+    color: var(--ws-text, rgba(0, 0, 0, 0.9));
+    border: 1px solid rgba(0, 82, 217,0.22);
     border-radius: 8px;
     padding: 10px 12px;
     white-space: pre-wrap;
     font-size: 12px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
   }
-  .react-flow__controls { background: rgba(6,13,26,0.9); border: 1px solid rgba(74,163,255,0.18); border-radius: 10px; }
-  .react-flow__controls-button { background: transparent; border-color: rgba(74,163,255,0.15); color: var(--ws-text-muted, #5a7a9a); }
-  .react-flow__controls-button:hover { background: rgba(74,163,255,0.1); color: var(--ws-text, #ddeeff); }
+  .react-flow__controls { background: rgba(255, 255, 255,0.9); border: 1px solid rgba(0, 82, 217,0.18); border-radius: 10px; }
+  .react-flow__controls-button { background: transparent; border-color: rgba(0, 82, 217,0.15); color: var(--ws-text-muted, rgba(0, 0, 0, 0.4)); }
+  .react-flow__controls-button:hover { background: rgba(0, 82, 217,0.1); color: var(--ws-text, rgba(0, 0, 0, 0.9)); }
 `;
 
 export function LineageDiagram() {
@@ -111,7 +111,7 @@ export function LineageDiagram() {
           target: e.target,
           label: e.label,
           animated: true,
-          style: { stroke: "#58a6ff" }
+          style: { stroke: "#0052d9" }
         }));
 
         if (!ignore) {
@@ -127,12 +127,12 @@ export function LineageDiagram() {
   }, [activeId]);
 
   return (
-    <div style={{ width: "100%", height: "100%", position: "relative", background: "var(--ws-bg, #060d1a)" }}>
+    <div style={{ width: "100%", height: "100%", position: "relative", background: "var(--ws-bg, #eeeeee)" }}>
       <style>{THEME_CSS}</style>
 
       {/* Toolbar */}
-      <div style={{ position: "absolute", top: 14, left: 14, right: 14, zIndex: 10, display: "flex", gap: 8, alignItems: "center", background: "rgba(4,10,18,0.88)", backdropFilter: "blur(14px)", padding: "8px 12px", borderRadius: 12, border: "1px solid rgba(74,163,255,0.16)", boxShadow: "0 4px 20px rgba(0,0,0,0.4)" }}>
-        <span className="ws-eyebrow" style={{ color: "var(--ws-accent, #4aa3ff)", marginRight: 4 }}>PROV-O 溯源</span>
+      <div style={{ position: "absolute", top: 14, left: 14, right: 14, zIndex: 10, display: "flex", gap: 8, alignItems: "center", background: "rgba(255, 255, 255,0.88)", backdropFilter: "blur(14px)", padding: "8px 12px", borderRadius: 12, border: "1px solid rgba(0, 82, 217,0.16)", boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }}>
+        <span className="ws-eyebrow" style={{ color: "var(--ws-accent, #0052d9)", marginRight: 4 }}>PROV-O 溯源</span>
         <input
           className="ws-input"
           type="text"
@@ -155,14 +155,14 @@ export function LineageDiagram() {
       </div>
 
       {error ? (
-        <div style={{ position: "absolute", top: 60, left: 14, right: 14, zIndex: 10, padding: 12, borderRadius: 14, color: "#ffb4c2", background: "rgba(255,157,175,0.1)", border: "1px solid rgba(255,157,175,0.18)" }}>
+        <div style={{ position: "absolute", top: 60, left: 14, right: 14, zIndex: 10, padding: 12, borderRadius: 14, color: "#d54941", background: "rgba(213, 73, 65,0.1)", border: "1px solid rgba(213, 73, 65,0.18)" }}>
           {error}
         </div>
       ) : null}
 
       {activeId ? (
         <ReactFlow nodes={nodes} edges={edges} fitView>
-          <Background color="rgba(74,163,255,0.08)" gap={24} />
+          <Background color="rgba(0, 82, 217,0.08)" gap={24} />
           <Controls />
         </ReactFlow>
       ) : (

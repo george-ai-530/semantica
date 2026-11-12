@@ -41,17 +41,17 @@ function ConceptRow({
           paddingBottom: 5,
           borderRadius: 6,
           cursor: "pointer",
-          color: depth === 0 ? "#c6d4e3" : "#8b949e",
+          color: depth === 0 ? "rgba(0, 0, 0, 0.7)" : "rgba(0, 0, 0, 0.6)",
           fontSize: depth === 0 ? 13 : 12,
           transition: "background 120ms ease",
         }}
-        onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = "rgba(74,163,255,0.07)"; }}
+        onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = "rgba(0, 82, 217,0.07)"; }}
         onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = "transparent"; }}
       >
         {hasChildren ? (
           <button
             onClick={() => setExpanded((v) => !v)}
-            style={{ background: "transparent", border: "none", color: "#8b949e", cursor: "pointer", padding: 0, display: "flex", alignItems: "center" }}
+            style={{ background: "transparent", border: "none", color: "rgba(0, 0, 0, 0.6)", cursor: "pointer", padding: 0, display: "flex", alignItems: "center" }}
           >
             {expanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
           </button>
@@ -65,7 +65,7 @@ function ConceptRow({
           {concept.pref_label || concept.uri}
         </span>
         {children.length > 0 ? (
-          <span style={{ color: "#6a7f97", fontSize: 10 }}>{children.length}</span>
+          <span style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 10 }}>{children.length}</span>
         ) : null}
       </div>
       {expanded && hasChildren
@@ -96,10 +96,10 @@ function SchemePanel({
         style={schemeHeaderStyle}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          {expanded ? <ChevronDown size={14} color="#8b949e" /> : <ChevronRight size={14} color="#8b949e" />}
-          <span style={{ color: "#e6edf3", fontSize: 14, fontWeight: 700 }}>{scheme.label}</span>
+          {expanded ? <ChevronDown size={14} color="rgba(0, 0, 0, 0.6)" /> : <ChevronRight size={14} color="rgba(0, 0, 0, 0.6)" />}
+          <span style={{ color: "rgba(0, 0, 0, 0.9)", fontSize: 14, fontWeight: 700 }}>{scheme.label}</span>
         </div>
-        <span style={{ color: "#6a7f97", fontSize: 11 }}>
+        <span style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 11 }}>
           {isLoading ? "…" : `${totalConcepts} 个概念`}
         </span>
       </button>
@@ -108,9 +108,9 @@ function SchemePanel({
       {expanded ? (
         <div style={{ paddingTop: 4, paddingBottom: 8 }}>
           {isLoading ? (
-            <div style={{ padding: "8px 24px", color: "#6a7f97", fontSize: 12 }}>正在加载概念…</div>
+            <div style={{ padding: "8px 24px", color: "rgba(0, 0, 0, 0.6)", fontSize: 12 }}>正在加载概念…</div>
           ) : hierarchy.length === 0 ? (
-            <div style={{ padding: "8px 24px", color: "#6a7f97", fontSize: 12, fontStyle: "italic" }}>
+            <div style={{ padding: "8px 24px", color: "rgba(0, 0, 0, 0.6)", fontSize: 12, fontStyle: "italic" }}>
               该方案中没有概念。
             </div>
           ) : (
@@ -137,10 +137,10 @@ export function OntologySummaryTab({
       {/* Header */}
       <div style={headerStyle}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <BookOpen size={18} color="#d2a8ff" />
+          <BookOpen size={18} color="#5e3ab8" />
           <div>
-            <div style={{ color: "#ebf3ff", fontSize: 16, fontWeight: 700 }}>本体概览</div>
-            <div style={{ color: "#8b949e", fontSize: 12 }}>
+            <div style={{ color: "rgba(0, 0, 0, 0.9)", fontSize: 16, fontWeight: 700 }}>本体概览</div>
+            <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 12 }}>
               {isLoading
                 ? "正在加载方案…"
                 : `已加载 ${schemes.length} 个词汇方案`}
@@ -161,14 +161,14 @@ export function OntologySummaryTab({
           {isLoading ? (
             <div style={{ padding: 24, display: "flex", flexDirection: "column", gap: 10 }}>
               {[90, 75, 60].map((w, i) => (
-                <div key={i} style={{ height: 36, borderRadius: 8, background: "rgba(255,255,255,0.04)", width: `${w}%` }} />
+                <div key={i} style={{ height: 36, borderRadius: 8, background: "rgba(0, 0, 0, 0.04)", width: `${w}%` }} />
               ))}
             </div>
           ) : schemes.length === 0 ? (
             <div style={emptyStateStyle}>
-              <BookOpen size={32} color="rgba(210,168,255,0.15)" />
-              <div style={{ color: "#8b949e", fontSize: 13, marginTop: 12 }}>尚未加载词汇方案</div>
-              <div style={{ color: "#6a7f97", fontSize: 12, marginTop: 4, textAlign: "center", maxWidth: 240 }}>
+              <BookOpen size={32} color="rgba(123, 83, 216,0.15)" />
+              <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 13, marginTop: 12 }}>尚未加载词汇方案</div>
+              <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 12, marginTop: 4, textAlign: "center", maxWidth: 240 }}>
                 通过词汇浏览器导入 .ttl 或 .rdf 文件，即可在此查看本体。
               </div>
             </div>
@@ -185,26 +185,26 @@ export function OntologySummaryTab({
         {selectedConcept ? (
           <div style={detailPanelStyle}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
-              <div style={{ color: "#d2a8ff", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase" }}>
+              <div style={{ color: "#5e3ab8", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase" }}>
                 概念详情
               </div>
-              <button onClick={() => setSelectedConcept(null)} style={{ background: "transparent", border: "none", color: "#8b949e", cursor: "pointer", fontSize: 16 }}>×</button>
+              <button onClick={() => setSelectedConcept(null)} style={{ background: "transparent", border: "none", color: "rgba(0, 0, 0, 0.6)", cursor: "pointer", fontSize: 16 }}>×</button>
             </div>
 
             <h3 style={{ color: "#ffffff", fontSize: 18, fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 6px 0" }}>
               {selectedConcept.pref_label}
             </h3>
             {selectedConcept.notation ? (
-              <div style={{ color: "#8b949e", fontSize: 12, marginBottom: 8 }}>标识：{selectedConcept.notation}</div>
+              <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 12, marginBottom: 8 }}>标识：{selectedConcept.notation}</div>
             ) : null}
-            <div style={{ color: "#6a7f97", fontSize: 11, fontFamily: "monospace", wordBreak: "break-all", marginBottom: 14 }}>
+            <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 11, fontFamily: "monospace", wordBreak: "break-all", marginBottom: 14 }}>
               {selectedConcept.uri}
             </div>
 
             {selectedConcept.description ? (
               <div style={detailSectionStyle}>
                 <div style={detailLabelStyle}>描述</div>
-                <div style={{ color: "#c6d4e3", fontSize: 13, lineHeight: 1.6 }}>{selectedConcept.description}</div>
+                <div style={{ color: "rgba(0, 0, 0, 0.7)", fontSize: 13, lineHeight: 1.6 }}>{selectedConcept.description}</div>
               </div>
             ) : null}
 
@@ -227,13 +227,13 @@ export function OntologySummaryTab({
                     <div
                       key={child.uri}
                       onClick={() => setSelectedConcept(child)}
-                      style={{ color: "#79c0ff", fontSize: 12, cursor: "pointer", padding: "3px 0" }}
+                      style={{ color: "#0052d9", fontSize: 12, cursor: "pointer", padding: "3px 0" }}
                     >
                       → {child.pref_label}
                     </div>
                   ))}
                   {selectedConcept.children!.length > 8 ? (
-                    <div style={{ color: "#6a7f97", fontSize: 11 }}>还有 {selectedConcept.children!.length - 8} 个</div>
+                    <div style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 11 }}>还有 {selectedConcept.children!.length - 8} 个</div>
                   ) : null}
                 </div>
               </div>
@@ -252,7 +252,7 @@ const shellStyle: React.CSSProperties = {
   flexDirection: "column",
   width: "100%",
   height: "100%",
-  background: "#0d1117",
+  background: "#eeeeee",
   overflow: "hidden",
 };
 
@@ -261,7 +261,7 @@ const headerStyle: React.CSSProperties = {
   alignItems: "center",
   justifyContent: "space-between",
   padding: "20px 24px 16px",
-  borderBottom: "1px solid rgba(88,166,255,0.1)",
+  borderBottom: "1px solid rgba(0, 82, 217,0.1)",
   flexShrink: 0,
 };
 
@@ -271,9 +271,9 @@ const openBrowserBtnStyle: React.CSSProperties = {
   gap: 6,
   padding: "6px 12px",
   borderRadius: 8,
-  border: "1px solid rgba(210,168,255,0.22)",
-  background: "rgba(210,168,255,0.08)",
-  color: "#d2a8ff",
+  border: "1px solid rgba(123, 83, 216,0.22)",
+  background: "rgba(123, 83, 216,0.08)",
+  color: "#5e3ab8",
   fontSize: 12,
   fontWeight: 600,
   cursor: "pointer",
@@ -282,13 +282,13 @@ const openBrowserBtnStyle: React.CSSProperties = {
 const treeColumnStyle: React.CSSProperties = {
   flex: 1,
   overflowY: "auto",
-  borderRight: "1px solid rgba(255,255,255,0.06)",
+  borderRight: "1px solid rgba(0, 0, 0, 0.06)",
 };
 
 const schemeCardStyle: React.CSSProperties = {
   borderRadius: 10,
-  border: "1px solid rgba(210,168,255,0.1)",
-  background: "rgba(255,255,255,0.02)",
+  border: "1px solid rgba(123, 83, 216,0.1)",
+  background: "rgba(0, 0, 0, 0.02)",
   overflow: "hidden",
 };
 
@@ -301,25 +301,25 @@ const schemeHeaderStyle: React.CSSProperties = {
   background: "transparent",
   border: "none",
   cursor: "pointer",
-  borderBottom: "1px solid rgba(255,255,255,0.05)",
+  borderBottom: "1px solid rgba(0, 0, 0, 0.05)",
 };
 
 const detailPanelStyle: React.CSSProperties = {
   width: 300,
   padding: "20px",
   overflowY: "auto",
-  borderLeft: "1px solid rgba(255,255,255,0.06)",
+  borderLeft: "1px solid rgba(0, 0, 0, 0.06)",
   flexShrink: 0,
 };
 
 const detailSectionStyle: React.CSSProperties = {
   marginTop: 14,
   paddingTop: 12,
-  borderTop: "1px solid rgba(255,255,255,0.06)",
+  borderTop: "1px solid rgba(0, 0, 0, 0.06)",
 };
 
 const detailLabelStyle: React.CSSProperties = {
-  color: "#8b949e",
+  color: "rgba(0, 0, 0, 0.6)",
   fontSize: 10,
   fontWeight: 700,
   textTransform: "uppercase",
@@ -330,9 +330,9 @@ const detailLabelStyle: React.CSSProperties = {
 const altLabelChipStyle: React.CSSProperties = {
   padding: "3px 8px",
   borderRadius: 999,
-  background: "rgba(255,255,255,0.05)",
-  border: "1px solid rgba(255,255,255,0.08)",
-  color: "#8fa8c6",
+  background: "rgba(0, 0, 0, 0.05)",
+  border: "1px solid rgba(0, 0, 0, 0.08)",
+  color: "rgba(0, 0, 0, 0.6)",
   fontSize: 11,
 };
 

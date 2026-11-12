@@ -132,18 +132,18 @@ export type ResolvedEdgeStyle = {
 };
 
 export function getDistanceBandColor(distance: number): string {
-  if (distance <= 0) return "#7CFF9B";
-  if (distance <= 1) return "#56D364";
-  if (distance <= 2) return "#58A6FF";
-  if (distance <= 3) return "#B0883A";
-  if (distance <= 6) return "#B0883A";
-  return "#FF7B72";
+  if (distance <= 0) return "#1a7f37";
+  if (distance <= 1) return "#2da44e";
+  if (distance <= 2) return "#0052d9";
+  if (distance <= 3) return "#9a6700";
+  if (distance <= 6) return "#9a6700";
+  return "#cf222e";
 }
 
 function getSemanticScoreColor(score: number): string {
-  if (score >= 0.7) return "#56D364";
-  if (score >= 0.4) return "#E3B341";
-  return "#FF7B72";
+  if (score >= 0.7) return "#1a7f37";
+  if (score >= 0.4) return "#9a6700";
+  return "#cf222e";
 }
 
 export function buildStructuralDistanceSnapshot(
@@ -2448,8 +2448,8 @@ function buildCommunityGroupedGraph(): GraphDisplayResult {
       arrowVisibilityPolicy: "hidden",
       baseSize,
       size: baseSize,
-      color: withAlpha("#9BB7D6", GRAPH_THEME.grouped.style.edgeAlpha),
-      mutedColor: withAlpha("#9BB7D6", Math.max(0.14, GRAPH_THEME.grouped.style.edgeAlpha * 0.4)),
+      color: withAlpha("#5F6B7A", GRAPH_THEME.grouped.style.edgeAlpha),
+      mutedColor: withAlpha("#5F6B7A", Math.max(0.14, GRAPH_THEME.grouped.style.edgeAlpha * 0.4)),
       visualPriority: Math.min(1.05, 0.38 + Math.log2(aggregateCount + 1) * 0.14),
     });
   });
