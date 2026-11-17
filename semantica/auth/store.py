@@ -221,10 +221,10 @@ class AuthStore:
             ("ws_biz", "商业智能空间 (Business)", "商业洞察与经营分析知识库", "graph:ws_biz", now, now),
         )
 
-        # Ensure default local admin account exists
+        # Ensure default local admin account exists and password is set to '1' (or SEMANTICA_ADMIN_PASSWORD)
+        default_admin_pass = os.environ.get("SEMANTICA_ADMIN_PASSWORD", "1")
         cursor.execute("SELECT id FROM auth_users WHERE username = 'admin'")
         if not cursor.fetchone():
-            default_admin_pass = os.environ.get("SEMANTICA_ADMIN_PASSWORD", "Young520")
             cursor.execute(
                 """
                 INSERT INTO auth_users (
@@ -242,6 +242,78 @@ class AuthStore:
                     now,
                 ),
             )
+        else:
+            cursor.execute(
+                "UPDATE auth_users SET password_hash = ? WHERE username = 'admin'",
+                (hash_password(default_admin_pass),),
+            )
+
+        # Seed test users: user_a and user_b with password '1'
+        test_user_pass = os.environ.get("SEMANTICA_TEST_PASSWORD", "1")
+        for u_id, u_name, u_display in [
+            ("usr_test_a", "user_a", "测试用户 A (User A)"),
+            ("usr_test_b", "user_b", "测试用户 B (User B)"),
+        ]:
+            cursor.execute("SELECT id FROM auth_users WHERE username = ?", (u_name,))
+            if not cursor.fetchone():
+                cursor.execute(
+                    """
+                    INSERT INTO auth_users (
+                        id, username, email, display_name, user_type, is_active,
+                        global_role, password_hash, created_at, updated_at
+                    ) VALUES (?, ?, ?, ?, 'local', 1, 'user', ?, ?, ?);
+                    """,
+                    (
+                        u_id,
+                        u_name,
+                        f"{u_name}@semantica.local",
+                        u_display,
+                        hash_password(test_user_pass),
+                        now,
+                        now,
+                    ),
+                )
+            else:
+                cursor.execute(
+                    "UPDATE auth_users SET password_hash = ? WHERE username = ?",
+                    (hash_password(test_user_pass), u_name),
+                )
+
+        # Seed isolated workspaces for user_a and user_b
+        cursor.execute(
+            """
+            INSERT OR IGNORE INTO auth_workspaces (
+                id, name, description, graph_id, is_default, created_by, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, 0, ?, ?, ?);
+            """,
+            ("ws_user_a", "用户 A 专属空间", "User A 独立知识空间", "graph:ws_user_a", "usr_test_a", now, now),
+        )
+        cursor.execute(
+            """
+            INSERT OR IGNORE INTO auth_workspaces (
+                id, name, description, graph_id, is_default, created_by, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, 0, ?, ?, ?);
+            """,
+            ("ws_user_b", "用户 B 专属空间", "User B 独立知识空间", "graph:ws_user_b", "usr_test_b", now, now),
+        )
+
+        # Grant user_a Admin on ws_user_a, and user_b Admin on ws_user_b
+        cursor.execute(
+            """
+            INSERT OR IGNORE INTO auth_workspace_grants (
+                id, workspace_id, grantee_type, grantee_id, role, created_at, updated_at
+            ) VALUES (?, ?, 'user', ?, 'Admin', ?, ?);
+            """,
+            ("grant_ws_user_a", "ws_user_a", "usr_test_a", now, now),
+        )
+        cursor.execute(
+            """
+            INSERT OR IGNORE INTO auth_workspace_grants (
+                id, workspace_id, grantee_type, grantee_id, role, created_at, updated_at
+            ) VALUES (?, ?, 'user', ?, 'Admin', ?, ?);
+            """,
+            ("grant_ws_user_b", "ws_user_b", "usr_test_b", now, now),
+        )
 
         self.conn.commit()
 

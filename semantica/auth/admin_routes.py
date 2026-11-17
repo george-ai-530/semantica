@@ -206,7 +206,8 @@ class CreateGroupRequest(BaseModel):
 
 
 class GroupMemberRequest(BaseModel):
-    user_id: str = Field(..., description="ID or username of the user to add/remove")
+    user_id: Optional[str] = Field(None, description="ID or username of the user to add/remove")
+    username: Optional[str] = Field(None, description="Username of the user")
 
 
 def _group_to_dict(group) -> Dict[str, Any]:
@@ -289,11 +290,18 @@ async def add_group_member(
             detail=f"Group '{group_id}' not found.",
         )
 
-    user = store.get_user_by_id_or_username(payload.user_id)
+    target_ident = payload.user_id or payload.username
+    if not target_ident:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="user_id or username is required.",
+        )
+
+    user = store.get_user_by_id_or_username(target_ident)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User '{payload.user_id}' not found.",
+            detail=f"User '{target_ident}' not found.",
         )
 
     store.add_user_to_group(group.id, user.id)
