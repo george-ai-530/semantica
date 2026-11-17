@@ -369,9 +369,15 @@ async def list_workspace_grants(workspace_id: str, request: Request):
     store = _get_store(request)
     ws = store.get_workspace(workspace_id)
     if not ws:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Workspace '{workspace_id}' not found.",
+        created_by = (
+            request.state.identity.user_id
+            if hasattr(request.state, "identity") and request.state.identity
+            else "admin"
+        )
+        ws = store.create_workspace(
+            workspace_id=workspace_id,
+            name=workspace_id,
+            created_by=created_by,
         )
     grants = store.list_workspace_grants(workspace_id=workspace_id)
     return [_grant_to_dict(g) for g in grants]
@@ -387,9 +393,15 @@ async def create_workspace_grant(
     store = _get_store(request)
     ws = store.get_workspace(workspace_id)
     if not ws:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Workspace '{workspace_id}' not found.",
+        created_by = (
+            request.state.identity.user_id
+            if hasattr(request.state, "identity") and request.state.identity
+            else "admin"
+        )
+        ws = store.create_workspace(
+            workspace_id=workspace_id,
+            name=workspace_id,
+            created_by=created_by,
         )
 
     grantee_type = payload.grantee_type.lower()
@@ -434,9 +446,15 @@ async def delete_workspace_grant(
     store = _get_store(request)
     ws = store.get_workspace(workspace_id)
     if not ws:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Workspace '{workspace_id}' not found.",
+        created_by = (
+            request.state.identity.user_id
+            if hasattr(request.state, "identity") and request.state.identity
+            else "admin"
+        )
+        ws = store.create_workspace(
+            workspace_id=workspace_id,
+            name=workspace_id,
+            created_by=created_by,
         )
 
     deleted = store.delete_workspace_grant(grant_id)

@@ -649,14 +649,21 @@ class AuthStore:
         role_hierarchy = {"Viewer": 1, "Editor": 2, "Admin": 3}
         reverse_hierarchy = {1: "Viewer", 2: "Editor", 3: "Admin"}
 
-        user = self.get_user(user_id)
+        user = self.get_user(user_id) or self.get_user_by_username(user_id)
         if user and user.global_role == "admin":
             # Global admin has Admin role on all workspaces
             workspaces = self.list_workspaces()
             return {ws.id: "Admin" for ws in workspaces}
 
+        user_identifiers = [user_id]
+        if user:
+            if user.id not in user_identifiers:
+                user_identifiers.append(user.id)
+            if user.username not in user_identifiers:
+                user_identifiers.append(user.username)
+
         # Collect all group identifiers for user
-        local_groups = self.get_user_groups(user_id)
+        local_groups = self.get_user_groups(user.id if user else user_id)
         group_identifiers = {g.id for g in local_groups} | {g.name for g in local_groups}
         if ad_groups:
             group_identifiers.update(ad_groups)
@@ -665,12 +672,13 @@ class AuthStore:
 
         with self._lock:
             # 1. Direct user grants
+            placeholders = ",".join("?" for _ in user_identifiers)
             cursor = self.conn.execute(
-                """
+                f"""
                 SELECT workspace_id, role FROM auth_workspace_grants
-                WHERE grantee_type = 'user' AND grantee_id = ?;
+                WHERE grantee_type = 'user' AND grantee_id IN ({placeholders});
                 """,
-                (user_id,),
+                tuple(user_identifiers),
             )
             for row in cursor.fetchall():
                 ws_id = row["workspace_id"]
@@ -692,7 +700,10 @@ class AuthStore:
                     level = role_hierarchy.get(row["role"], 1)
                     effective_roles[ws_id] = max(effective_roles.get(ws_id, 0), level)
 
-        return {ws_id: reverse_hierarchy.get(lvl, "Viewer") for ws_id, lvl in effective_roles.items()}
+        res = {ws_id: reverse_hierarchy.get(lvl, "Viewer") for ws_id, lvl in effective_roles.items()}
+        if "default" not in res:
+            res["default"] = "Viewer"
+        return res
 
     def _row_to_grant(self, row: sqlite3.Row) -> WorkspaceGrant:
         return WorkspaceGrant(
@@ -872,16 +883,21 @@ class AuthStore:
         if not api_key.user_id:
             return [], {}
 
-        user = self.get_user(api_key.user_id)
+        user = self.get_user(api_key.user_id) or self.get_user_by_username(api_key.user_id)
         if not user or not user.is_active or user.is_expired():
             return [], {}
 
         user_roles = self.get_user_workspace_roles(user.id)
+        if not user_roles:
+            user_roles = {"default": "Viewer"}
+
         if "*" in api_key.allowed_workspaces:
             return list(user_roles.keys()), user_roles
 
         allowed_set = set(api_key.allowed_workspaces)
         scoped_roles = {ws: role for ws, role in user_roles.items() if ws in allowed_set}
+        if not scoped_roles and "default" in allowed_set:
+            scoped_roles = {"default": "Viewer"}
         return list(scoped_roles.keys()), scoped_roles
 
     def _row_to_api_key(self, row: sqlite3.Row) -> ApiKey:
@@ -922,6 +938,8 @@ def get_default_auth_store_path() -> Optional[str]:
     return (
         os.environ.get("SEMANTICA_AUTH_DB")
         or os.environ.get("SEMANTICA_AUTH_STORAGE_PATH")
+        or os.environ.get("SEMANTICA_AUTH_DB_PATH")
+        or "semantica_auth.db"
     )
 
 

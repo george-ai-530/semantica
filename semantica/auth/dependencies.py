@@ -140,6 +140,22 @@ def get_current_identity(
         )
         global_role = user.global_role if user else claims.get("role", "user")
 
+        has_explicit_ws = bool(
+            request.headers.get("X-Workspace-ID") or request.query_params.get("workspace")
+        )
+        is_workspace_route = not request.url.path.startswith("/api/auth/")
+
+        if (
+            (has_explicit_ws or is_workspace_route)
+            and "*" not in authorized_workspaces
+            and global_role != "admin"
+            and target_workspace not in authorized_workspaces
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Access denied to workspace '{target_workspace}'.",
+            )
+
         context = RequestContext(
             user_id=user.id if user else sub,
             username=user.username if user else claims.get("username", sub),
@@ -171,6 +187,21 @@ def get_current_identity(
                     if user_obj
                     else ("admin" if api_key_obj.is_service else "user")
                 )
+                has_explicit_ws = bool(
+                    request.headers.get("X-Workspace-ID") or request.query_params.get("workspace")
+                )
+                is_workspace_route = not request.url.path.startswith("/api/auth/")
+
+                if (
+                    (has_explicit_ws or is_workspace_route)
+                    and "*" not in authorized_workspaces
+                    and global_role != "admin"
+                    and target_workspace not in authorized_workspaces
+                ):
+                    raise HTTPException(
+                        status_code=status.HTTP_403_FORBIDDEN,
+                        detail=f"Access denied to workspace '{target_workspace}'.",
+                    )
                 context = RequestContext(
                     user_id=user_obj.id if user_obj else f"service_{api_key_obj.id}",
                     username=user_obj.username if user_obj else api_key_obj.name,
