@@ -175,16 +175,32 @@ class ActiveDirectoryClient:
                     server,
                     user=self.bind_dn,
                     password=self.bind_password,
-                    connect_timeout=self.connect_timeout,
                     auto_bind=True,
                 )
-                search_filter = f"(&(objectClass=user)(sAMAccountName={escaped_user}))"
-                admin_conn.search(
-                    search_base=self.base_dn,
-                    search_filter=search_filter,
-                    search_scope=SUBTREE,
-                    attributes=["sAMAccountName", "displayName", "mail", "memberOf", "distinguishedName"],
-                )
+                # Strategy 1: Service Account Bind + Search User DN + Verify User Bind
+                # First attempt Microsoft Active Directory schema (sAMAccountName)
+                # Fall back to RFC2307 / OpenLDAP schema (uid) if sAMAccountName is not supported
+                search_ok = False
+                try:
+                    search_filter = f"(&(objectClass=user)(sAMAccountName={escaped_user}))"
+                    admin_conn.search(
+                        search_base=self.base_dn,
+                        search_filter=search_filter,
+                        search_scope=SUBTREE,
+                        attributes=["sAMAccountName", "displayName", "mail", "memberOf", "distinguishedName"],
+                    )
+                    search_ok = True
+                except LDAPException:
+                    search_ok = False
+
+                if not search_ok or not admin_conn.entries:
+                    search_filter = f"(|(&(objectClass=inetOrgPerson)(uid={escaped_user}))(uid={escaped_user}))"
+                    admin_conn.search(
+                        search_base=self.base_dn,
+                        search_filter=search_filter,
+                        search_scope=SUBTREE,
+                        attributes=["uid", "displayName", "cn", "mail", "memberOf", "distinguishedName"],
+                    )
 
                 if not admin_conn.entries:
                     admin_conn.unbind()
@@ -199,14 +215,13 @@ class ActiveDirectoryClient:
                     server,
                     user=user_dn,
                     password=password,
-                    connect_timeout=self.connect_timeout,
                 )
                 if not user_conn.bind():
                     return None
                 user_conn.unbind()
 
                 # Extract attributes
-                disp_attr = getattr(entry, "displayName", None)
+                disp_attr = getattr(entry, "displayName", None) or getattr(entry, "cn", None)
                 display_name_val = str(disp_attr.value) if disp_attr and disp_attr.value else clean_user
                 mail_attr = getattr(entry, "mail", None)
                 mail_val = str(mail_attr.value) if mail_attr and mail_attr.value else None
@@ -245,7 +260,6 @@ class ActiveDirectoryClient:
                 server,
                 user=bind_user,
                 password=password,
-                connect_timeout=self.connect_timeout,
             )
             if not conn.bind():
                 return None
@@ -257,19 +271,34 @@ class ActiveDirectoryClient:
             user_dn = bind_user
 
             try:
-                search_filter = f"(sAMAccountName={escaped_user})"
-                conn.search(
-                    search_base=self.base_dn,
-                    search_filter=search_filter,
-                    search_scope=SUBTREE,
-                    attributes=["sAMAccountName", "displayName", "mail", "memberOf", "distinguishedName"],
-                )
+                search_ok = False
+                try:
+                    search_filter = f"(sAMAccountName={escaped_user})"
+                    conn.search(
+                        search_base=self.base_dn,
+                        search_filter=search_filter,
+                        search_scope=SUBTREE,
+                        attributes=["sAMAccountName", "displayName", "mail", "memberOf", "distinguishedName"],
+                    )
+                    search_ok = True
+                except LDAPException:
+                    search_ok = False
+
+                if not search_ok or not conn.entries:
+                    search_filter = f"(uid={escaped_user})"
+                    conn.search(
+                        search_base=self.base_dn,
+                        search_filter=search_filter,
+                        search_scope=SUBTREE,
+                        attributes=["uid", "displayName", "cn", "mail", "memberOf", "distinguishedName"],
+                    )
+
                 if conn.entries:
                     entry = conn.entries[0]
                     dn_attr = getattr(entry, "entry_dn", None) or getattr(entry, "distinguishedName", None)
                     if dn_attr:
                         user_dn = str(getattr(dn_attr, "value", dn_attr))
-                    disp_attr = getattr(entry, "displayName", None)
+                    disp_attr = getattr(entry, "displayName", None) or getattr(entry, "cn", None)
                     if disp_attr and disp_attr.value:
                         display_name_val = str(disp_attr.value)
                     mail_attr = getattr(entry, "mail", None)
