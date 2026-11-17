@@ -200,8 +200,48 @@ class AuthStore:
                 id, name, description, graph_id, is_default, created_by, created_at, updated_at
             ) VALUES (?, ?, ?, ?, 1, NULL, ?, ?);
             """,
-            ("default", "Default Workspace", "Default global workspace", "graph:default", now, now),
+            ("default", "默认工作区 (Default)", "系统默认全局主知识空间", "graph:default", now, now),
         )
+
+        # Seed demo multi-tenant workspaces for demonstration & isolation testing
+        cursor.execute(
+            """
+            INSERT OR IGNORE INTO auth_workspaces (
+                id, name, description, graph_id, is_default, created_by, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, 0, NULL, ?, ?);
+            """,
+            ("ws_rd", "研发工程空间 (R&D)", "研发技术与工程架构知识库", "graph:ws_rd", now, now),
+        )
+        cursor.execute(
+            """
+            INSERT OR IGNORE INTO auth_workspaces (
+                id, name, description, graph_id, is_default, created_by, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, 0, NULL, ?, ?);
+            """,
+            ("ws_biz", "商业智能空间 (Business)", "商业洞察与经营分析知识库", "graph:ws_biz", now, now),
+        )
+
+        # Ensure default local admin account exists
+        cursor.execute("SELECT id FROM auth_users WHERE username = 'admin'")
+        if not cursor.fetchone():
+            default_admin_pass = os.environ.get("SEMANTICA_ADMIN_PASSWORD", "Young520")
+            cursor.execute(
+                """
+                INSERT INTO auth_users (
+                    id, username, email, display_name, user_type, is_active,
+                    global_role, password_hash, created_at, updated_at
+                ) VALUES (?, ?, ?, ?, 'local', 1, 'admin', ?, ?, ?);
+                """,
+                (
+                    "usr_admin_default",
+                    "admin",
+                    "admin@semantica.local",
+                    "系统管理员 (Admin)",
+                    hash_password(default_admin_pass),
+                    now,
+                    now,
+                ),
+            )
 
         self.conn.commit()
 
@@ -939,7 +979,6 @@ def get_default_auth_store_path() -> Optional[str]:
         os.environ.get("SEMANTICA_AUTH_DB")
         or os.environ.get("SEMANTICA_AUTH_STORAGE_PATH")
         or os.environ.get("SEMANTICA_AUTH_DB_PATH")
-        or "semantica_auth.db"
     )
 
 

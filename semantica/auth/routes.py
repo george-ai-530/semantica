@@ -9,6 +9,7 @@ Exposes endpoints for user authentication and session management:
 """
 
 import logging
+import os
 from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
@@ -290,26 +291,37 @@ async def login(
         meta["ldap_dn"] = ldap_user.dn
         meta["ldap_groups"] = ldap_user.groups
 
+        # Determine global role: check SEMANTICA_ADMIN_USERS env var
+        admin_names = [
+            x.strip().lower()
+            for x in os.environ.get("SEMANTICA_ADMIN_USERS", "").split(",")
+            if x.strip()
+        ]
+        is_admin = ldap_user.username.lower() in admin_names
+        assigned_role = "admin" if is_admin else "user"
+
         if existing:
+            current_role = "admin" if is_admin else existing.global_role
             user = store.update_user(
                 user_id=existing.id,
                 email=ldap_user.email or existing.email,
                 display_name=ldap_user.display_name or existing.display_name,
+                global_role=current_role,
                 extra_metadata=meta,
             ) or existing
             user_id = user.id
-            global_role = user.global_role
+            global_role = current_role
         else:
             user = store.create_user(
                 username=ldap_user.username,
                 email=ldap_user.email,
                 display_name=ldap_user.display_name,
                 user_type="ad",
-                global_role="user",
+                global_role=assigned_role,
                 extra_metadata=meta,
             )
             user_id = user.id
-            global_role = user.global_role
+            global_role = assigned_role
 
         # Refresh AD security group memberships on each interactive login
         current_groups = store.get_user_groups(user_id)

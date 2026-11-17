@@ -260,11 +260,29 @@ export function LoginModal({
           <button
             type="submit"
             className="ws-btn ws-btn--primary"
-            style={{ width: '100%', justifyContent: 'center', padding: '10px 16px' }}
+            style={{ width: '100%', justifyContent: 'center', padding: '10px 16px', fontWeight: 700 }}
             disabled={isLoading}
           >
             {isLoading ? '正在验证身份…' : '登 录'}
           </button>
+
+          {/* Quick Credential Hints for Ease of Verification */}
+          <div
+            style={{
+              marginTop: 16,
+              padding: '10px 12px',
+              borderRadius: 8,
+              background: '#f8f9fa',
+              border: '1px solid var(--ws-border)',
+              fontSize: 11,
+              color: 'var(--ws-text-muted)',
+              lineHeight: 1.5,
+            }}
+          >
+            <div style={{ fontWeight: 700, color: 'var(--ws-text)', marginBottom: 4 }}>💡 常用凭据提示：</div>
+            <div>• <strong>系统管理员</strong>: <code>admin</code> / <code>Young520</code> (拥有全站与管理控制台最高权限)</div>
+            <div>• <strong>LDAP 域员工</strong>: <code>testuser</code> / <code>Young520</code> (经由 NAS OpenLDAP 389 直连认证)</div>
+          </div>
         </form>
       </div>
     </div>

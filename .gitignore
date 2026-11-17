@@ -126,3 +126,4 @@ demo_out/
 
 # Worktrees
 .worktrees/
+semantica_auth.db

@@ -8,7 +8,7 @@
  * to all outgoing API requests.
  */
 
-import { useState, useEffect } from 'react';
+import { useEffect, useSyncExternalStore } from 'react';
 
 export interface AuthUser {
   id: string;
@@ -66,12 +66,25 @@ let currentWorkspaces: WorkspaceItem[] = [
   { id: 'default', name: '默认工作区 (Default)', is_default: true, role: 'Admin' },
 ];
 
+let storeVersion = 0;
 const listeners = new Set<() => void>();
 
 function notify() {
+  storeVersion++;
   for (const listener of listeners) {
     listener();
   }
+}
+
+function subscribe(callback: () => void) {
+  listeners.add(callback);
+  return () => {
+    listeners.delete(callback);
+  };
+}
+
+function getSnapshot() {
+  return storeVersion;
 }
 
 // ---------------------------------------------------------------------------
@@ -237,7 +250,8 @@ export async function login(
       };
     }
 
-    setAuthToken(data.access_token);
+    currentToken = data.access_token;
+    setStoredItem(TOKEN_STORAGE_KEY, data.access_token);
     if (data.user) {
       currentUser = {
         id: data.user.id,
@@ -274,15 +288,7 @@ export function logout() {
 // ---------------------------------------------------------------------------
 
 export function useAuth() {
-  const [, setTick] = useState(0);
-
-  useEffect(() => {
-    const update = () => setTick((t) => t + 1);
-    listeners.add(update);
-    return () => {
-      listeners.delete(update);
-    };
-  }, []);
+  useSyncExternalStore(subscribe, getSnapshot);
 
   // Initialize profile on mount if token exists
   useEffect(() => {
@@ -295,6 +301,7 @@ export function useAuth() {
     token: currentToken,
     user: currentUser,
     isAuthenticated: Boolean(currentToken && currentUser),
+    isAdmin: currentUser?.global_role === 'admin',
     activeWorkspace: currentWorkspace,
     workspaces: currentWorkspaces,
     setActiveWorkspace,

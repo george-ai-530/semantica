@@ -15,6 +15,8 @@ import {
   Search,
   Settings2,
   ShieldCheck,
+  Key,
+  LogOut,
   type LucideIcon,
 } from 'lucide-react';
 import { ErrorBoundary } from './ErrorBoundary';
@@ -41,6 +43,7 @@ const KGOverviewTab = lazy(() => import('./workspaces/ManageWorkspace/KGOverview
 const OntologySummaryTab = lazy(() => import('./workspaces/ManageWorkspace/OntologySummaryTab').then((module) => ({ default: module.OntologySummaryTab })));
 const OntologyWorkspace = lazy(() => import('./workspaces/OntologyWorkspace').then((module) => ({ default: module.OntologyWorkspace })));
 const AdminWorkspace = lazy(() => import('./workspaces/AdminWorkspace/AdminWorkspace').then((module) => ({ default: module.AdminWorkspace })));
+const FederatedSearchTab = lazy(() => import('./workspaces/FederatedSearch/FederatedSearchTab').then((module) => ({ default: module.FederatedSearchTab })));
 
 type WorkspaceId = 'welcome' | 'explore' | 'analyze' | 'decisions' | 'enrich' | 'manage' | 'ontology-hub' | 'admin';
 type AnalyzeView = 'sparql' | 'reasoning';
@@ -1798,15 +1801,13 @@ export default function App() {
   const [exploreDraftDirty, setExploreDraftDirty] = useState(false);
   const [agentMemoryAvailable, setAgentMemoryAvailable] = useState(false);
 
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
   const visibleNavItems: NavItem[] = [
     ...navItems,
-    ...(user?.global_role === 'admin'
-      ? [{ id: 'admin' as WorkspaceId, label: '管理控制台', hint: '系统治理与安全管控', icon: ShieldCheck }]
-      : []),
+    { id: 'admin' as WorkspaceId, label: '管理控制台', hint: '系统治理与安全管控', icon: ShieldCheck },
   ];
 
   useEffect(() => {
@@ -1882,8 +1883,8 @@ export default function App() {
       return (
         <WorkspaceShell
           title="探索"
-          subtitle={exploreView === 'graph' ? undefined : exploreView === 'memories' ? "浏览并编辑规范的 AgentMemory 文档。" : "浏览图谱并在视图间切换，无需离开工作区。"}
-          kicker={exploreView === 'graph' ? '图谱工作室' : exploreView === 'memories' ? '记忆浏览' : '词汇浏览'}
+          subtitle={exploreView === 'graph' ? undefined : exploreView === 'federated' ? "跨多个隔离工作区并发检索知识与实体。" : exploreView === 'memories' ? "浏览并编辑规范的 AgentMemory 文档。" : "浏览图谱并在视图间切换，无需离开工作区。"}
+          kicker={exploreView === 'graph' ? '图谱工作室' : exploreView === 'federated' ? '知识联邦' : exploreView === 'memories' ? '记忆浏览' : '词汇浏览'}
           compact
           tabs={
             <ExploreWorkspaceTabs
@@ -1901,7 +1902,13 @@ export default function App() {
                   externalFocusToken={graphFocusRequest?.token}
                   onDirtyChange={setExploreDraftDirty}
                 />
-              ) : exploreView === 'memories' ? <MemoryWorkspace onDirtyChange={setExploreDraftDirty} /> : <VocabularyWorkspace />}
+              ) : exploreView === 'federated' ? (
+                <FederatedSearchTab />
+              ) : exploreView === 'memories' ? (
+                <MemoryWorkspace onDirtyChange={setExploreDraftDirty} />
+              ) : (
+                <VocabularyWorkspace />
+              )}
             </Suspense>
           </ErrorBoundary>
         </WorkspaceShell>
@@ -2084,66 +2091,142 @@ export default function App() {
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               {isAuthenticated && user ? (
-                <button
-                  type="button"
-                  onClick={() => setIsSettingsModalOpen(true)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 8,
-                    background: '#ffffff',
-                    border: '1px solid var(--ws-border)',
-                    borderRadius: 8,
-                    padding: '5px 10px',
-                    fontSize: 12,
-                    fontWeight: 600,
-                    color: 'var(--ws-text)',
-                    cursor: 'pointer',
-                    transition: 'all 140ms ease',
-                  }}
-                  title="用户设置与 API 密钥"
-                >
-                  <div
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setIsSettingsModalOpen(true)}
+                    className="ws-btn ws-btn--secondary"
+                    style={{ padding: '5px 10px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 6 }}
+                    title="个人 API 密钥管理与生成"
+                  >
+                    <Key size={13} style={{ color: 'var(--ws-accent)' }} />
+                    <span>个人 API 密钥</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsSettingsModalOpen(true)}
                     style={{
-                      width: 20,
-                      height: 20,
-                      borderRadius: '50%',
-                      background: 'var(--ws-accent-soft)',
-                      color: 'var(--ws-accent)',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: 10,
-                      fontWeight: 800,
+                      gap: 8,
+                      background: '#ffffff',
+                      border: '1px solid var(--ws-border)',
+                      borderRadius: 8,
+                      padding: '5px 10px',
+                      fontSize: 12,
+                      fontWeight: 600,
+                      color: 'var(--ws-text)',
+                      cursor: 'pointer',
+                      transition: 'all 140ms ease',
+                    }}
+                    title="点击打开用户设置与安全配置"
+                  >
+                    <div
+                      style={{
+                        width: 22,
+                        height: 22,
+                        borderRadius: '50%',
+                        background: 'var(--ws-accent-soft)',
+                        color: 'var(--ws-accent)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: 11,
+                        fontWeight: 800,
+                      }}
+                    >
+                      {user.username.charAt(0).toUpperCase()}
+                    </div>
+                    <span>{user.display_name || user.username}</span>
+                    <span
+                      className={`ws-pill ${
+                        user.global_role === 'admin'
+                          ? 'ws-pill--purple'
+                          : 'ws-pill--mono'
+                      }`}
+                      style={{ fontSize: 10, padding: '1px 6px' }}
+                    >
+                      {user.global_role === 'admin' ? '系统管理员' : '普通用户'}
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => logout()}
+                    className="ws-btn ws-btn--ghost"
+                    style={{ padding: '5px 8px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 4 }}
+                    title="退出登录"
+                  >
+                    <LogOut size={13} />
+                    <span>退出</span>
+                  </button>
+                </>
+              ) : (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span
+                    style={{
+                      fontSize: 11,
+                      color: 'var(--ws-text-muted)',
+                      background: '#f4f4f4',
+                      padding: '3px 8px',
+                      borderRadius: 4,
+                      border: '1px solid var(--ws-border)',
                     }}
                   >
-                    {user.username.charAt(0).toUpperCase()}
-                  </div>
-                  <span>{user.display_name || user.username}</span>
-                  <span
-                    className={`ws-pill ${
-                      user.global_role === 'admin'
-                        ? 'ws-pill--purple'
-                        : 'ws-pill--mono'
-                    }`}
-                    style={{ fontSize: 10, padding: '1px 5px' }}
-                  >
-                    {user.global_role}
+                    访客模式 (只读)
                   </span>
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setIsLoginModalOpen(true)}
-                  className="ws-btn ws-btn--primary"
-                  style={{ padding: '5px 12px', fontSize: 12 }}
-                >
-                  <Lock size={13} />
-                  <span>登 录</span>
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsLoginModalOpen(true)}
+                    className="ws-btn ws-btn--primary"
+                    style={{ padding: '5px 14px', fontSize: 12, fontWeight: 700 }}
+                  >
+                    <Lock size={13} />
+                    <span>企业登录 / Sign In</span>
+                  </button>
+                </div>
               )}
             </div>
           </header>
+
+          {/* Unauthenticated Global Notice Banner */}
+          {!isAuthenticated && (
+            <div
+              style={{
+                background: 'linear-gradient(90deg, #f0f5ff 0%, #ffffff 100%)',
+                borderBottom: '1px solid rgba(0, 82, 217, 0.16)',
+                padding: '6px 18px',
+                fontSize: 12,
+                color: '#0052d9',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <span>
+                💡 <strong>企业安全防护已开启</strong>：当前处于未登录状态。您可以点击右上角 <strong>「企业登录」</strong> 使用 <code>admin / Young520</code>（管理员）或 <code>testuser / Young520</code>（LDAP 域员工）体验多工作区隔离、个人 API 密钥与管理控制台。
+              </span>
+              <button
+                type="button"
+                onClick={() => setIsLoginModalOpen(true)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#0052d9',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  textDecoration: 'underline',
+                  padding: 0,
+                  fontSize: 12,
+                  whiteSpace: 'nowrap',
+                  marginLeft: 12,
+                }}
+              >
+                立即登录 &rarr;
+              </button>
+            </div>
+          )}
 
           <main style={{ flex: 1, minHeight: 0, position: 'relative', overflow: 'hidden' }}>
             {renderWorkspace()}

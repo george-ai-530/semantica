@@ -25,8 +25,10 @@ import {
   UserX,
   X,
   UserPlus,
+  Lock,
 } from 'lucide-react';
 import { useAuth } from '../../auth/authStore';
+import { LoginModal } from '../../auth/LoginModal';
 
 type AdminTab = 'guests' | 'workspaces' | 'groups' | 'keys';
 
@@ -133,20 +135,52 @@ export function AdminWorkspace() {
   const [serviceKeyForm, setServiceKeyForm] = useState({ name: '', allowed_workspaces: '*', expires_at: '' });
   const [createdServiceRawKey, setCreatedServiceRawKey] = useState<string | null>(null);
   const [copiedKey, setCopiedKey] = useState(false);
-
   const [feedbackMsg, setFeedbackMsg] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   // Guard non-admin access
-  if (user && user.global_role !== 'admin') {
+  if (!user || user.global_role !== 'admin') {
     return (
       <div className="ws-page" style={{ padding: 40, alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ maxWidth: 450, textAlign: 'center', background: '#fff', padding: 32, borderRadius: 14, border: '1px solid var(--ws-border)' }}>
-          <Shield size={42} style={{ color: '#d54941', marginBottom: 16 }} />
-          <h2 style={{ fontSize: 18, fontWeight: 800, margin: '0 0 8px' }}>访问被拒绝 (403 Forbidden)</h2>
-          <p style={{ fontSize: 13, color: 'var(--ws-text-muted)', lineHeight: 1.6 }}>
-            管理控制台仅向拥有系统 <code>admin</code> 全局角色的管理员开放。您当前身份角色为 <strong>{user.global_role}</strong>。
+        <div style={{ maxWidth: 520, textAlign: 'center', background: '#fff', padding: 36, borderRadius: 14, border: '1px solid var(--ws-border)', boxShadow: '0 8px 30px rgba(0,0,0,0.06)' }}>
+          <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(213, 73, 65, 0.08)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+            <Shield size={36} style={{ color: '#d54941' }} />
+          </div>
+          <h2 style={{ fontSize: 20, fontWeight: 800, margin: '0 0 10px', color: 'var(--ws-text)' }}>
+            企业管理控制台 (需要 Admin 权限)
+          </h2>
+          <p style={{ fontSize: 13, color: 'var(--ws-text-muted)', lineHeight: 1.6, margin: '0 0 20px' }}>
+            管理控制台汇集企业级治理中枢，受到严格的 RBAC 路由守护。<br />
+            {user ? (
+              <>您当前以 <strong>{user.display_name || user.username}</strong> ({user.global_role}) 身份登录，未获得全局管理员权限。</>
+            ) : (
+              <>当前处于访客未登录状态。请使用管理员凭据登录以解锁治理功能。</>
+            )}
           </p>
+
+          <div style={{ textAlign: 'left', background: '#f8f9fa', padding: '14px 18px', borderRadius: 10, border: '1px solid var(--ws-border)', marginBottom: 24, fontSize: 12, color: 'var(--ws-text)' }}>
+            <div style={{ fontWeight: 700, marginBottom: 6 }}>🛡️ 本控制台提供以下管控能力：</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, color: 'var(--ws-text-muted)' }}>
+              <div>• 外部访客 CRUD 与到期强制失效</div>
+              <div>• 多工作区隔离与 ACL 授权矩阵</div>
+              <div>• 本地组织群组与成员分配</div>
+              <div>• 全局 API 密钥清单与紧急撤销</div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+            <button
+              type="button"
+              onClick={() => setIsLoginModalOpen(true)}
+              className="ws-btn ws-btn--primary"
+              style={{ padding: '8px 20px', fontSize: 13, fontWeight: 700 }}
+            >
+              <Lock size={14} />
+              <span>以管理员身份登录 (admin / Young520)</span>
+            </button>
+          </div>
         </div>
+        <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
       </div>
     );
   }

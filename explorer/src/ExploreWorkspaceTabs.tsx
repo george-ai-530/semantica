@@ -1,4 +1,4 @@
-export type ExploreView = 'graph' | 'memories' | 'vocabulary';
+export type ExploreView = 'graph' | 'memories' | 'vocabulary' | 'federated';
 
 type ExploreWorkspaceTabsProps = {
   activeView: ExploreView;
@@ -15,6 +15,9 @@ export function ExploreWorkspaceTabs({
     <>
       <button className="workspace-tab" data-active={activeView === 'graph'} onClick={() => onSelect('graph')}>
         COWIN 图谱
+      </button>
+      <button className="workspace-tab" data-active={activeView === 'federated'} onClick={() => onSelect('federated')}>
+        知识联邦检索
       </button>
       {agentMemoryAvailable ? (
         <button className="workspace-tab" data-active={activeView === 'memories'} onClick={() => onSelect('memories')}>
