@@ -30,6 +30,13 @@ export interface WorkspaceItem {
   role?: string;
 }
 
+export interface AuthState {
+  token: string | null;
+  user: AuthUser | null;
+  activeWorkspace: string;
+  workspaces: WorkspaceItem[];
+}
+
 const TOKEN_STORAGE_KEY = 'semantica_auth_token';
 const WORKSPACE_STORAGE_KEY = 'semantica_active_workspace';
 
@@ -58,19 +65,19 @@ function setStoredItem(key: string, val: string | null) {
   }
 }
 
-// In-memory reactive state
-let currentToken: string | null = getStoredItem(TOKEN_STORAGE_KEY);
-let currentUser: AuthUser | null = null;
-let currentWorkspace: string = getStoredItem(WORKSPACE_STORAGE_KEY) || 'default';
-let currentWorkspaces: WorkspaceItem[] = [
-  { id: 'default', name: '默认工作区 (Default)', is_default: true, role: 'Admin' },
-];
+// In-memory reactive immutable state
+let authState: AuthState = {
+  token: getStoredItem(TOKEN_STORAGE_KEY),
+  user: null,
+  activeWorkspace: getStoredItem(WORKSPACE_STORAGE_KEY) || 'default',
+  workspaces: [
+    { id: 'default', name: '默认工作区 (Default)', is_default: true, role: 'Admin' },
+  ],
+};
 
-let storeVersion = 0;
 const listeners = new Set<() => void>();
 
 function notify() {
-  storeVersion++;
   for (const listener of listeners) {
     listener();
   }
@@ -83,8 +90,8 @@ function subscribe(callback: () => void) {
   };
 }
 
-function getSnapshot() {
-  return storeVersion;
+function getSnapshot(): AuthState {
+  return authState;
 }
 
 // ---------------------------------------------------------------------------
@@ -105,19 +112,19 @@ export function installFetchInterceptor() {
 
     // Attach active workspace header
     if (!headers.has('X-Workspace-ID')) {
-      headers.set('X-Workspace-ID', currentWorkspace);
+      headers.set('X-Workspace-ID', authState.activeWorkspace);
     }
 
     // Attach Bearer JWT token if user is signed in
-    if (currentToken && !headers.has('Authorization')) {
-      headers.set('Authorization', `Bearer ${currentToken}`);
+    if (authState.token && !headers.has('Authorization')) {
+      headers.set('Authorization', `Bearer ${authState.token}`);
     }
 
     initObj.headers = headers;
     const response = await originalFetch(input, initObj);
 
     // If 401 received on a protected route with a token, the token might be expired
-    if (response.status === 401 && currentToken) {
+    if (response.status === 401 && authState.token) {
       const urlStr = typeof input === 'string' ? input : input instanceof URL ? input.toString() : input.url;
       // Do not clear on login failures
       if (!urlStr.includes('/api/auth/login')) {
@@ -142,35 +149,37 @@ installFetchInterceptor();
 // ---------------------------------------------------------------------------
 
 export function getAuthToken(): string | null {
-  return currentToken;
+  return authState.token;
 }
 
 export function getCurrentUser(): AuthUser | null {
-  return currentUser;
+  return authState.user;
 }
 
 export function getActiveWorkspace(): string {
-  return currentWorkspace;
+  return authState.activeWorkspace;
 }
 
 export function getWorkspaces(): WorkspaceItem[] {
-  return currentWorkspaces;
+  return authState.workspaces;
 }
 
 export function setActiveWorkspace(workspaceId: string) {
-  currentWorkspace = workspaceId;
+  authState = {
+    ...authState,
+    activeWorkspace: workspaceId,
+  };
   setStoredItem(WORKSPACE_STORAGE_KEY, workspaceId);
   notify();
 }
 
 export function setAuthToken(token: string | null) {
-  currentToken = token;
-  if (token) {
-    setStoredItem(TOKEN_STORAGE_KEY, token);
-  } else {
-    setStoredItem(TOKEN_STORAGE_KEY, null);
-    currentUser = null;
-  }
+  authState = {
+    ...authState,
+    token,
+    user: token ? authState.user : null,
+  };
+  setStoredItem(TOKEN_STORAGE_KEY, token);
   notify();
 }
 
@@ -180,11 +189,16 @@ export async function fetchUserWorkspaces(): Promise<WorkspaceItem[]> {
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
-        currentWorkspaces = data;
-        // If current workspace is not in list, select the first one
-        if (!data.some((ws) => ws.id === currentWorkspace)) {
-          setActiveWorkspace(data[0].id);
-        }
+        const nextActive = data.some((ws: any) => ws.id === authState.activeWorkspace)
+          ? authState.activeWorkspace
+          : data[0].id;
+
+        authState = {
+          ...authState,
+          workspaces: data,
+          activeWorkspace: nextActive,
+        };
+        setStoredItem(WORKSPACE_STORAGE_KEY, nextActive);
         notify();
         return data;
       }
@@ -192,18 +206,18 @@ export async function fetchUserWorkspaces(): Promise<WorkspaceItem[]> {
   } catch (err) {
     console.debug('Failed to fetch workspaces:', err);
   }
-  return currentWorkspaces;
+  return authState.workspaces;
 }
 
 export async function refreshProfile(): Promise<AuthUser | null> {
-  if (!currentToken) {
+  if (!authState.token) {
     return null;
   }
   try {
     const res = await fetch('/api/auth/me');
     if (res.ok) {
       const data = await res.json();
-      currentUser = {
+      const profile: AuthUser = {
         id: data.user_id,
         username: data.username,
         display_name: data.extra?.display_name || data.username,
@@ -214,9 +228,14 @@ export async function refreshProfile(): Promise<AuthUser | null> {
         workspace_roles: data.workspace_roles || {},
         type: data.extra?.type,
       };
+
+      authState = {
+        ...authState,
+        user: profile,
+      };
       notify();
       await fetchUserWorkspaces();
-      return currentUser;
+      return profile;
     } else if (res.status === 401) {
       setAuthToken(null);
     }
@@ -250,21 +269,26 @@ export async function login(
       };
     }
 
-    currentToken = data.access_token;
+    const profile: AuthUser | null = data.user
+      ? {
+          id: data.user.id,
+          username: data.user.username,
+          display_name: data.user.display_name,
+          email: data.user.email,
+          global_role: data.user.global_role,
+          groups: data.user.groups || [],
+          authorized_workspaces: data.user.authorized_workspaces || ['default'],
+          workspace_roles: data.user.workspace_roles || {},
+          type: data.user.type,
+        }
+      : null;
+
     setStoredItem(TOKEN_STORAGE_KEY, data.access_token);
-    if (data.user) {
-      currentUser = {
-        id: data.user.id,
-        username: data.user.username,
-        display_name: data.user.display_name,
-        email: data.user.email,
-        global_role: data.user.global_role,
-        groups: data.user.groups || [],
-        authorized_workspaces: data.user.authorized_workspaces || ['default'],
-        workspace_roles: data.user.workspace_roles || {},
-        type: data.user.type,
-      };
-    }
+    authState = {
+      ...authState,
+      token: data.access_token,
+      user: profile,
+    };
     notify();
     await fetchUserWorkspaces();
     return { success: true };
@@ -277,9 +301,16 @@ export async function login(
 }
 
 export function logout() {
-  setAuthToken(null);
-  currentWorkspace = 'default';
+  setStoredItem(TOKEN_STORAGE_KEY, null);
   setStoredItem(WORKSPACE_STORAGE_KEY, 'default');
+  authState = {
+    token: null,
+    user: null,
+    activeWorkspace: 'default',
+    workspaces: [
+      { id: 'default', name: '默认工作区 (Default)', is_default: true, role: 'Admin' },
+    ],
+  };
   notify();
 }
 
@@ -288,22 +319,22 @@ export function logout() {
 // ---------------------------------------------------------------------------
 
 export function useAuth() {
-  useSyncExternalStore(subscribe, getSnapshot);
+  const state = useSyncExternalStore(subscribe, getSnapshot);
 
   // Initialize profile on mount if token exists
   useEffect(() => {
-    if (currentToken && !currentUser) {
+    if (state.token && !state.user) {
       refreshProfile();
     }
-  }, []);
+  }, [state.token, state.user]);
 
   return {
-    token: currentToken,
-    user: currentUser,
-    isAuthenticated: Boolean(currentToken && currentUser),
-    isAdmin: currentUser?.global_role === 'admin',
-    activeWorkspace: currentWorkspace,
-    workspaces: currentWorkspaces,
+    token: state.token,
+    user: state.user,
+    isAuthenticated: Boolean(state.token && state.user),
+    isAdmin: state.user?.global_role === 'admin',
+    activeWorkspace: state.activeWorkspace,
+    workspaces: state.workspaces,
     setActiveWorkspace,
     login,
     logout,

@@ -341,8 +341,60 @@ async def delete_group(group_id: str, request: Request):
 
 
 # =============================================================================
-# 3. Workspace Grants Management (/api/admin/workspaces/{id}/grants)
+# 3. Workspace Tenancy & Grants Management (/api/admin/workspaces)
 # =============================================================================
+
+
+class CreateWorkspaceRequest(BaseModel):
+    name: str = Field(..., description="Human-readable workspace name")
+    workspace_id: Optional[str] = Field(None, description="Optional custom workspace ID slug")
+    description: Optional[str] = Field(None, description="Optional description")
+
+
+@router.get("/workspaces")
+async def list_admin_workspaces(request: Request):
+    """List all tenant workspaces in the metadata database."""
+    store = _get_store(request)
+    workspaces = store.list_workspaces()
+    return [
+        {
+            "id": ws.id,
+            "name": ws.name,
+            "description": ws.description,
+            "graph_id": ws.graph_id,
+            "is_default": ws.is_default,
+            "created_by": ws.created_by,
+            "created_at": ws.created_at,
+            "updated_at": ws.updated_at,
+        }
+        for ws in workspaces
+    ]
+
+
+@router.post("/workspaces", status_code=status.HTTP_201_CREATED)
+async def create_admin_workspace(
+    payload: CreateWorkspaceRequest,
+    request: Request,
+    identity: RequestContext = Depends(require_admin),
+):
+    """Create a new tenant workspace."""
+    store = _get_store(request)
+    ws = store.create_workspace(
+        name=payload.name.strip(),
+        description=payload.description,
+        workspace_id=payload.workspace_id.strip() if payload.workspace_id else None,
+        created_by=identity.user_id,
+    )
+    return {
+        "id": ws.id,
+        "name": ws.name,
+        "description": ws.description,
+        "graph_id": ws.graph_id,
+        "is_default": ws.is_default,
+        "created_by": ws.created_by,
+        "created_at": ws.created_at,
+        "updated_at": ws.updated_at,
+    }
 
 
 class CreateGrantRequest(BaseModel):
