@@ -21,6 +21,7 @@ import type Graph from "graphology";
 import { batchMergeEdges, batchMergeNodes, graph } from "../../store/graphStore";
 import { logEvent } from "../../store/registryStore";
 import type { EdgeAttributes, NodeAttributes } from "../../store/graphStore";
+import { useAuth } from "../../auth/authStore";
 import { InspectorPanel, MetricChip, SurfaceCard } from "../../ui/primitives";
 import { lazy, Suspense } from "react";
 import { SigmaSceneAdapter } from "./SigmaSceneAdapter";
@@ -1343,6 +1344,69 @@ export function GraphWorkspace({ externalFocusNodeId, externalFocusToken, onDirt
     isLayoutRunning: false,
   });
   const reload = useReloadGraph();
+
+  // Bug 1 & 2 fix: Reset all interaction/selection state and camera-fit signature
+  // whenever the active workspace changes.  Without this, selectedNodeId /
+  // focusedNodeId from the previous workspace survive into the new graph, causing
+  // graph.getNodeAttributes / graph.neighbors to throw NotFoundGraphError and
+  // crash into ErrorBoundary.  Resetting appliedGraphSummarySignatureRef forces
+  // the camera-fit effect to re-fire, centering the new workspace's nodes even
+  // when the initial load was an empty default workspace.
+  const { activeWorkspace } = useAuth();
+  const prevActiveWorkspaceRef = useRef<string>(activeWorkspace);
+
+  useEffect(() => {
+    if (prevActiveWorkspaceRef.current === activeWorkspace) {
+      return;
+    }
+    prevActiveWorkspaceRef.current = activeWorkspace;
+
+    // Reset all node/edge selection and interaction state
+    setSelectedNodeId("");
+    setFocusedNodeId("");
+    setLastGroupedSelectedNodeId("");
+    setSelectedEdgeId("");
+    setSearchQuery("");
+    setSearchResults([]);
+    setSearchError("");
+    setPathTargetId("");
+    setPathResult(null);
+    setCollapsedNeighborhoodNodeIds([]);
+    setPredictions([]);
+    setIsRunningPredictions(false);
+    setScrubberTime(null);
+    setActiveNodeCount(null);
+    setTemporalBounds(null);
+    setSemanticDistanceState({
+      anchorNodeId: null,
+      scores: EMPTY_DISTANCE_RECORD,
+      count: 0,
+      status: "idle",
+      error: null,
+    });
+    setDistanceMode("off");
+    setHeatmapEnabled(false);
+    setEgoModeEnabled(false);
+    setViewMode("full");
+    setGraphReady(false);
+    setLoadingProgress(null);
+    lastScrubberMsRef.current = null;
+    pluginInteractionStateRef.current = {
+      hoveredNodeId: null,
+      selectedNodeId: "",
+      selectedEdgeId: "",
+      focusedNodeId: "",
+      activePath: [],
+      activePathEdgeIds: [],
+      viewMode: "full",
+      zoomTier: "overview",
+      isLayoutRunning: false,
+    };
+
+    // Bug 2 fix: Clear the applied summary signature so the camera-fit effect
+    // re-fires for the new workspace even if the graph version does not change.
+    appliedGraphSummarySignatureRef.current = null;
+  }, [activeWorkspace]);
 
   const handleLoadProgress = useCallback((progress: GraphLoadProgress) => {
     setLoadingProgress(progress);
