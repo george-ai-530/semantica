@@ -189,9 +189,13 @@ export async function fetchUserWorkspaces(): Promise<WorkspaceItem[]> {
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
-        const nextActive = data.some((ws: any) => ws.id === authState.activeWorkspace)
-          ? authState.activeWorkspace
-          : data[0].id;
+        // If activeWorkspace is 'default' (or not in available list), and user has a dedicated non-default workspace (e.g. ws_user_a),
+        // automatically switch to their primary workspace.
+        const nonDefaultPrimary = data.find((ws: any) => !ws.is_default && (ws.role === 'Admin' || ws.role === 'Editor'));
+        let nextActive = authState.activeWorkspace;
+        if (!data.some((ws: any) => ws.id === nextActive) || (nextActive === 'default' && nonDefaultPrimary && authState.user?.global_role !== 'admin')) {
+          nextActive = nonDefaultPrimary ? nonDefaultPrimary.id : data[0].id;
+        }
 
         authState = {
           ...authState,
