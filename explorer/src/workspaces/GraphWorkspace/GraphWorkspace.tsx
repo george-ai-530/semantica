@@ -3401,10 +3401,12 @@ export function GraphWorkspace({ externalFocusNodeId, externalFocusToken, onDirt
                 <div className="palantir-grid" />
                 <div className="palantir-vignette" />
                 <div className="explore-scene-stage">
-                  <SigmaSceneAdapter
-                    ref={sceneRef}
-                    {...sceneAdapterProps}
-                  />
+                  {isAuthenticated ? (
+                    <SigmaSceneAdapter
+                      ref={sceneRef}
+                      {...sceneAdapterProps}
+                    />
+                  ) : null}
                   <GraphLoadingOverlay
                     progress={loadingProgress}
                     visible={showLoadingOverlay}
