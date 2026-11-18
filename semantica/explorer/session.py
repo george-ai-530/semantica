@@ -44,11 +44,14 @@ class GraphSession:
         self,
         graph: ContextGraph,
         provenance_storage_path: Optional[str] = None,
+        persistence_adapter: Optional[Any] = None,
     ) -> None:
         self.graph = graph
         self._provenance_storage_path = provenance_storage_path
         self._lock = threading.RLock()
         self._search_index = GraphSearchIndex()
+        self._persistence_adapter: Optional[Any] = None
+        self._persistence_batch_local = threading.local()
 
         self.annotations: Dict[str, Dict[str, Any]] = {}
 
@@ -67,6 +70,31 @@ class GraphSession:
         self._cached_embeddings: Optional[Dict[str, List[float]]] = None
         self._cached_graph_revision: int = -1
         self.rebuild_search_index()
+        if persistence_adapter is not None:
+            self.attach_persistence(persistence_adapter)
+
+    def attach_persistence(
+        self, adapter: Optional[Any], *, install_callback: bool = True
+    ) -> None:
+        """Bind a workspace persistence adapter and ensure graph mutations flow through it."""
+        self._persistence_adapter = adapter
+        if (
+            adapter is not None
+            and install_callback
+            and getattr(self.graph, "mutation_callback", None) is None
+        ):
+            self.graph.mutation_callback = self.handle_graph_mutation
+
+    def _batch_depth(self) -> int:
+        return int(getattr(self._persistence_batch_local, "depth", 0))
+
+    def _enter_persistence_batch(self) -> None:
+        self._persistence_batch_local.depth = self._batch_depth() + 1
+
+    def _exit_persistence_batch(self) -> int:
+        new_depth = max(0, self._batch_depth() - 1)
+        self._persistence_batch_local.depth = new_depth
+        return new_depth
 
     @classmethod
     def from_file(cls, path: str) -> "GraphSession":
@@ -546,6 +574,19 @@ class GraphSession:
         elif normalized_event in {"RELOAD_GRAPH", "RESET_GRAPH"}:
             self.rebuild_search_index()
 
+        adapter = self._persistence_adapter
+        if adapter is not None and self._batch_depth() == 0:
+            try:
+                adapter.on_mutation(
+                    self.graph, normalized_event, str(entity_id), payload or {}
+                )
+            except Exception:
+                logger.exception(
+                    "Failed to persist graph mutation event=%s entity_id=%s",
+                    normalized_event,
+                    entity_id,
+                )
+
     def search(
         self,
         query: str,
@@ -844,24 +885,40 @@ class GraphSession:
         return edge_ids
 
     def add_nodes(self, nodes: List[Dict[str, Any]]) -> int:
-        with self._lock:
-            added = self.graph.add_nodes(nodes)
-            has_mutation_callback = callable(getattr(self.graph, "mutation_callback", None))
-            if added and not has_mutation_callback:
-                self._bump_graph_revision_locked()
+        self._enter_persistence_batch()
+        added = 0
+        has_mutation_callback = False
+        try:
+            with self._lock:
+                added = self.graph.add_nodes(nodes)
+                has_mutation_callback = callable(getattr(self.graph, "mutation_callback", None))
+                if added and not has_mutation_callback:
+                    self._bump_graph_revision_locked()
+        finally:
+            depth = self._exit_persistence_batch()
         if added and not has_mutation_callback:
             self.rebuild_search_index()
+        if added and depth == 0 and self._persistence_adapter is not None:
+            self._persistence_adapter.sync_graph(self.graph)
         return added
 
     def add_edges(self, edges: List[Dict[str, Any]]) -> int:
-        with self._lock:
-            self.validate_skos_hierarchy(edges)
-            added = self.graph.add_edges(edges)
-            has_mutation_callback = callable(getattr(self.graph, "mutation_callback", None))
-            if added and not has_mutation_callback:
-                self._bump_graph_revision_locked()
+        self._enter_persistence_batch()
+        added = 0
+        has_mutation_callback = False
+        try:
+            with self._lock:
+                self.validate_skos_hierarchy(edges)
+                added = self.graph.add_edges(edges)
+                has_mutation_callback = callable(getattr(self.graph, "mutation_callback", None))
+                if added and not has_mutation_callback:
+                    self._bump_graph_revision_locked()
+        finally:
+            depth = self._exit_persistence_batch()
         if added and not has_mutation_callback:
             self.rebuild_search_index()
+        if added and depth == 0 and self._persistence_adapter is not None:
+            self._persistence_adapter.sync_graph(self.graph)
         return added
 
     def validate_skos_hierarchy(self, edges: List[Dict[str, Any]]) -> None:
@@ -885,15 +942,24 @@ class GraphSession:
         Note: This provides lock-based mutual exclusion and pre-write validation,
         not transactional rollback atomicity.
         """
-        with self._lock:
-            self.validate_skos_hierarchy(edges)
-            nodes_added = self.graph.add_nodes(nodes)
-            edges_added = self.graph.add_edges(edges)
-            has_mutation_callback = callable(getattr(self.graph, "mutation_callback", None))
-            if (nodes_added or edges_added) and not has_mutation_callback:
-                self._bump_graph_revision_locked()
+        self._enter_persistence_batch()
+        nodes_added = 0
+        edges_added = 0
+        has_mutation_callback = False
+        try:
+            with self._lock:
+                self.validate_skos_hierarchy(edges)
+                nodes_added = self.graph.add_nodes(nodes)
+                edges_added = self.graph.add_edges(edges)
+                has_mutation_callback = callable(getattr(self.graph, "mutation_callback", None))
+                if (nodes_added or edges_added) and not has_mutation_callback:
+                    self._bump_graph_revision_locked()
+        finally:
+            depth = self._exit_persistence_batch()
         if (nodes_added or edges_added) and not has_mutation_callback:
             self.rebuild_search_index()
+        if (nodes_added or edges_added) and depth == 0 and self._persistence_adapter is not None:
+            self._persistence_adapter.sync_graph(self.graph)
         return nodes_added, edges_added
 
     def add_node(

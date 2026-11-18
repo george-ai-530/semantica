@@ -57,6 +57,7 @@ jobs:
                         tests/test_federated_graphrag.py \
                         tests/test_api_key_admin_endpoints.py \
                         tests/test_multi_tenant_isolation_and_rbac_flow.py \
+                        tests/test_workspace_graph_persistence.py \
                         tests/explorer/test_explorer_auth.py -v
 
   build-image:

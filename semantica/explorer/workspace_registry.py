@@ -8,9 +8,14 @@ caching, and graceful shutdown of all sessions.
 
 import logging
 import threading
-from typing import Callable, Dict, Optional
+from typing import Any, Callable, Dict, List, Optional, Sequence
 
 from ..context.context_graph import ContextGraph
+from .graph_persistence import (
+    FalkorDBSyncBridge,
+    WorkspaceGraphStore,
+    WorkspacePersistenceAdapter,
+)
 from .session import GraphSession
 
 logger = logging.getLogger(__name__)
@@ -178,6 +183,9 @@ class WorkspaceSessionRegistry:
         graph_key_fn: Optional[Callable[[str], str]] = None,
         provenance_storage_path: Optional[str] = None,
         session_factory: Optional[Callable[[str], GraphSession]] = None,
+        graph_db_path: Optional[str] = None,
+        graph_store: Optional[WorkspaceGraphStore] = None,
+        falkor_bridge: Optional[FalkorDBSyncBridge] = None,
     ) -> None:
         self._lock = threading.RLock()
         self._sessions: Dict[str, GraphSession] = {}
@@ -186,6 +194,55 @@ class WorkspaceSessionRegistry:
         self._provenance_storage_path = provenance_storage_path
         self._session_factory = session_factory
         self._closed = False
+
+        if graph_store is not None:
+            self._graph_store: Optional[WorkspaceGraphStore] = graph_store
+            self._owns_graph_store = False
+        elif graph_db_path:
+            self._graph_store = WorkspaceGraphStore(graph_db_path)
+            self._owns_graph_store = True
+        else:
+            self._graph_store = None
+            self._owns_graph_store = False
+
+        if falkor_bridge is not None:
+            self._falkor_bridge: Optional[FalkorDBSyncBridge] = falkor_bridge
+        elif self._graph_store is not None:
+            self._falkor_bridge = FalkorDBSyncBridge()
+        else:
+            self._falkor_bridge = None
+
+    @property
+    def graph_store(self) -> Optional[WorkspaceGraphStore]:
+        return self._graph_store
+
+    @property
+    def falkor_bridge(self) -> Optional[FalkorDBSyncBridge]:
+        return self._falkor_bridge
+
+    def persistence_status(self) -> Dict[str, Any]:
+        """Return structured diagnostics describing active graph persistence."""
+        sqlite_enabled = self._graph_store is not None
+        falkor_enabled = bool(self._falkor_bridge and self._falkor_bridge.enabled)
+        if sqlite_enabled and falkor_enabled:
+            backend = "sqlite+falkordb"
+        elif sqlite_enabled:
+            backend = "sqlite"
+        elif falkor_enabled:
+            backend = "falkordb"
+        else:
+            backend = "memory"
+        return {
+            "enabled": sqlite_enabled or falkor_enabled,
+            "backend": backend,
+            "sqlite_path": self._graph_store.db_path if self._graph_store else None,
+            "falkordb_enabled": falkor_enabled,
+            "falkordb_host": self._falkor_bridge.host if falkor_enabled and self._falkor_bridge else None,
+            "falkordb_port": self._falkor_bridge.port if falkor_enabled and self._falkor_bridge else None,
+            "persisted_workspaces": (
+                self._graph_store.list_workspaces() if self._graph_store else []
+            ),
+        }
 
     # ------------------------------------------------------------------
     # Public API
@@ -224,6 +281,54 @@ class WorkspaceSessionRegistry:
                 ws_id,
                 graph_key,
             )
+
+    def bind_default_session(
+        self,
+        ws_id: str,
+        session: GraphSession,
+        *,
+        hydrate_from_store: bool = True,
+    ) -> None:
+        """Register *session* and bind durable persistence when configured."""
+        graph_key = self._graph_key_fn(ws_id)
+        with self._lock:
+            self._sessions[ws_id] = session
+            self._graph_keys[ws_id] = graph_key
+
+            if self._graph_store is not None:
+                if hydrate_from_store:
+                    if self._graph_store.is_initialized(ws_id):
+                        self._graph_store.load_into_context_graph(ws_id, session.graph)
+                        session.rebuild_search_index()
+                    else:
+                        self._graph_store.save_context_graph(
+                            ws_id, graph_key, session.graph, seeded=False
+                        )
+                if self._falkor_bridge is not None and self._falkor_bridge.enabled:
+                    self._falkor_bridge.sync_full_graph(graph_key, session.graph)
+
+            adapter = self._make_adapter(ws_id, graph_key)
+            if adapter is not None:
+                session.attach_persistence(adapter)
+
+    def warm_persisted_workspaces(
+        self, seed_defaults: Sequence[str] = ("ws_user_a", "ws_user_b")
+    ) -> List[str]:
+        """Eagerly load persisted workspaces and seed default tenant graphs."""
+        if self._graph_store is None and not (
+            self._falkor_bridge and self._falkor_bridge.enabled
+        ):
+            return []
+        persisted = self._graph_store.list_workspaces() if self._graph_store else []
+        ordered = list(dict.fromkeys([*seed_defaults, *persisted]))
+        warmed: List[str] = []
+        for ws_id in ordered:
+            try:
+                self.get(ws_id)
+                warmed.append(ws_id)
+            except Exception:
+                logger.exception("Failed warming workspace session %s", ws_id)
+        return warmed
 
     def remove(self, ws_id: str) -> Optional[GraphSession]:
         """Remove and return the session for *ws_id*, or ``None``."""
@@ -266,8 +371,6 @@ class WorkspaceSessionRegistry:
                 session = self._sessions.pop(ws_id, None)
                 if session is not None:
                     logger.info("Shutting down session for workspace %s", ws_id)
-                    # GraphSession has no explicit close(), but clear heavy
-                    # cached state to free memory promptly.
                     session.invalidate_embedding_cache()
             except Exception:
                 logger.exception("Error shutting down session for workspace %s", ws_id)
@@ -275,6 +378,11 @@ class WorkspaceSessionRegistry:
         with self._lock:
             self._sessions.clear()
             self._graph_keys.clear()
+            if self._owns_graph_store and self._graph_store is not None:
+                try:
+                    self._graph_store.close()
+                except Exception:
+                    logger.exception("Error closing WorkspaceGraphStore")
 
     @property
     def is_closed(self) -> bool:
@@ -285,6 +393,20 @@ class WorkspaceSessionRegistry:
     # Internal helpers
     # ------------------------------------------------------------------
 
+    def _make_adapter(
+        self, ws_id: str, graph_key: str
+    ) -> Optional[WorkspacePersistenceAdapter]:
+        has_store = self._graph_store is not None
+        has_falkor = bool(self._falkor_bridge and self._falkor_bridge.enabled)
+        if not has_store and not has_falkor:
+            return None
+        return WorkspacePersistenceAdapter(
+            ws_id=ws_id,
+            graph_key=graph_key,
+            store=self._graph_store,
+            falkor_bridge=self._falkor_bridge,
+        )
+
     def _create_locked(self, ws_id: str) -> GraphSession:
         """Create a new ``GraphSession`` for *ws_id*. Must be called under ``_lock``."""
         graph_key = self._graph_key_fn(ws_id)
@@ -293,18 +415,36 @@ class WorkspaceSessionRegistry:
         if self._session_factory is not None:
             session = self._session_factory(graph_key)
         else:
-            # In-memory ContextGraph for each workspace.
             graph = ContextGraph(advanced_analytics=False)
-            # Pre-populate default domain datasets for known tenant workspaces so
-            # that their graphs survive container restarts without requiring an
-            # external populate script to re-ingest data.
-            if ws_id == "ws_user_a":
-                _seed_ws_user_a(graph)
-            elif ws_id == "ws_user_b":
-                _seed_ws_user_b(graph)
+            if self._graph_store is not None:
+                if self._graph_store.is_initialized(ws_id):
+                    self._graph_store.load_into_context_graph(ws_id, graph)
+                else:
+                    seeded = False
+                    if ws_id == "ws_user_a":
+                        _seed_ws_user_a(graph)
+                        seeded = True
+                    elif ws_id == "ws_user_b":
+                        _seed_ws_user_b(graph)
+                        seeded = True
+                    self._graph_store.save_context_graph(
+                        ws_id, graph_key, graph, seeded=seeded
+                    )
+                if self._falkor_bridge is not None and self._falkor_bridge.enabled:
+                    self._falkor_bridge.sync_full_graph(graph_key, graph)
+            else:
+                if ws_id == "ws_user_a":
+                    _seed_ws_user_a(graph)
+                elif ws_id == "ws_user_b":
+                    _seed_ws_user_b(graph)
+                if self._falkor_bridge is not None and self._falkor_bridge.enabled:
+                    self._falkor_bridge.sync_full_graph(graph_key, graph)
+
+            adapter = self._make_adapter(ws_id, graph_key)
             session = GraphSession(
                 graph,
                 provenance_storage_path=self._provenance_storage_path,
+                persistence_adapter=adapter,
             )
 
         self._sessions[ws_id] = session
