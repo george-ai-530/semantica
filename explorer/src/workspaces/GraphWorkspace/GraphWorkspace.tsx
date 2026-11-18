@@ -624,8 +624,10 @@ const HUD_CSS = `
   }
   .explore-shell {
     position: relative;
+    flex: 1;
     width: 100%;
     height: 100%;
+    min-height: 0;
     overflow: hidden;
     padding: 12px;
     display: flex;
@@ -648,16 +650,19 @@ const HUD_CSS = `
     flex: 1;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(340px, 380px);
+    grid-template-rows: minmax(0, 1fr);
     gap: 12px;
   }
   .explore-scene-stack {
     min-height: 0;
+    height: 100%;
     display: flex;
     flex-direction: column;
     gap: 14px;
   }
   .explore-scene-card {
     min-height: 0;
+    height: 100%;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -665,7 +670,7 @@ const HUD_CSS = `
   }
   .explore-scene-shell {
     position: relative;
-    min-height: 0;
+    min-height: 400px;
     flex: 1;
     overflow: hidden;
     border-radius: 20px 20px 0 0;

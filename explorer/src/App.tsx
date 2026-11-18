@@ -571,6 +571,9 @@ const shellStyles = `
 
   .workspace-shell {
     flex: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
     min-width: 0;
     display: flex;
     flex-direction: column;
@@ -685,7 +688,10 @@ const shellStyles = `
 
   .workspace-body {
     flex: 1;
+    height: 100%;
     min-height: 0;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
   }
 
@@ -2228,7 +2234,7 @@ export default function App() {
             </div>
           )}
 
-          <main style={{ flex: 1, minHeight: 0, position: 'relative', overflow: 'hidden' }}>
+          <main style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
             {renderWorkspace()}
           </main>
         </div>
