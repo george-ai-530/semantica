@@ -477,11 +477,11 @@ interface UseLoadGraphOptions {
 
 export function useLoadGraph(options: UseLoadGraphOptions = {}) {
   const { enabled = true, onGraphReady, onProgress } = options;
-  const { activeWorkspace } = useAuth();
+  const { activeWorkspace, isAuthenticated } = useAuth();
 
   return useQuery<GraphLoadSummary>({
-    queryKey: ["graph", "full-load", activeWorkspace],
-    enabled,
+    queryKey: ["graph", "full-load", activeWorkspace, isAuthenticated],
+    enabled: enabled && isAuthenticated,
     staleTime: 30000,
     retry: 0,
     queryFn: async ({ signal }): Promise<GraphLoadSummary> => {

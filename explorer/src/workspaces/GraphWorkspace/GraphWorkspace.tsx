@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 import type Graph from "graphology";
-import { batchMergeEdges, batchMergeNodes, graph } from "../../store/graphStore";
+import { batchMergeEdges, batchMergeNodes, clearGraph, graph } from "../../store/graphStore";
 import { logEvent } from "../../store/registryStore";
 import type { EdgeAttributes, NodeAttributes } from "../../store/graphStore";
 import { useAuth } from "../../auth/authStore";
@@ -1357,14 +1357,19 @@ export function GraphWorkspace({ externalFocusNodeId, externalFocusToken, onDirt
   // crash into ErrorBoundary.  Resetting appliedGraphSummarySignatureRef forces
   // the camera-fit effect to re-fire, centering the new workspace's nodes even
   // when the initial load was an empty default workspace.
-  const { activeWorkspace } = useAuth();
+  const { activeWorkspace, isAuthenticated } = useAuth();
   const prevActiveWorkspaceRef = useRef<string>(activeWorkspace);
 
   useEffect(() => {
-    if (prevActiveWorkspaceRef.current === activeWorkspace) {
+    const workspaceChanged = prevActiveWorkspaceRef.current !== activeWorkspace;
+    if (!workspaceChanged && isAuthenticated) {
       return;
     }
     prevActiveWorkspaceRef.current = activeWorkspace;
+
+    // Always clear graph nodes/edges immediately when workspace changes or
+    // the user logs out, so no tenant data leaks onto the canvas.
+    clearGraph();
 
     // Reset all node/edge selection and interaction state
     setSelectedNodeId("");
@@ -1411,7 +1416,7 @@ export function GraphWorkspace({ externalFocusNodeId, externalFocusToken, onDirt
     // Bug 2 fix: Clear the applied summary signature so the camera-fit effect
     // re-fires for the new workspace even if the graph version does not change.
     appliedGraphSummarySignatureRef.current = null;
-  }, [activeWorkspace]);
+  }, [activeWorkspace, isAuthenticated]);
 
   const handleLoadProgress = useCallback((progress: GraphLoadProgress) => {
     setLoadingProgress(progress);
@@ -2318,7 +2323,10 @@ export function GraphWorkspace({ externalFocusNodeId, externalFocusToken, onDirt
     viewMode,
   ]);
 
-  const showLoadingOverlay = !graphReady && (isLoading || isFetching || Boolean(loadingProgress) || isGraphLoadError);
+  // Don't show the loading spinner or error toast when unauthenticated —
+  // the graph query is disabled, so "isLoading" can still be true from a
+  // previous failed fetch.
+  const showLoadingOverlay = isAuthenticated && !graphReady && (isLoading || isFetching || Boolean(loadingProgress) || isGraphLoadError);
   const showSettlingStatus = graphReady && loadingProgress?.phase === "stabilizing_layout";
   const hasGraphContent = Boolean(summary?.nodeCount);
   const activePath = pathResult?.path ?? EMPTY_PATH;
@@ -3404,6 +3412,40 @@ export function GraphWorkspace({ externalFocusNodeId, externalFocusToken, onDirt
                     error={graphLoadErrorMessage}
                     onRetry={handleRetryGraphLoad}
                   />
+                  {!isAuthenticated && (
+                    <div style={{
+                      position: "absolute", inset: 0, display: "flex",
+                      alignItems: "center", justifyContent: "center",
+                      background: "rgba(248,249,250,0.92)", zIndex: 20,
+                    }}>
+                      <div style={{
+                        maxWidth: 480, textAlign: "center", padding: "36px 40px",
+                        background: "#fff", borderRadius: 16,
+                        border: "1px solid var(--ws-border)",
+                        boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
+                      }}>
+                        <div style={{
+                          width: 56, height: 56, borderRadius: "50%",
+                          background: "rgba(66,133,244,0.08)",
+                          display: "inline-flex", alignItems: "center",
+                          justifyContent: "center", marginBottom: 16,
+                        }}>
+                          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4285f4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>
+                          </svg>
+                        </div>
+                        <div style={{ fontSize: 17, fontWeight: 800, color: "var(--ws-text)", marginBottom: 10 }}>
+                          当前处于未登录状态
+                        </div>
+                        <div style={{ fontSize: 13, color: "var(--ws-text-muted)", lineHeight: 1.7, marginBottom: 20 }}>
+                          请点击右上角「企业登录」以查看工作区知识图谱。<br />
+                          <span style={{ fontFamily: "monospace", fontSize: 12 }}>
+                            admin / 1 &nbsp;·&nbsp; user_a / 1 &nbsp;·&nbsp; user_b / 1
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 

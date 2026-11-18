@@ -138,6 +138,19 @@ export function AdminWorkspace() {
   const [feedbackMsg, setFeedbackMsg] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
+  // Load active tab data — must be declared BEFORE the early-return guard to
+  // satisfy React's Rules of Hooks (hooks must be called unconditionally).
+  useEffect(() => {
+    if (!user || user.global_role !== 'admin') return;
+    if (activeTab === 'guests') loadGuests();
+    if (activeTab === 'workspaces') {
+      loadWorkspaces();
+      loadGrants(selectedWsId);
+    }
+    if (activeTab === 'groups') loadGroups();
+    if (activeTab === 'keys') loadAdminKeys();
+  }, [activeTab, user?.id, user?.global_role, selectedWsId]);
+
   // Guard non-admin access
   if (!user || user.global_role !== 'admin') {
     return (
@@ -184,17 +197,6 @@ export function AdminWorkspace() {
       </div>
     );
   }
-
-  // Load active tab data
-  useEffect(() => {
-    if (activeTab === 'guests') loadGuests();
-    if (activeTab === 'workspaces') {
-      loadWorkspaces();
-      loadGrants(selectedWsId);
-    }
-    if (activeTab === 'groups') loadGroups();
-    if (activeTab === 'keys') loadAdminKeys();
-  }, [activeTab]);
 
   function showMessage(text: string, type: 'success' | 'error' = 'success') {
     setFeedbackMsg({ text, type });

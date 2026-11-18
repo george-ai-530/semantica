@@ -9,6 +9,7 @@
  */
 
 import { useEffect, useSyncExternalStore } from 'react';
+import { clearGraph } from '../store/graphStore';
 
 export interface AuthUser {
   id: string;
@@ -315,6 +316,9 @@ export function logout() {
       { id: 'default', name: '默认工作区 (Default)', is_default: true, role: 'Admin' },
     ],
   };
+  // Immediately wipe tenant graph nodes/edges from memory so logged-out
+  // users never see another tenant's data on the canvas.
+  try { clearGraph(); } catch { /* store may not be ready on first render */ }
   notify();
 }
 
