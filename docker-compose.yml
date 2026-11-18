@@ -1,9 +1,7 @@
 services:
   explorer:
     image: ${SEMANTICA_EXPLORER_IMAGE:-ghcr.io/george-ai-530/semantica-explorer:latest}
-    build:
-      context: .
-      dockerfile: Dockerfile
+    pull_policy: always
     container_name: semantica-explorer
     environment:
       FALKORDB_HOST: ${FALKORDB_HOST:-falkordb}
