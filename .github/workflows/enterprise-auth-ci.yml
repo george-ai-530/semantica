@@ -81,6 +81,10 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
+            --label "org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
+            --label "org.opencontainers.image.description=Semantica Enterprise Multi-Tenant Knowledge Graph Explorer" \
+            --label "org.opencontainers.image.licenses=Apache-2.0" \
+            --label "org.opencontainers.image.revision=${{ github.sha }}" \
             -t "${{ steps.image.outputs.tag_latest }}" \
             -t "${{ steps.image.outputs.tag_enterprise }}" \
             -t "${{ steps.image.outputs.tag_sha }}" \
@@ -119,6 +123,29 @@ jobs:
         run: |
           docker stop semantica-ci-test 2>/dev/null || true
           docker rm semantica-ci-test 2>/dev/null || true
+
+      - name: Prepare Explorer distribution artifacts
+        run: |
+          mkdir -p dist-artifacts
+          cp -r semantica/static dist-artifacts/
+          cat <<EOF > dist-artifacts/build-metadata.json
+          {
+            "repository": "${{ github.repository }}",
+            "commit": "${{ github.sha }}",
+            "short_sha": "${GITHUB_SHA::7}",
+            "ref": "${{ github.ref }}",
+            "image": "${{ steps.image.outputs.tag_latest }}",
+            "image_sha": "${{ steps.image.outputs.tag_sha }}",
+            "built_at": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          }
+          EOF
+
+      - name: Upload Explorer distribution artifact
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: semantica-explorer-dist
+          path: dist-artifacts/
+          retention-days: 14
 
       - name: Push image to GitHub Container Registry
         if: github.event_name != 'pull_request'

@@ -24,6 +24,10 @@ RUN mkdir -p /app/semantica && npm run build
 # and this image together once 3.14 is verified, not with a lone image bump.
 FROM python:3.13-slim AS runtime
 
+LABEL org.opencontainers.image.source="https://github.com/george-ai-530/semantica" \
+      org.opencontainers.image.description="Semantica Enterprise Multi-Tenant Knowledge Graph Explorer" \
+      org.opencontainers.image.licenses="Apache-2.0"
+
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     FALKORDB_HOST=falkordb \
