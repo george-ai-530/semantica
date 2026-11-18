@@ -118,16 +118,10 @@ jobs:
             || (echo "Admin login failed!" && docker logs semantica-ci-test && exit 1)
           echo "Admin login with password '1' verified."
 
-      - name: Teardown test container
-        if: always()
-        run: |
-          docker stop semantica-ci-test 2>/dev/null || true
-          docker rm semantica-ci-test 2>/dev/null || true
-
-      - name: Prepare Explorer distribution artifacts
+      - name: Extract Explorer distribution artifacts from container
         run: |
           mkdir -p dist-artifacts
-          cp -r semantica/static dist-artifacts/
+          docker cp semantica-ci-test:/app/semantica/static dist-artifacts/static
           cat <<EOF > dist-artifacts/build-metadata.json
           {
             "repository": "${{ github.repository }}",
@@ -146,6 +140,12 @@ jobs:
           name: semantica-explorer-dist
           path: dist-artifacts/
           retention-days: 14
+
+      - name: Teardown test container
+        if: always()
+        run: |
+          docker stop semantica-ci-test 2>/dev/null || true
+          docker rm semantica-ci-test 2>/dev/null || true
 
       - name: Push image to GitHub Container Registry
         if: github.event_name != 'pull_request'
