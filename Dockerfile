@@ -115,7 +115,12 @@ RUN pip install --no-cache-dir -r explorer-extra-py313.txt -r pep517-build.txt -
     && pip install --no-cache-dir --no-deps --no-build-isolation . \
     && rm -f explorer-extra-py313.txt pep517-build.txt \
     && python -m pip uninstall --yes pip \
-    && chown -R semantica:semantica /app
+    && mkdir -p /data \
+    && chown -R semantica:semantica /app /data
+
+ENV SEMANTICA_AUTH_DB_PATH=/data/semantica_auth.db \
+    SEMANTICA_ADMIN_PASSWORD=1 \
+    SEMANTICA_TEST_PASSWORD=1
 
 USER semantica
 

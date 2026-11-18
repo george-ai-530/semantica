@@ -1,29 +1,40 @@
 services:
   explorer:
+    image: ${SEMANTICA_EXPLORER_IMAGE:-ghcr.io/george-ai-530/semantica-explorer:latest}
     build:
       context: .
       dockerfile: Dockerfile
-    image: semantica-knowledge-explorer:latest
+    container_name: semantica-explorer
     environment:
-      FALKORDB_HOST: falkordb
-      FALKORDB_PORT: "6379"
-      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:8000,http://127.0.0.1:8000}
-      # Required for API access - the Explorer refuses all protected routes
-      # (503) until this is set. Generate one with `openssl rand -hex 32`.
-      SEMANTICA_API_KEY: ${SEMANTICA_API_KEY:-}
-      # Trusted local-only setups only: bypasses the API key entirely.
+      FALKORDB_HOST: ${FALKORDB_HOST:-falkordb}
+      FALKORDB_PORT: ${FALKORDB_PORT:-6379}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:8000,http://127.0.0.1:8000,http://192.168.1.15:8000}
+      SEMANTICA_AUTH_DB_PATH: ${SEMANTICA_AUTH_DB_PATH:-/data/semantica_auth.db}
+      SEMANTICA_JWT_SECRET: ${SEMANTICA_JWT_SECRET:-semantica-enterprise-young520-nas-token-secret}
+      SEMANTICA_ADMIN_PASSWORD: ${SEMANTICA_ADMIN_PASSWORD:-1}
+      SEMANTICA_TEST_PASSWORD: ${SEMANTICA_TEST_PASSWORD:-1}
+      SEMANTICA_API_KEY: ${SEMANTICA_API_KEY:-1}
       SEMANTICA_ALLOW_ANONYMOUS: ${SEMANTICA_ALLOW_ANONYMOUS:-false}
+      SEMANTICA_LDAP_SERVER: ${SEMANTICA_LDAP_SERVER:-openldap}
+      SEMANTICA_LDAP_PORT: ${SEMANTICA_LDAP_PORT:-389}
+      SEMANTICA_LDAP_BASE_DN: ${SEMANTICA_LDAP_BASE_DN:-dc=example,dc=com}
+      SEMANTICA_LDAP_BIND_DN: ${SEMANTICA_LDAP_BIND_DN:-cn=admin,dc=example,dc=com}
+      SEMANTICA_LDAP_BIND_PASSWORD: ${SEMANTICA_LDAP_BIND_PASSWORD:-Young520}
+      SEMANTICA_LDAP_USER_DN_TEMPLATE: ${SEMANTICA_LDAP_USER_DN_TEMPLATE:-uid={username},ou=Users,dc=example,dc=com}
     depends_on:
       falkordb:
         condition: service_started
     ports:
       - "8000:8000"
+    volumes:
+      - semantica_data:/data
     networks:
       - semantica
     restart: unless-stopped
 
   falkordb:
     image: falkordb/falkordb:latest
+    container_name: semantica-falkordb
     ports:
       - "6379:6379"
     volumes:
@@ -38,3 +49,4 @@ networks:
 
 volumes:
   falkordb_data:
+  semantica_data:
