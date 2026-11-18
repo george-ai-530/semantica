@@ -48,6 +48,7 @@ export interface GraphInspectorPanelProps {
   onFocusNode?: (nodeId: string) => void;
   onMarkdownApplied?: (result: MarkdownApplyResult) => void;
   onMarkdownDirtyChange?: (dirty: boolean) => void;
+  readOnly?: boolean;
 }
 
 const PROVENANCE_KEYS = ["source", "source_url", "pmid", "pmids", "evidence", "provenance", "confidence"] as const;
@@ -310,6 +311,7 @@ export function GraphInspectorPanel({
   onFocusNode,
   onMarkdownApplied,
   onMarkdownDirtyChange,
+  readOnly = false,
 }: GraphInspectorPanelProps) {
   if (!nodeId) {
     return (
@@ -429,6 +431,7 @@ export function GraphInspectorPanel({
             resource={{ kind: "context-node", id: effectiveNodeId }}
             onApplied={onMarkdownApplied}
             onDirtyChange={onMarkdownDirtyChange}
+            readOnly={readOnly}
           />
         </div>
       </details>

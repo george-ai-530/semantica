@@ -1357,7 +1357,10 @@ export function GraphWorkspace({ externalFocusNodeId, externalFocusToken, onDirt
   // crash into ErrorBoundary.  Resetting appliedGraphSummarySignatureRef forces
   // the camera-fit effect to re-fire, centering the new workspace's nodes even
   // when the initial load was an empty default workspace.
-  const { activeWorkspace, isAuthenticated } = useAuth();
+  const { activeWorkspace, isAuthenticated, user, workspaces } = useAuth();
+  const currentWs = workspaces.find((w) => w.id === activeWorkspace);
+  const activeWsRole = currentWs?.role || user?.workspace_roles?.[activeWorkspace] || (user?.global_role === 'admin' ? 'Admin' : 'Viewer');
+  const isViewer = activeWsRole === 'Viewer';
   const prevActiveWorkspaceRef = useRef<string>(activeWorkspace);
 
   useEffect(() => {
@@ -3521,6 +3524,7 @@ export function GraphWorkspace({ externalFocusNodeId, externalFocusToken, onDirt
                       onFocusNode={focusNode}
                       onMarkdownApplied={handleMarkdownApplied}
                       onMarkdownDirtyChange={handleMarkdownDirtyChange}
+                      readOnly={isViewer}
                     />
                   </Suspense>
                 </div>

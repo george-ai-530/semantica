@@ -17,6 +17,7 @@ import {
   ShieldCheck,
   Key,
   LogOut,
+  Download,
   type LucideIcon,
 } from 'lucide-react';
 import { ErrorBoundary } from './ErrorBoundary';
@@ -24,6 +25,8 @@ import { ExploreWorkspaceTabs, type ExploreView } from './ExploreWorkspaceTabs';
 import { fetchAgentMemoryAvailability } from './explorerCapabilities';
 import { hasOntologyUrlState } from './workspaces/OntologyWorkspace/ontologyUrlState';
 import { WorkspaceSwitcher } from './auth/WorkspaceSwitcher';
+import { PersistenceIndicator } from './auth/PersistenceIndicator';
+import { WorkspaceExportModal } from './auth/WorkspaceExportModal';
 import { LoginModal } from './auth/LoginModal';
 import { UserSettingsModal } from './auth/UserSettingsModal';
 import { useAuth } from './auth/authStore';
@@ -1810,6 +1813,7 @@ export default function App() {
   const { user, isAuthenticated, logout } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
   const visibleNavItems: NavItem[] = [
     ...navItems,
@@ -2093,6 +2097,17 @@ export default function App() {
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <WorkspaceSwitcher />
+              <PersistenceIndicator />
+              <button
+                type="button"
+                className="ws-btn ws-btn--secondary"
+                onClick={() => setIsExportModalOpen(true)}
+                title="导出当前工作区图谱快照 (JSON/CSV/GraphML/Turtle)"
+                style={{ padding: '5px 10px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 6 }}
+              >
+                <Download size={13} style={{ color: 'var(--ws-purple)' }} />
+                <span>导出当前空间</span>
+              </button>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -2241,6 +2256,7 @@ export default function App() {
       </div>
       <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
       <UserSettingsModal isOpen={isSettingsModalOpen} onClose={() => setIsSettingsModalOpen(false)} />
+      <WorkspaceExportModal isOpen={isExportModalOpen} onClose={() => setIsExportModalOpen(false)} />
     </QueryClientProvider>
   );
 }
