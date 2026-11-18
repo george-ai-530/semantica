@@ -2205,7 +2205,7 @@ export default function App() {
               }}
             >
               <span>
-                💡 <strong>企业安全防护已开启</strong>：当前处于未登录状态。您可以点击右上角 <strong>「企业登录」</strong> 使用 <code>admin / Young520</code>（管理员）或 <code>testuser / Young520</code>（LDAP 域员工）体验多工作区隔离、个人 API 密钥与管理控制台。
+                💡 <strong>企业安全防护已开启</strong>：当前处于未登录状态。您可以点击右上角 <strong>「企业登录」</strong> 使用 <code>admin / 1</code>（管理员）、<code>user_a / 1</code>（测试用户A）、<code>user_b / 1</code>（测试用户B）或 <code>testuser / Young520</code>（LDAP 域员工）体验多工作区隔离、个人 API 密钥与管理控制台。
               </span>
               <button
                 type="button"

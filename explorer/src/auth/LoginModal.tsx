@@ -280,7 +280,9 @@ export function LoginModal({
             }}
           >
             <div style={{ fontWeight: 700, color: 'var(--ws-text)', marginBottom: 4 }}>💡 常用凭据提示：</div>
-            <div>• <strong>系统管理员</strong>: <code>admin</code> / <code>Young520</code> (拥有全站与管理控制台最高权限)</div>
+            <div>• <strong>系统管理员</strong>: <code>admin</code> / <code>1</code> (拥有全站与管理控制台最高权限)</div>
+            <div>• <strong>测试账号 A</strong>: <code>user_a</code> / <code>1</code> (专属空间 ws_user_a)</div>
+            <div>• <strong>测试账号 B</strong>: <code>user_b</code> / <code>1</code> (专属空间 ws_user_b)</div>
             <div>• <strong>LDAP 域员工</strong>: <code>testuser</code> / <code>Young520</code> (经由 NAS OpenLDAP 389 直连认证)</div>
           </div>
         </form>
