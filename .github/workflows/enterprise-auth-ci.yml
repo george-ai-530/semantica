@@ -58,6 +58,7 @@ jobs:
                         tests/test_api_key_admin_endpoints.py \
                         tests/test_multi_tenant_isolation_and_rbac_flow.py \
                         tests/test_workspace_graph_persistence.py \
+                        tests/test_real_user_lifecycle_and_boundary.py \
                         tests/explorer/test_explorer_auth.py -v
 
   build-image:
