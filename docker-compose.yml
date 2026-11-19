@@ -20,6 +20,9 @@ services:
       SEMANTICA_LDAP_BIND_DN: ${SEMANTICA_LDAP_BIND_DN:-cn=admin,dc=example,dc=com}
       SEMANTICA_LDAP_BIND_PASSWORD: ${SEMANTICA_LDAP_BIND_PASSWORD:-Young520}
       SEMANTICA_LDAP_USER_DN_TEMPLATE: ${SEMANTICA_LDAP_USER_DN_TEMPLATE:-uid={username},ou=Users,dc=example,dc=com}
+    extra_hosts:
+      - "openldap:192.168.1.15"
+      - "host.docker.internal:host-gateway"
     depends_on:
       falkordb:
         condition: service_started

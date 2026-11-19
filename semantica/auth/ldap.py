@@ -143,6 +143,31 @@ class ActiveDirectoryClient:
         """Instantiate client using SEMANTICA_LDAP_* environment variables."""
         return cls()
 
+    def _get_reachable_server(self) -> str:
+        """Resolve LDAP server hostname, attempting fallback IPs/hosts if DNS lookup fails."""
+        import socket
+        candidates = [self.server]
+        env_fallback = os.environ.get("SEMANTICA_LDAP_FALLBACK_SERVER")
+        if env_fallback:
+            candidates.append(env_fallback)
+        candidates.extend(["openldap", "192.168.1.15", "host.docker.internal", "172.17.0.1", "127.0.0.1"])
+
+        seen = set()
+        for candidate in candidates:
+            if not candidate or candidate in seen:
+                continue
+            seen.add(candidate)
+            try:
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(0.8)
+                res = sock.connect_ex((candidate, self.port))
+                sock.close()
+                if res == 0:
+                    return candidate
+            except Exception:
+                continue
+        return self.server
+
     def authenticate_sync(self, username: str, password: str) -> Optional[LDAPUser]:
         """Perform synchronous LDAP bind and query against Active Directory."""
         if not username or not password:
@@ -159,10 +184,11 @@ class ActiveDirectoryClient:
             return None
 
         escaped_user = escape_filter_chars(clean_user)
+        target_server = self._get_reachable_server()
 
         try:
             server = Server(
-                self.server,
+                target_server,
                 port=self.port,
                 use_ssl=self.use_ssl,
                 get_info=ALL,
