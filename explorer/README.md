@@ -20,9 +20,24 @@ npm --version
 
 ---
 
-## Two ways to run the Explorer
+## Ways to run the Explorer
 
-### Option A — pip install (recommended for users)
+### Option A — Docker Compose (Zero local build, recommended for Enterprise & NAS)
+
+Pulls the pre-built multi-tenant container directly from GitHub Container Registry. Zero local compilation, Node.js, or Python setup required:
+
+```bash
+docker compose up -d
+# Dashboard opens at http://127.0.0.1:8000
+# Default admin credentials: admin / 1
+```
+
+To build locally from source with Docker:
+```bash
+docker compose -f docker-compose.yml -f docker-compose.build.yml up -d --build
+```
+
+### Option B — pip install (recommended for local Python users)
 
 Install the package with the explorer extras. The pre-built frontend bundle is included in the wheel so no Node.js is required.
 
@@ -69,7 +84,7 @@ python -m semantica.explorer --graph my_graph.json
 
 ---
 
-### Option B — run from source (for contributors / frontend development)
+### Option C — run from source (for contributors / frontend development)
 
 This mode runs the React dev server with hot module replacement, so frontend changes appear in the browser instantly without rebuilding.
 

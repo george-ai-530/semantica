@@ -2,18 +2,27 @@
 Semantica Explorer : FastAPI Dependencies
 
 Provides ``Depends()``-compatible callables for injecting the
-current ``GraphSession`` into route handlers, and for enforcing API-key
-authentication on protected routes. WebSocket manager access is handled
-directly via ``app.state.ws_manager``.
+current ``GraphSession`` into route handlers, and for enforcing authentication
+and caller identity (JWT bearer tokens and API keys) on protected routes.
+WebSocket manager access is handled directly via ``app.state.ws_manager``.
 """
 
-import hmac
-import os
 from typing import Optional
 
-from fastapi import Request, HTTPException, Security, status
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security.api_key import APIKeyHeader
 
+from ..auth.dependencies import (
+    anonymous_access_allowed,
+    get_current_identity,
+    get_expected_api_key,
+    is_auth_configured,
+    is_valid_api_key,
+    require_auth,
+    require_workspace_role,
+)
+from ..auth.models import RequestContext
+from ..auth.store import AuthStore, get_auth_store
 from ..context.agent_memory import AgentMemory
 from .markdown_resources import MarkdownResourceRegistry
 from .session import GraphSession
@@ -21,67 +30,72 @@ from .session import GraphSession
 _api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 
-def get_expected_api_key() -> Optional[str]:
-    """Read the configured API key from the environment on every call.
-
-    Read fresh (not cached) so tests and ops tooling can rotate the key
-    without restarting the process.
-    """
-    return os.environ.get("SEMANTICA_API_KEY") or None
-
-
-def anonymous_access_allowed() -> bool:
-    return os.environ.get("SEMANTICA_ALLOW_ANONYMOUS", "").strip().lower() == "true"
-
-
-def is_valid_api_key(candidate: Optional[str]) -> bool:
-    """Return True if *candidate* matches the configured key, or if the
-    server has explicitly opted into anonymous access."""
-    if anonymous_access_allowed():
-        return True
-    expected = get_expected_api_key()
-    if not expected:
-        return False
-    return bool(candidate) and hmac.compare_digest(candidate, expected)
-
-
-def require_auth(api_key: Optional[str] = Security(_api_key_header)) -> None:
-    """Dependency enforcing the ``X-API-Key`` header on protected routes.
-
-    Every Explorer/API router (except health/info/static assets) should be
-    mounted with ``dependencies=[Depends(require_auth)]``. If
-    SEMANTICA_API_KEY is unset, requests are refused with 503 rather than
-    silently served unauthenticated — SEMANTICA_ALLOW_ANONYMOUS=true opts
-    into that explicitly for local development.
-    """
-    if anonymous_access_allowed():
-        return
-    expected = get_expected_api_key()
-    if not expected:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail=(
-                "Server is not configured for authentication. Set the "
-                "SEMANTICA_API_KEY environment variable, or explicitly opt "
-                "into unauthenticated access (development only) with "
-                "SEMANTICA_ALLOW_ANONYMOUS=true."
-            ),
-        )
-    if not api_key or not hmac.compare_digest(api_key, expected):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or missing API key. Send it as the X-API-Key header.",
-        )
-
-
 def get_session(request: Request) -> GraphSession:
-    """Retrieve the GraphSession stored on ``app.state``."""
+    """Retrieve the ``GraphSession`` for the current request's workspace.
+
+    Resolution order:
+    1. If a ``WorkspaceSessionRegistry`` is available on ``app.state``, resolve
+       the workspace from the caller's ``RequestContext`` (set by the auth
+       ingress pipeline) and return the per-workspace session.
+    2. Fall back to the legacy single ``app.state.session`` for backwards
+       compatibility with single-tenant deployments.
+    """
+    from .workspace_registry import WorkspaceSessionRegistry
+
+    registry: Optional[WorkspaceSessionRegistry] = getattr(
+        request.app.state, "workspace_registry", None
+    )
+
+    if registry is not None:
+        # Resolve active workspace from the identity injected by get_current_identity.
+        identity: Optional[RequestContext] = getattr(request.state, "identity", None)
+        ws_id = "default"
+        if identity is not None:
+            ws_id = identity.current_workspace or "default"
+        else:
+            # Fallback: read workspace from request headers/query directly
+            ws_id = (
+                request.headers.get("X-Workspace-ID")
+                or request.query_params.get("workspace")
+                or "default"
+            )
+        try:
+            return registry.get(ws_id)
+        except RuntimeError:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Workspace session registry is shut down.",
+            )
+
+    # Legacy path: single global session
     if not hasattr(request.app.state, "session") or request.app.state.session is None:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="GraphSession not initialized."
         )
     return request.app.state.session
+
+
+def get_workspace_session(required_role: str = "Viewer"):
+    """Dependency factory returning a ``GraphSession`` with RBAC enforcement.
+
+    The caller must have at least *required_role* on the target workspace;
+    otherwise an HTTP 403 is raised.
+    """
+
+    def _resolve(
+        request: Request,
+        identity: RequestContext = Depends(get_current_identity),
+    ) -> GraphSession:
+        ws_id = identity.current_workspace or "default"
+        if not identity.has_workspace_access(ws_id, required_role=required_role):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Access denied: required role '{required_role}' on workspace '{ws_id}'.",
+            )
+        return get_session(request)
+
+    return _resolve
 
 
 def get_markdown_resources(request: Request) -> MarkdownResourceRegistry:
@@ -104,3 +118,20 @@ def get_agent_memory(request: Request) -> AgentMemory:
             detail="AgentMemory is not configured for this Explorer instance.",
         )
     return memory
+
+
+__all__ = [
+    "RequestContext",
+    "anonymous_access_allowed",
+    "get_agent_memory",
+    "get_auth_store",
+    "get_current_identity",
+    "get_expected_api_key",
+    "get_markdown_resources",
+    "get_session",
+    "get_workspace_session",
+    "is_auth_configured",
+    "is_valid_api_key",
+    "require_auth",
+    "require_workspace_role",
+]

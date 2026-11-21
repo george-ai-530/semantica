@@ -35,6 +35,7 @@ export interface MarkdownContentViewerProps {
   onDirtyChange?: (dirty: boolean) => void;
   className?: string;
   defaultMode?: "preview" | "source";
+  readOnly?: boolean;
 }
 
 // Exported for unit-testing the roving-tabindex navigation logic without a DOM.
@@ -64,6 +65,7 @@ export function MarkdownContentViewer({
   onDirtyChange,
   className,
   defaultMode = "preview",
+  readOnly = false,
 }: MarkdownContentViewerProps) {
   const [activeMode, setActiveMode] = useState<"preview" | "source">(defaultMode);
   const [copied, setCopied] = useState(false);
@@ -299,10 +301,20 @@ export function MarkdownContentViewer({
             </button>
           )}
           {resource && !editing && !loading ? (
-            <button type="button" onClick={() => void handleEdit()} style={copyBtnStyle}>
-              <Pencil size={12} style={{ marginRight: 4 }} aria-hidden="true" />
-              编辑
-            </button>
+            readOnly ? (
+              <span
+                title="当前工作区为只读权限 (Viewer)，不可修改"
+                style={{ ...copyBtnStyle, cursor: "default", opacity: 0.75, display: "inline-flex", alignItems: "center" }}
+              >
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--ws-text-dim)", marginRight: 5 }} />
+                只读 (Viewer)
+              </span>
+            ) : (
+              <button type="button" onClick={() => void handleEdit()} style={copyBtnStyle}>
+                <Pencil size={12} style={{ marginRight: 4 }} aria-hidden="true" />
+                编辑
+              </button>
+            )
           ) : null}
           {loading ? (
             <button type="button" disabled style={{ ...copyBtnStyle, opacity: 0.65 }}>

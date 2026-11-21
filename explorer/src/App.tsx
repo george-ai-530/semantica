@@ -7,6 +7,7 @@ import {
   FileSearch,
   GitBranchPlus,
   GitMerge,
+  Lock,
   Network,
   Radar,
   Route,
@@ -14,12 +15,21 @@ import {
   Search,
   Settings2,
   ShieldCheck,
+  Key,
+  LogOut,
+  Download,
   type LucideIcon,
 } from 'lucide-react';
 import { ErrorBoundary } from './ErrorBoundary';
 import { ExploreWorkspaceTabs, type ExploreView } from './ExploreWorkspaceTabs';
 import { fetchAgentMemoryAvailability } from './explorerCapabilities';
 import { hasOntologyUrlState } from './workspaces/OntologyWorkspace/ontologyUrlState';
+import { WorkspaceSwitcher } from './auth/WorkspaceSwitcher';
+import { PersistenceIndicator } from './auth/PersistenceIndicator';
+import { WorkspaceExportModal } from './auth/WorkspaceExportModal';
+import { LoginModal } from './auth/LoginModal';
+import { UserSettingsModal } from './auth/UserSettingsModal';
+import { useAuth } from './auth/authStore';
 
 const DecisionWorkspace = lazy(() => import('./workspaces/DecisionWorkspace/DecisionWorkspace').then((module) => ({ default: module.DecisionWorkspace })));
 const DiffMergeWorkspace = lazy(() => import('./workspaces/DiffMergeWorkspace/DiffMergeWorkspace').then((module) => ({ default: module.DiffMergeWorkspace })));
@@ -35,8 +45,10 @@ const EntityResolutionTab = lazy(() => import('./workspaces/EnrichWorkspace/Enti
 const KGOverviewTab = lazy(() => import('./workspaces/ManageWorkspace/KGOverviewTab').then((module) => ({ default: module.KGOverviewTab })));
 const OntologySummaryTab = lazy(() => import('./workspaces/ManageWorkspace/OntologySummaryTab').then((module) => ({ default: module.OntologySummaryTab })));
 const OntologyWorkspace = lazy(() => import('./workspaces/OntologyWorkspace').then((module) => ({ default: module.OntologyWorkspace })));
+const AdminWorkspace = lazy(() => import('./workspaces/AdminWorkspace/AdminWorkspace').then((module) => ({ default: module.AdminWorkspace })));
+const FederatedSearchTab = lazy(() => import('./workspaces/FederatedSearch/FederatedSearchTab').then((module) => ({ default: module.FederatedSearchTab })));
 
-type WorkspaceId = 'welcome' | 'explore' | 'analyze' | 'decisions' | 'enrich' | 'manage' | 'ontology-hub';
+type WorkspaceId = 'welcome' | 'explore' | 'analyze' | 'decisions' | 'enrich' | 'manage' | 'ontology-hub' | 'admin';
 type AnalyzeView = 'sparql' | 'reasoning';
 type EnrichView = 'import' | 'merge' | 'registry' | 'resolve';
 type ManageView = 'lineage' | 'kg-overview' | 'ontology';
@@ -97,6 +109,9 @@ const navItems: NavItem[] = [
 ];
 
 function readInitialWorkspace(): WorkspaceId {
+  if (typeof window !== 'undefined' && (window.location.pathname === '/admin' || window.location.hash === '#admin')) {
+    return 'admin';
+  }
   return hasOntologyUrlState() ? 'ontology-hub' : 'welcome';
 }
 
@@ -559,6 +574,9 @@ const shellStyles = `
 
   .workspace-shell {
     flex: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
     min-width: 0;
     display: flex;
     flex-direction: column;
@@ -673,7 +691,10 @@ const shellStyles = `
 
   .workspace-body {
     flex: 1;
+    height: 100%;
     min-height: 0;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
   }
 
@@ -1789,6 +1810,16 @@ export default function App() {
   const [exploreDraftDirty, setExploreDraftDirty] = useState(false);
   const [agentMemoryAvailable, setAgentMemoryAvailable] = useState(false);
 
+  const { user, isAuthenticated, logout } = useAuth();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+
+  const visibleNavItems: NavItem[] = [
+    ...navItems,
+    { id: 'admin' as WorkspaceId, label: '管理控制台', hint: '系统治理与安全管控', icon: ShieldCheck },
+  ];
+
   useEffect(() => {
     let active = true;
     void fetchAgentMemoryAvailability().then((available) => {
@@ -1816,10 +1847,23 @@ export default function App() {
     if (activeWorkspace === "explore" && !confirmDiscardExploreDraft()) return;
     setExploreDraftDirty(false);
     setActiveWorkspace(nextWorkspace);
+    if (nextWorkspace === 'admin') {
+      window.history.pushState(null, '', '#admin');
+    }
   };
 
 
   const renderWorkspace = () => {
+    if (activeWorkspace === 'admin') {
+      return (
+        <ErrorBoundary key="admin">
+          <Suspense fallback={<WorkspaceFallback />}>
+            <AdminWorkspace />
+          </Suspense>
+        </ErrorBoundary>
+      );
+    }
+
     if (activeWorkspace === 'welcome') {
       return (
         <WelcomeScreen
@@ -1849,8 +1893,8 @@ export default function App() {
       return (
         <WorkspaceShell
           title="探索"
-          subtitle={exploreView === 'graph' ? undefined : exploreView === 'memories' ? "浏览并编辑规范的 AgentMemory 文档。" : "浏览图谱并在视图间切换，无需离开工作区。"}
-          kicker={exploreView === 'graph' ? '图谱工作室' : exploreView === 'memories' ? '记忆浏览' : '词汇浏览'}
+          subtitle={exploreView === 'graph' ? undefined : exploreView === 'federated' ? "跨多个隔离工作区并发检索知识与实体。" : exploreView === 'memories' ? "浏览并编辑规范的 AgentMemory 文档。" : "浏览图谱并在视图间切换，无需离开工作区。"}
+          kicker={exploreView === 'graph' ? '图谱工作室' : exploreView === 'federated' ? '知识联邦' : exploreView === 'memories' ? '记忆浏览' : '词汇浏览'}
           compact
           tabs={
             <ExploreWorkspaceTabs
@@ -1868,7 +1912,13 @@ export default function App() {
                   externalFocusToken={graphFocusRequest?.token}
                   onDirtyChange={setExploreDraftDirty}
                 />
-              ) : exploreView === 'memories' ? <MemoryWorkspace onDirtyChange={setExploreDraftDirty} /> : <VocabularyWorkspace />}
+              ) : exploreView === 'federated' ? (
+                <FederatedSearchTab />
+              ) : exploreView === 'memories' ? (
+                <MemoryWorkspace onDirtyChange={setExploreDraftDirty} />
+              ) : (
+                <VocabularyWorkspace />
+              )}
             </Suspense>
           </ErrorBoundary>
         </WorkspaceShell>
@@ -2016,7 +2066,7 @@ export default function App() {
           <button className="brand-pill" title="COWIN 知识图谱" onClick={() => switchWorkspace('welcome')} style={{ cursor: 'pointer', border: '1px solid rgba(54, 110, 244,0.18)', padding: 0, background: 'transparent', overflow: 'hidden' }}>
             <img src="/favicon.png" alt="COWIN" width={34} height={34} style={{ display: 'block', borderRadius: 'inherit' }} />
           </button>
-          {navItems.map(({ id, label, hint, icon: Icon }) => (
+          {visibleNavItems.map(({ id, label, hint, icon: Icon }) => (
             <button
               key={id}
               className="nav-button"
@@ -2029,8 +2079,184 @@ export default function App() {
             </button>
           ))}
         </aside>
-        {renderWorkspace()}
+
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, height: '100%', overflow: 'hidden' }}>
+          {/* Top persistent header bar with WorkspaceSwitcher on Left & Auth/User on Right */}
+          <header
+            style={{
+              height: 48,
+              minHeight: 48,
+              background: '#ffffff',
+              borderBottom: '1px solid var(--ws-border)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '0 18px',
+              zIndex: 100,
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <WorkspaceSwitcher />
+              <PersistenceIndicator />
+              <button
+                type="button"
+                className="ws-btn ws-btn--secondary"
+                onClick={() => setIsExportModalOpen(true)}
+                title="导出当前工作区图谱快照 (JSON/CSV/GraphML/Turtle)"
+                style={{ padding: '5px 10px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 6 }}
+              >
+                <Download size={13} style={{ color: 'var(--ws-purple)' }} />
+                <span>导出当前空间</span>
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              {isAuthenticated && user ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setIsSettingsModalOpen(true)}
+                    className="ws-btn ws-btn--secondary"
+                    style={{ padding: '5px 10px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 6 }}
+                    title="个人 API 密钥管理与生成"
+                  >
+                    <Key size={13} style={{ color: 'var(--ws-accent)' }} />
+                    <span>个人 API 密钥</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsSettingsModalOpen(true)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 8,
+                      background: '#ffffff',
+                      border: '1px solid var(--ws-border)',
+                      borderRadius: 8,
+                      padding: '5px 10px',
+                      fontSize: 12,
+                      fontWeight: 600,
+                      color: 'var(--ws-text)',
+                      cursor: 'pointer',
+                      transition: 'all 140ms ease',
+                    }}
+                    title="点击打开用户设置与安全配置"
+                  >
+                    <div
+                      style={{
+                        width: 22,
+                        height: 22,
+                        borderRadius: '50%',
+                        background: 'var(--ws-accent-soft)',
+                        color: 'var(--ws-accent)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: 11,
+                        fontWeight: 800,
+                      }}
+                    >
+                      {user.username.charAt(0).toUpperCase()}
+                    </div>
+                    <span>{user.display_name || user.username}</span>
+                    <span
+                      className={`ws-pill ${
+                        user.global_role === 'admin'
+                          ? 'ws-pill--purple'
+                          : 'ws-pill--mono'
+                      }`}
+                      style={{ fontSize: 10, padding: '1px 6px' }}
+                    >
+                      {user.global_role === 'admin' ? '系统管理员' : '普通用户'}
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => logout()}
+                    className="ws-btn ws-btn--ghost"
+                    style={{ padding: '5px 8px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 4 }}
+                    title="退出登录"
+                  >
+                    <LogOut size={13} />
+                    <span>退出</span>
+                  </button>
+                </>
+              ) : (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span
+                    style={{
+                      fontSize: 11,
+                      color: 'var(--ws-text-muted)',
+                      background: '#f4f4f4',
+                      padding: '3px 8px',
+                      borderRadius: 4,
+                      border: '1px solid var(--ws-border)',
+                    }}
+                  >
+                    访客模式 (只读)
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setIsLoginModalOpen(true)}
+                    className="ws-btn ws-btn--primary"
+                    style={{ padding: '5px 14px', fontSize: 12, fontWeight: 700 }}
+                  >
+                    <Lock size={13} />
+                    <span>企业登录 / Sign In</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          </header>
+
+          {/* Unauthenticated Global Notice Banner */}
+          {!isAuthenticated && (
+            <div
+              style={{
+                background: 'linear-gradient(90deg, #f0f5ff 0%, #ffffff 100%)',
+                borderBottom: '1px solid rgba(0, 82, 217, 0.16)',
+                padding: '6px 18px',
+                fontSize: 12,
+                color: '#0052d9',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <span>
+                💡 <strong>企业安全防护已开启</strong>：当前处于未登录状态。您可以点击右上角 <strong>「企业登录」</strong> 使用 <code>admin / 1</code>（管理员）、<code>user_a / 1</code>（测试用户A）、<code>user_b / 1</code>（测试用户B）或 <code>testuser / 1</code>（LDAP 域员工，所有测试密码均已统一为 <code>1</code>）体验多工作区隔离、个人 API 密钥与管理控制台。
+              </span>
+              <button
+                type="button"
+                onClick={() => setIsLoginModalOpen(true)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#0052d9',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  textDecoration: 'underline',
+                  padding: 0,
+                  fontSize: 12,
+                  whiteSpace: 'nowrap',
+                  marginLeft: 12,
+                }}
+              >
+                立即登录 &rarr;
+              </button>
+            </div>
+          )}
+
+          <main style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
+            {renderWorkspace()}
+          </main>
+        </div>
       </div>
+      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
+      <UserSettingsModal isOpen={isSettingsModalOpen} onClose={() => setIsSettingsModalOpen(false)} />
+      <WorkspaceExportModal isOpen={isExportModalOpen} onClose={() => setIsExportModalOpen(false)} />
     </QueryClientProvider>
   );
 }

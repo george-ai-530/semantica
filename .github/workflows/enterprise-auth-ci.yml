@@ -1,0 +1,157 @@
+name: Enterprise Auth CI & Container Build
+
+permissions:
+  contents: read
+  packages: write
+
+on:
+  push:
+    branches:
+      - 'feature/enterprise-auth-workspace'
+      - 'feature/**'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run Enterprise Auth & Multi-Workspace Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: explorer/package-lock.json
+
+      - name: Install and test Explorer frontend
+        working-directory: explorer
+        run: |
+          npm ci
+          npm run test:auth-frontend
+          npm run build
+
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies with uv
+        run: |
+          uv sync --extra explorer
+
+      - name: Run Enterprise Auth & Multi-Workspace Backend Test Suite
+        run: |
+          uv run pytest tests/test_auth_metadata_store.py \
+                        tests/test_ldap_jwt_login.py \
+                        tests/test_workspace_session_routing.py \
+                        tests/test_federated_graphrag.py \
+                        tests/test_api_key_admin_endpoints.py \
+                        tests/test_multi_tenant_isolation_and_rbac_flow.py \
+                        tests/test_workspace_graph_persistence.py \
+                        tests/test_real_user_lifecycle_and_boundary.py \
+                        tests/explorer/test_explorer_auth.py -v
+
+  build-image:
+    name: Build & Verify Docker Image
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Compute image name and tags
+        id: image
+        run: |
+          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          IMAGE="ghcr.io/${OWNER}/semantica-explorer"
+          SHORT_SHA="${GITHUB_SHA::7}"
+          echo "name=${IMAGE}" >> $GITHUB_OUTPUT
+          echo "tag_latest=${IMAGE}:latest" >> $GITHUB_OUTPUT
+          echo "tag_enterprise=${IMAGE}:enterprise" >> $GITHUB_OUTPUT
+          echo "tag_sha=${IMAGE}:sha-${SHORT_SHA}" >> $GITHUB_OUTPUT
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --label "org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
+            --label "org.opencontainers.image.description=Semantica Enterprise Multi-Tenant Knowledge Graph Explorer" \
+            --label "org.opencontainers.image.licenses=Apache-2.0" \
+            --label "org.opencontainers.image.revision=${{ github.sha }}" \
+            -t "${{ steps.image.outputs.tag_latest }}" \
+            -t "${{ steps.image.outputs.tag_enterprise }}" \
+            -t "${{ steps.image.outputs.tag_sha }}" \
+            .
+
+      - name: Verify Container Health
+        run: |
+          docker run -d --name semantica-ci-test -p 8000:8000 \
+            -e SEMANTICA_ALLOW_ANONYMOUS=true \
+            -e SEMANTICA_ADMIN_PASSWORD=1 \
+            -e SEMANTICA_TEST_PASSWORD=1 \
+            "${{ steps.image.outputs.tag_latest }}"
+
+          # Wait for container startup and health check
+          for i in {1..15}; do
+            if curl -s http://127.0.0.1:8000/api/health | grep -q '"status":"ok"'; then
+              echo "Healthcheck successfully passed on attempt $i!"
+              break
+            fi
+            echo "Waiting for container API to be healthy... ($i/15)"
+            sleep 2
+          done
+
+          # Final health check
+          curl -f http://127.0.0.1:8000/api/health || (docker logs semantica-ci-test && exit 1)
+
+          # Verify admin login with password '1'
+          curl -fs -X POST http://127.0.0.1:8000/api/auth/login \
+            -H 'Content-Type: application/json' \
+            -d '{"username":"admin","password":"1"}' | grep -q 'token' \
+            || (echo "Admin login failed!" && docker logs semantica-ci-test && exit 1)
+          echo "Admin login with password '1' verified."
+
+      - name: Extract Explorer distribution artifacts from container
+        run: |
+          mkdir -p dist-artifacts
+          docker cp semantica-ci-test:/app/semantica/static dist-artifacts/static
+          cat <<EOF > dist-artifacts/build-metadata.json
+          {
+            "repository": "${{ github.repository }}",
+            "commit": "${{ github.sha }}",
+            "short_sha": "${GITHUB_SHA::7}",
+            "ref": "${{ github.ref }}",
+            "image": "${{ steps.image.outputs.tag_latest }}",
+            "image_sha": "${{ steps.image.outputs.tag_sha }}",
+            "built_at": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          }
+          EOF
+
+      - name: Upload Explorer distribution artifact
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: semantica-explorer-dist
+          path: dist-artifacts/
+          retention-days: 14
+
+      - name: Teardown test container
+        if: always()
+        run: |
+          docker stop semantica-ci-test 2>/dev/null || true
+          docker rm semantica-ci-test 2>/dev/null || true
+
+      - name: Push image to GitHub Container Registry
+        if: github.event_name != 'pull_request'
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          docker push "${{ steps.image.outputs.tag_latest }}"
+          docker push "${{ steps.image.outputs.tag_enterprise }}"
+          docker push "${{ steps.image.outputs.tag_sha }}"

@@ -244,6 +244,15 @@ else:
         "install the required dependencies: pip install 'semantica[explorer]'."
     )
 
+try:
+    from .auth.routes import router as auth_router
+    from .auth.admin_routes import router as admin_router
+    app.include_router(auth_router)
+    app.include_router(admin_router)
+    logging.info("Authentication routes (/api/auth, /api/admin) successfully mounted.")
+except Exception as exc:
+    logging.warning(f"Failed to mount auth/admin routes: {exc}")
+
 # SPA catch all
 @app.get("/{full_path:path}", include_in_schema=False)
 async def serve_spa(full_path: str):

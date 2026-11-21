@@ -1,5 +1,4 @@
-# syntax=docker/dockerfile:1
-FROM node:26-alpine@sha256:2d984a15c9b54fd0aeb608b8e0d0d83529eb34d2966db27a1fb4f1edc3d298a3 AS frontend-builder
+FROM node:22-alpine AS frontend-builder
 
 WORKDIR /app
 COPY explorer/package*.json ./explorer/
@@ -23,7 +22,11 @@ RUN mkdir -p /app/semantica && npm run build
 # bumps for this image. gensim (extras graph-embeddings / split-topic) still
 # ships no cp314 wheel. Raise the ceiling in pyproject.toml, the Install Matrix
 # and this image together once 3.14 is verified, not with a lone image bump.
-FROM python:3.13-slim@sha256:8d9d0b8bcf6506481eae4907c18f5e3e7902e629f5f6d684f9e7c32e85e3ddf0 AS runtime
+FROM python:3.13-slim AS runtime
+
+LABEL org.opencontainers.image.source="https://github.com/george-ai-530/semantica" \
+      org.opencontainers.image.description="Semantica Enterprise Multi-Tenant Knowledge Graph Explorer" \
+      org.opencontainers.image.licenses="Apache-2.0"
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -115,7 +118,13 @@ RUN pip install --no-cache-dir -r explorer-extra-py313.txt -r pep517-build.txt -
     && pip install --no-cache-dir --no-deps --no-build-isolation . \
     && rm -f explorer-extra-py313.txt pep517-build.txt \
     && python -m pip uninstall --yes pip \
-    && chown -R semantica:semantica /app
+    && mkdir -p /data \
+    && chown -R semantica:semantica /app /data
+
+ENV SEMANTICA_AUTH_DB_PATH=/data/semantica_auth.db \
+    SEMANTICA_GRAPH_DB_PATH=/data/semantica_graphs.db \
+    SEMANTICA_ADMIN_PASSWORD=1 \
+    SEMANTICA_TEST_PASSWORD=1
 
 USER semantica
 

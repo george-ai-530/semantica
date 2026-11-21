@@ -1,4 +1,5 @@
 ﻿import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "../../auth/authStore";
 import { batchMergeEdges, batchMergeNodes, clearGraph } from "../../store/graphStore";
 import type { EdgeAttributes, NodeAttributes } from "../../store/graphStore";
 import { curveGroupForPair, pairRegistryKey } from "../../store/edgePairKeys.js";
@@ -476,11 +477,12 @@ interface UseLoadGraphOptions {
 
 export function useLoadGraph(options: UseLoadGraphOptions = {}) {
   const { enabled = true, onGraphReady, onProgress } = options;
+  const { activeWorkspace, isAuthenticated } = useAuth();
 
   return useQuery<GraphLoadSummary>({
-    queryKey: ["graph", "full-load"],
-    enabled,
-    staleTime: Infinity,
+    queryKey: ["graph", "full-load", activeWorkspace, isAuthenticated],
+    enabled: enabled && isAuthenticated,
+    staleTime: 30000,
     retry: 0,
     queryFn: async ({ signal }): Promise<GraphLoadSummary> => {
       const startedAt = performance.now();

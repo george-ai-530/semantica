@@ -1480,7 +1480,22 @@ A browser-based graph workbench. Pan and zoom live graphs, scrub the timeline, r
 | **Ontology Hub** | SHACL Studio, visual editor, cross-ontology alignments, SKOS browser |
 | **Lineage** | W3C PROV-O provenance visualization for any entity |
 
-Quickest way to start (no Node.js required):
+### Quick Start with Docker (Zero Local Build)
+
+The fastest way to deploy the full enterprise stack (Explorer UI, Multi-Tenant RBAC, SQLite WAL persistence, and FalkorDB graph mirror). Directly pulls the prebuilt image from GitHub Container Registry with no local build, Node.js, or Python setup required:
+
+```bash
+docker compose up -d
+# Dashboard opens at http://127.0.0.1:8000
+# Default credentials: admin / 1
+```
+
+To build locally from source instead:
+```bash
+docker compose -f docker-compose.yml -f docker-compose.build.yml up -d --build
+```
+
+### Local Python Start (no Node.js required):
 
 ```bash
 pip install "semantica[explorer]"
