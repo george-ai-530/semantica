@@ -265,26 +265,6 @@ export function LoginModal({
           >
             {isLoading ? '正在验证身份…' : '登 录'}
           </button>
-
-          {/* Quick Credential Hints for Ease of Verification */}
-          <div
-            style={{
-              marginTop: 16,
-              padding: '10px 12px',
-              borderRadius: 8,
-              background: '#f8f9fa',
-              border: '1px solid var(--ws-border)',
-              fontSize: 11,
-              color: 'var(--ws-text-muted)',
-              lineHeight: 1.5,
-            }}
-          >
-            <div style={{ fontWeight: 700, color: 'var(--ws-text)', marginBottom: 4 }}>💡 常用凭据提示（所有密码均已统一为 1）：</div>
-            <div>• <strong>系统管理员</strong>: <code>admin</code> / <code>1</code> (拥有全站与管理控制台最高权限)</div>
-            <div>• <strong>测试账号 A</strong>: <code>user_a</code> / <code>1</code> (专属空间 ws_user_a)</div>
-            <div>• <strong>测试账号 B</strong>: <code>user_b</code> / <code>1</code> (专属空间 ws_user_b)</div>
-            <div>• <strong>LDAP 域员工</strong>: <code>testuser</code> / <code>1</code> (经由 NAS OpenLDAP 389 直连认证)</div>
-          </div>
         </form>
       </div>
     </div>

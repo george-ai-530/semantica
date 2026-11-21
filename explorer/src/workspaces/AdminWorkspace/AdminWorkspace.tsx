@@ -189,7 +189,7 @@ export function AdminWorkspace() {
               style={{ padding: '8px 20px', fontSize: 13, fontWeight: 700 }}
             >
               <Lock size={14} />
-              <span>以管理员身份登录 (admin / 1)</span>
+              <span>以管理员身份登录</span>
             </button>
           </div>
         </div>

@@ -3443,10 +3443,7 @@ export function GraphWorkspace({ externalFocusNodeId, externalFocusToken, onDirt
                           当前处于未登录状态
                         </div>
                         <div style={{ fontSize: 13, color: "var(--ws-text-muted)", lineHeight: 1.7, marginBottom: 20 }}>
-                          请点击右上角「企业登录」以查看工作区知识图谱。<br />
-                          <span style={{ fontFamily: "monospace", fontSize: 12 }}>
-                            admin / 1 &nbsp;·&nbsp; user_a / 1 &nbsp;·&nbsp; user_b / 1
-                          </span>
+                          请点击右上角「企业登录」以查看工作区知识图谱。
                         </div>
                       </div>
                     </div>

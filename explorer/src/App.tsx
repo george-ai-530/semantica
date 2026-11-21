@@ -28,6 +28,7 @@ import { WorkspaceSwitcher } from './auth/WorkspaceSwitcher';
 import { PersistenceIndicator } from './auth/PersistenceIndicator';
 import { WorkspaceExportModal } from './auth/WorkspaceExportModal';
 import { LoginModal } from './auth/LoginModal';
+import { LoginPage } from './auth/LoginPage';
 import { UserSettingsModal } from './auth/UserSettingsModal';
 import { useAuth } from './auth/authStore';
 
@@ -1800,6 +1801,30 @@ function WelcomeScreen({
   );
 }
 
+/** sessionStorage flag for read-only guest browsing (per browser tab). */
+const GUEST_STORAGE_KEY = 'semantica_guest_mode';
+
+const BOOT_STYLES = `
+.cowin-boot {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(31, 45, 36, 0.62);
+  background: linear-gradient(180deg, #f6fbf8 0%, #eef7f2 100%);
+}
+.cowin-boot__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #16b364;
+  animation: skeleton-pulse 1.1s ease-in-out infinite;
+}
+`;
+
 export default function App() {
   const [activeWorkspace, setActiveWorkspace] = useState<WorkspaceId>(readInitialWorkspace);
   const [exploreView, setExploreView] = useState<ExploreView>('graph');
@@ -1810,10 +1835,18 @@ export default function App() {
   const [exploreDraftDirty, setExploreDraftDirty] = useState(false);
   const [agentMemoryAvailable, setAgentMemoryAvailable] = useState(false);
 
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, token, isAuthenticated, logout } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  // Read-only guest browsing is opt-in from the login page and lasts for the tab.
+  const [guestMode, setGuestMode] = useState<boolean>(() => {
+    try {
+      return sessionStorage.getItem(GUEST_STORAGE_KEY) === '1';
+    } catch {
+      return false;
+    }
+  });
 
   const visibleNavItems: NavItem[] = [
     ...navItems,
@@ -2058,6 +2091,43 @@ export default function App() {
     );
   };
 
+  // ── Entry gate ────────────────────────────────────────────────────────────
+  // Unauthenticated visitors land on the standalone login page. Browsing without
+  // an account is still possible, but has to be chosen explicitly ("访客只读").
+  // While a stored token is being exchanged for a profile we show a splash
+  // instead of flashing the login form.
+  const enterGuestMode = () => {
+    try {
+      sessionStorage.setItem(GUEST_STORAGE_KEY, '1');
+    } catch {
+      /* private mode: fall back to in-memory only */
+    }
+    setGuestMode(true);
+  };
+
+  const exitToLogin = () => {
+    try {
+      sessionStorage.removeItem(GUEST_STORAGE_KEY);
+    } catch {
+      /* ignore */
+    }
+    setGuestMode(false);
+    logout();
+  };
+
+  if (!isAuthenticated && !guestMode) {
+    if (token) {
+      return (
+        <div className="cowin-boot">
+          <style>{BOOT_STYLES}</style>
+          <div className="cowin-boot__dot" />
+          <span>正在恢复登录会话…</span>
+        </div>
+      );
+    }
+    return <LoginPage onGuest={enterGuestMode} />;
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <style>{shellStyles}</style>
@@ -2174,7 +2244,7 @@ export default function App() {
 
                   <button
                     type="button"
-                    onClick={() => logout()}
+                    onClick={exitToLogin}
                     className="ws-btn ws-btn--ghost"
                     style={{ padding: '5px 8px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 4 }}
                     title="退出登录"
@@ -2226,7 +2296,7 @@ export default function App() {
               }}
             >
               <span>
-                💡 <strong>企业安全防护已开启</strong>：当前处于未登录状态。您可以点击右上角 <strong>「企业登录」</strong> 使用 <code>admin / 1</code>（管理员）、<code>user_a / 1</code>（测试用户A）、<code>user_b / 1</code>（测试用户B）或 <code>testuser / 1</code>（LDAP 域员工，所有测试密码均已统一为 <code>1</code>）体验多工作区隔离、个人 API 密钥与管理控制台。
+                💡 <strong>当前处于访客只读状态</strong>：仅可浏览公开图谱内容。点击右上角 <strong>「企业登录」</strong> 使用企业域账号或本地账号登录，即可解锁多工作区隔离、个人 API 密钥与管理控制台。
               </span>
               <button
                 type="button"
